@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="MTYD.ViewModel.Select" Title="Meal Schedule" BackgroundColor ="#f3f2dc">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout x:Name="mainStack">
+                <Picker x:Name="SubscriptionPicker" Margin="30,0,30,0" SelectedIndexChanged="planChange" Title="Choose a Meal Plan"></Picker>
+                <Grid Margin="15,0,15,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40" />
+                        <!-- 1 Buttons -->
+                        <RowDefinition Height="40" />
+                        <!-- Bar -->
+                        <RowDefinition Height="*" />
+                        <!-- Collection View -->
+
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+
+                    <!-- WEEK ONE -->
+                    <!--<Picker x:Name="datePicker" Grid.ColumnSpan="2" Margin="15,0,0,0" SelectedIndexChanged="dateChange"/>
+                <Frame OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Column="3" CornerRadius="15">
+                    <Button x:Name="save1" Text = "Save" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="0" Grid.Column="3" Clicked="saveUserMeals"/>
+                </Frame>-->
+                    <Picker x:Name="datePicker" Grid.ColumnSpan="2" Margin="15,0,0,0" SelectedIndexChanged="dateChange"/>
+                    <Frame OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Column="3" CornerRadius="20">
+                        <Button ClassId="save1" Text = "Save" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="0" Grid.Column="3" Clicked="saveUserMeals" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black" FontAttributes="Bold"/>
+                    </Frame>
+                    <Frame OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Row="0" Grid.Column="2" CornerRadius="20">
+                        <Button x:Name="surpriseBttn"  ClassId="surpriseButton" Text = "Surprise" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="0" Grid.Column="3" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black"  FontAttributes="Bold"/>
+                    </Frame>
+                    <Frame OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Row = "1" Grid.Column="2" CornerRadius="20">
+                        <Button x:Name="skipBttn"  ClassId="skipButton" Text = "Skip" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="2" Grid.Column="3" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black"  FontAttributes="Bold"/>
+                    </Frame>
+
+                    <Frame OutlineColor="DarkRed" Padding="0" BackgroundColor="Transparent" Grid.Row = "1"  Grid.Column="3">
+                        <Label Text = "Count" x:Name="totalCount" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Medium" Grid.Row="1" Grid.Column="3" BackgroundColor="Transparent" TextColor="Black" FontAttributes="Bold"/>
+                    </Frame>
+
+                    <!-- Segmented Progress Bar Grid -->
+                    <!-- <Grid  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="60" />
+                        </Grid.RowDefinitions>
+
+                        <ProgressBar Progress="0.5" x:Name="weekOneProgress" Margin="15,40,0,0" ProgressColor="Green" BackgroundColor="Gray">
+                            <ProgressBar.ScaleY>
+                                <OnPlatform
+                                x:TypeArguments="x:Double"
+                                iOS="4"
+                                Android="1" />
+                            </ProgressBar.ScaleY>
+                        </ProgressBar>
+                       <Image Source="food.png" Margin="-5,3,0,0" WidthRequest="20" HeightRequest="20" VerticalOptions="Start" HorizontalOptions="Start" Grid.Row="0" Grid.Column="1"/> 
+                    </Grid> -->
+
+                    <!-- End Progress Bar Grid 1-->
+                </Grid>
+                <ProgressBar Progress="0.5" x:Name="weekOneProgress" Margin="10,10,10,10" BackgroundColor="Transparent" HeightRequest="35" ></ProgressBar>
+
+                <CollectionView x:Name="weekOneMenu" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Margin="0,0,0,30" BackgroundColor="#f3f2dc">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout
+                        Orientation="Vertical"
+                        Span="2" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="175" />
+                                    <RowDefinition Height="50" />
+                                    <RowDefinition Height="20" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Frame Grid.Column="0" Padding="10" Grid.RowSpan="2" Grid.ColumnSpan="1">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1.25*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Image Grid.RowSpan="2"
+                                                       Grid.ColumnSpan="2"
+                                                       Source="{Binding MealImage}"
+                                                       Aspect="AspectFill"
+                                                       />
+                                        <Grid Margin="-30,-30,-30,-30" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                                            <Frame Grid.Row="0" Grid.Column="0" ScaleY="0.25" ScaleX="0.25" CornerRadius="40">
+                                                <ImageButton x:Name="heart1" Source="heartoutline.png" Clicked="clickedFavorite" />
+                                            </Frame>
+                                            <Frame Grid.Row="0" Grid.Column="1" ScaleY="0.25" ScaleX="0.25" CornerRadius="40">
+                                                <Label Text="{Binding MealQuantity}" FontSize="50" HorizontalOptions="Center" VerticalOptions="Center" />
+                                            </Frame>
+                                            <Frame x:Name="week1Dec" Grid.Row="1" Grid.Column="0" ScaleY="0.25" ScaleX="0.25" CornerRadius="40">
+                                                <Button FontSize="100" TextColor="Black" HorizontalOptions="Center" VerticalOptions="Center" Text="-" Clicked="clickDecrease" />
+                                            </Frame>
+                                            <Frame x:Name="week1Inc" Grid.Row="1" Grid.Column="1" ScaleY="0.25" ScaleX="0.25" CornerRadius="40">
+                                                <Button x:Name="increase" FontSize="70" TextColor="Black" HorizontalOptions="Center" VerticalOptions="Center" Text="+" Clicked="clickIncrease"/>
+                                            </Frame>
+                                        </Grid>
+                                        <Label  Grid.Column="0"
+                                                        Grid.Row="2"
+                                                        Grid.ColumnSpan="2"
+                                                        FontSize="Small"
+                                                       Text="{Binding MealName}"
+                                                       FontAttributes="Bold" />
+
+                                        <Label Grid.Row="2"
+                                                       FontSize="Micro"
+                                                       Grid.Column="0"
+                                                       Grid.ColumnSpan="2"
+                                                       Text="{Binding MealCalories}"
+                                                       VerticalOptions="End" />
+                                    </Grid>
+                                </Frame>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+
+
+
+                <!-- WEEK ONE END -->
+
+
+                <!--</Grid>-->
+
+                <StackLayout x:Name="mainSubStack"  Orientation="Horizontal" VerticalOptions="EndAndExpand">
+                    <RelativeLayout>
+                        <Frame x:Name="NavBar" HasShadow="True" CornerRadius="0" Padding="0,-5,0,10" HeightRequest="65" VerticalOptions="End"  RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=1,Constant=0}">
+                            <Grid Grid.Row="1" Grid.Column="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.25*" />
+                                    <ColumnDefinition Width="0.25*" />
+                                    <ColumnDefinition Width="0.25*" />
+                                    <ColumnDefinition Width="0.25*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*" />
+                                </Grid.RowDefinitions>
+
+                                <StackLayout VerticalOptions="End" Grid.Column="0">
+                                    <ImageButton x:Name="SubscribeIconNav" Source="noun_subscribe_2445070.png" HeightRequest="40" WidthRequest="40" Margin="0, 10, 0, 0" Clicked="onNavIconClick"></ImageButton>
+                                    <Button x:Name="SubscribeNav" Text="Subscribe" FontSize="12" TextColor="#006633" BackgroundColor="Transparent" HorizontalOptions="Center" Margin="0, -20, 0, 0" Clicked="onNavClick">
+                                    </Button>
+                                </StackLayout>
+                                <StackLayout VerticalOptions="End" Grid.Column="1">
+                                    <ImageButton x:Name="SelectIconNav" Source="noun_select_2076436.png" HeightRequest="40" WidthRequest="40" Margin="0, 10, 0, 0" Clicked="onNavIconClick"></ImageButton>
+                                    <Button x:Name="SelectNav" Text="Select" FontSize="12" TextColor="#006633" BackgroundColor="Transparent" HorizontalOptions="Center" Margin="0, -20, 0, 0" Clicked="onNavClick">
+                                    </Button>
+                                </StackLayout>
+                                <StackLayout VerticalOptions="End" Grid.Column="2">
+                                    <ImageButton x:Name="ProfileIconNav" Source="noun_profil_2944974.png" HeightRequest="40" WidthRequest="40" Margin="0, 10, 0, 0" Clicked="onNavIconClick"></ImageButton>
+                                    <Button x:Name="ProfileNav" Text="Profile" FontSize="12" TextColor="#006633" HorizontalOptions="Center" Margin="0, -20, 0, 0" BackgroundColor="Transparent" Clicked="onNavClick">
+                                    </Button>
+                                </StackLayout>
+                                <StackLayout VerticalOptions="End" Grid.Column="3">
+                                    <ImageButton x:Name="MoreIconNav" Source="noun_more_897914.png" HeightRequest="60" WidthRequest="60" Margin="0, 1, 0, 0" Clicked="onNavIconClick"></ImageButton>
+                                    <Button x:Name="MoreNav" Text="More" FontSize="12" TextColor="#006633" HorizontalOptions="Center" Margin="0, -32, 0, 0" BackgroundColor="Transparent" Clicked="onNavClick">
+                                    </Button>
+                                </StackLayout>
+                            </Grid>
+                        </Frame>
+                    </RelativeLayout>
+                </StackLayout>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

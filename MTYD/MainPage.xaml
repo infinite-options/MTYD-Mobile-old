@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="MTYD.MainPage" NavigationPage.HasNavigationBar="False">
+
+
+    
+    <StackLayout x:Name="mainStack">
+
+            <AbsoluteLayout x:Name="absLayout" BackgroundColor="#000000">
+            <Image  AbsoluteLayout.LayoutBounds="1, -15, 2, 1.0"
+                    AbsoluteLayout.LayoutFlags="All" 
+                    Source="landing.jpg" Aspect="AspectFill" Rotation="180"/>
+
+            <Image AbsoluteLayout.LayoutBounds="1,1,1,1"
+                   AbsoluteLayout.LayoutFlags="All"
+                   BackgroundColor="Black" Aspect="AspectFill" Opacity="0.5"/>
+
+            <Label x:Name="Heading" Text="NUTRITION&#10;MADE EASY" FontAttributes="Bold" LineHeight="1"
+
+
+                   AbsoluteLayout.LayoutBounds="0.5, 0.14"
+                   AbsoluteLayout.LayoutFlags="PositionProportional"
+                   FontSize="44" VerticalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   TextColor="#FFFFFF" CharacterSpacing="3" />
+
+            <Label x:Name="subHeading" Text="LOCAL. ORGANIC. RESPONSIBLE."
+                   VerticalOptions="Center" TextColor="#FFB054" FontAttributes="Bold"
+                   HorizontalTextAlignment="Center" FontSize="20"
+                   AbsoluteLayout.LayoutBounds="0.5, 0.26" CharacterSpacing="1"
+                   AbsoluteLayout.LayoutFlags="PositionProportional"/>
+
+            <Grid AbsoluteLayout.LayoutBounds="0.5, 0.405"
+                   AbsoluteLayout.LayoutFlags="PositionProportional">
+
+                <Frame x:Name="userFrame" Padding="20,10" Margin="0" BackgroundColor="#FFE5B4">
+                    
+                   <Entry x:Name="loginUsername" Keyboard="Text" FontAttributes="Bold"
+                   FontSize="16" Placeholder="USERNAME"
+                   HeightRequest="20" WidthRequest="245"
+                   BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
+
+                </Frame>
+
+            </Grid>
+
+
+            <Grid AbsoluteLayout.LayoutBounds="0.5, 0.47"
+                   AbsoluteLayout.LayoutFlags="PositionProportional">
+
+                <Frame x:Name="passFrame" Padding="20,10,35,10" Margin="0" BackgroundColor="#FFE5B4">
+                    
+                   <Entry x:Name="loginPassword" Keyboard="Text" FontAttributes="Bold"
+                   FontSize="16" Placeholder="PASSWORD" IsPassword="True"
+                   HeightRequest="20" WidthRequest="230"
+                   BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
+
+                </Frame>
+
+            </Grid>
+            
+
+            <!--<Entry x:Name="loginUsername" Keyboard="Text" FontAttributes="Bold"
+                   FontSize="16" Placeholder="  USERNAME"
+                   HeightRequest="37" WidthRequest="285"
+                   AbsoluteLayout.LayoutBounds="0.5, 0.405"
+                   AbsoluteLayout.LayoutFlags="PositionProportional"
+                   BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
+
+            <Entry x:Name="loginPassword" IsPassword="True" Keyboard="Text"
+                   FontSize="16" Placeholder="PASSWORD"
+                   HeightRequest="37" WidthRequest="285"
+                   AbsoluteLayout.LayoutBounds="0.5, 0.47"
+                   AbsoluteLayout.LayoutFlags="PositionProportional"
+                   BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>-->
+
+            <ImageButton x:Name="seePassword" AbsoluteLayout.LayoutBounds="0.815, 0.47"
+                         AbsoluteLayout.LayoutFlags="PositionProportional"
+                         HeightRequest="28" WidthRequest="28" Source="eye.png"
+                         Aspect="AspectFill" Opacity="0.5" Clicked="clickedSeePassword" />
+
+            <Button x:Name="forgotPass" Text="Forgot Password?"
+                    BackgroundColor="Transparent" TextColor="White"
+                    FontSize="14" HeightRequest="20" WidthRequest="120"
+                    AbsoluteLayout.LayoutBounds="0.75, 0.51"
+                    AbsoluteLayout.LayoutFlags="PositionProportional"
+                    Clicked="clickedForgotPass"/>
+
+            <Button x:Name="loginButton" Text="LOG IN" FontSize="17" FontAttributes="Bold"
+                    BackgroundColor="#F59A28" TextColor= "White"
+                    HeightRequest="49" WidthRequest="120"
+                    AbsoluteLayout.LayoutBounds="0.28, 0.57"
+                    AbsoluteLayout.LayoutFlags="PositionProportional"
+                    Clicked="clickedLogin"/>
+
+            <Button x:Name= "signUpButton" Text="SIGN UP" FontSize="17" FontAttributes="Bold"
+                    BackgroundColor="#F59A28" TextColor= "White"
+                    HeightRequest="49" WidthRequest="120"
+                    AbsoluteLayout.LayoutBounds="0.72, 0.57"
+                    AbsoluteLayout.LayoutFlags="PositionProportional"
+                    Clicked="clickedSignUp"></Button>
+
+            <Label Text="or" TextColor="White" FontSize="16"
+                   AbsoluteLayout.LayoutBounds="0.5, 0.635"
+                   AbsoluteLayout.LayoutFlags="PositionProportional"/>
+
+            <BoxView BackgroundColor="#C49F3F"
+                     HeightRequest="1" WidthRequest="105"
+                     AbsoluteLayout.LayoutBounds="0.23, 0.6325"
+                     AbsoluteLayout.LayoutFlags="PositionProportional"/>
+
+            <BoxView BackgroundColor="#C49F3F"
+                     HeightRequest="1" WidthRequest="105"
+                     AbsoluteLayout.LayoutBounds="0.77, 0.6325"
+                     AbsoluteLayout.LayoutFlags="PositionProportional"/>
+
+            <Label Text="LOG IN OR SIGN UP WITH" TextColor="White" FontSize="18"
+                   AbsoluteLayout.LayoutBounds="0.5, 0.685"
+                   AbsoluteLayout.LayoutFlags="PositionProportional"/>
+
+            <ImageButton  x:Name="googleLoginButton" AbsoluteLayout.LayoutBounds="0.25, 0.77"
+                          AbsoluteLayout.LayoutFlags="PositionProportional"
+                          BackgroundColor="#DD4B39"
+                          HeightRequest="55" WidthRequest="55"
+                          Clicked="googleLoginButtonClicked" Source="googleicon2.png"
+                          Aspect="AspectFill"/>
+
+            <ImageButton x:Name="facebookLoginButton" AbsoluteLayout.LayoutBounds="0.5, 0.77"
+                         AbsoluteLayout.LayoutFlags="PositionProportional"
+                         BackgroundColor="#6C9BE8"
+                         HeightRequest="55" WidthRequest="55"
+                         Source="fbicon.png" Clicked="facebookLoginButtonClicked"
+                         Aspect="AspectFill"/>
+
+            <ImageButton  x:Name="appleLoginButton" AbsoluteLayout.LayoutBounds="0.75, 0.77"
+                          AbsoluteLayout.LayoutFlags="PositionProportional"
+                          BackgroundColor="#E4E4E4"
+                          HeightRequest="55" WidthRequest="55"
+                          Clicked="appleLoginButtonClicked" Source="appleicon2.png"
+                          Aspect="AspectFill"/>
+               
+
+            </AbsoluteLayout>
+
+                    <!--<StackLayout x:Name="mainSubStack"  Orientation="Horizontal" VerticalOptions="EndAndExpand">
+                <RelativeLayout>
+                <Frame x:Name="NavBar" HasShadow="True" CornerRadius="0" Padding="0,-5,0,10" HeightRequest="65" VerticalOptions="End"  RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=1,Constant=0}">
+                    <Grid Grid.Row="1" Grid.Column="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.25*" />
+                            <ColumnDefinition Width="0.25*" />
+                            <ColumnDefinition Width="0.25*" />
+                            <ColumnDefinition Width="0.25*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" />
+                        </Grid.RowDefinitions>
+
+                        <StackLayout VerticalOptions="End" Grid.Column="0">
+                            <ImageButton x:Name="SubscribeIconNav" Source="noun_subscribe_2445070.png" HeightRequest="40" WidthRequest="40" Margin="0, 10, 0, 0" Clicked="onNavIconClick"></ImageButton>
+                            <Button x:Name="SubscribeNav" Text="Subscribe" FontSize="12" TextColor="#006633" BackgroundColor="Transparent" HorizontalOptions="Center" Margin="0, -20, 0, 0" Clicked="onNavClick">
+                            </Button>
+                        </StackLayout>
+                        <StackLayout VerticalOptions="End" Grid.Column="1">
+                            <ImageButton x:Name="SelectIconNav" Source="noun_select_2076436.png" HeightRequest="40" WidthRequest="40" Margin="0, 10, 0, 0" Clicked="onNavIconClick"></ImageButton>
+                            <Button x:Name="SelectNav" Text="Select" FontSize="12" TextColor="#006633" BackgroundColor="Transparent" HorizontalOptions="Center" Margin="0, -20, 0, 0" Clicked="onNavClick">
+                            </Button>
+                        </StackLayout>
+                        <StackLayout VerticalOptions="End" Grid.Column="2">
+                            <ImageButton x:Name="ProfileIconNav" Source="noun_profil_2944974.png" HeightRequest="40" WidthRequest="40" Margin="0, 10, 0, 0" Clicked="onNavIconClick"></ImageButton>
+                            <Button x:Name="ProfileNav" Text="Profile" FontSize="12" TextColor="#006633" HorizontalOptions="Center" Margin="0, -20, 0, 0" BackgroundColor="Transparent" Clicked="onNavClick">
+                            </Button>
+                        </StackLayout>
+                        <StackLayout VerticalOptions="End" Grid.Column="3">
+                            <ImageButton x:Name="MoreIconNav" Source="noun_more_897914.png" HeightRequest="60" WidthRequest="60" Margin="0, 1, 0, 0" Clicked="onNavIconClick"></ImageButton>
+                            <Button x:Name="MoreNav" Text="More" FontSize="12" TextColor="#006633" HorizontalOptions="Center" Margin="0, -32, 0, 0" BackgroundColor="Transparent" Clicked="onNavClick"> 
+                            </Button>
+                        </StackLayout>
+                    </Grid>
+                </Frame>
+            </RelativeLayout>
+            </StackLayout>-->
+    </StackLayout>
+    
+</ContentPage>

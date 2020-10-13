@@ -1,0 +1,61 @@
+﻿<Properties StartupConfiguration="{FAB6B3BB-6B8C-41F3-9565-69D18FC959BC}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/ViewModel/Menu.xaml">
+    <Files>
+      <File FileName="MTYD/ViewModel/SubscriptionPage.xaml.cs" Line="457" Column="1" />
+      <File FileName="MTYD/ViewModel/Menu.xaml" Line="15" Column="1" />
+      <File FileName="MTYD/ViewModel/Menu.xaml.cs" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="MTYD" expanded="True">
+            <Node name="MTYD" expanded="True">
+              <Node name="Model" expanded="True">
+                <Node name="Database" expanded="True" />
+                <Node name="Login" expanded="True" />
+                <Node name="SignUp" expanded="True" />
+                <Node name="User" expanded="True" />
+              </Node>
+              <Node name="Resources" expanded="True" />
+              <Node name="ViewModel" expanded="True">
+                <Node name="AppleLogin.xaml" expanded="True" />
+                <Node name="DeliveryBilling.xaml" expanded="True" />
+                <Node name="FacebookLogin.xaml" expanded="True" />
+                <Node name="GoogleLogin.xaml" expanded="True" />
+                <Node name="MealSchedule.xaml" expanded="True" />
+                <Node name="Menu.xaml" expanded="True" selected="True" />
+                <Node name="Profile.xaml" expanded="True" />
+                <Node name="Select.xaml" expanded="True" />
+                <Node name="SignUp.xaml" expanded="True" />
+                <Node name="SocialMediaSignUpPage.xaml" expanded="True" />
+                <Node name="SubscriptionPage.xaml" expanded="True" />
+                <Node name="UserProfile.xaml" expanded="True" />
+                <Node name="VerifyInfo.xaml" expanded="True" />
+              </Node>
+              <Node name="App.xaml" expanded="True" />
+              <Node name="MainPage.xaml" expanded="True" />
+            </Node>
+            <Node name="MTYD.Android" expanded="True">
+              <Node name="Resources" expanded="True">
+                <Node name="drawable" expanded="True" />
+                <Node name="mipmap-xxxhdpi" expanded="True" />
+              </Node>
+            </Node>
+            <Node name="MTYD.iOS" expanded="True">
+              <Node name="Properties" expanded="True" />
+              <Node name="Resources" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.MTYD.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.45378B49-DE2E-44A6-899E-E2DCB6A5819B" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.MTYD.Android AndroidDesignerPreferredTheme="Theme.AppCompat.Light.NoActionBar" PreferredExecutionTarget="Android.one_plus_6" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
