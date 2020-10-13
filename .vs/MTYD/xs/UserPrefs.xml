@@ -1,8 +1,8 @@
 ﻿<Properties StartupConfiguration="{FAB6B3BB-6B8C-41F3-9565-69D18FC959BC}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/ViewModel/Menu.xaml">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/ViewModel/SubscriptionPage.xaml.cs">
     <Files>
-      <File FileName="MTYD/ViewModel/SubscriptionPage.xaml.cs" Line="457" Column="1" />
-      <File FileName="MTYD/ViewModel/Menu.xaml" Line="15" Column="1" />
+      <File FileName="MTYD/ViewModel/SubscriptionPage.xaml.cs" Line="473" Column="2" />
+      <File FileName="MTYD/ViewModel/Menu.xaml" Line="5" Column="9" />
       <File FileName="MTYD/ViewModel/Menu.xaml.cs" />
     </Files>
     <Pads>
@@ -18,22 +18,10 @@
               </Node>
               <Node name="Resources" expanded="True" />
               <Node name="ViewModel" expanded="True">
-                <Node name="AppleLogin.xaml" expanded="True" />
-                <Node name="DeliveryBilling.xaml" expanded="True" />
-                <Node name="FacebookLogin.xaml" expanded="True" />
-                <Node name="GoogleLogin.xaml" expanded="True" />
-                <Node name="MealSchedule.xaml" expanded="True" />
-                <Node name="Menu.xaml" expanded="True" selected="True" />
-                <Node name="Profile.xaml" expanded="True" />
-                <Node name="Select.xaml" expanded="True" />
-                <Node name="SignUp.xaml" expanded="True" />
-                <Node name="SocialMediaSignUpPage.xaml" expanded="True" />
-                <Node name="SubscriptionPage.xaml" expanded="True" />
-                <Node name="UserProfile.xaml" expanded="True" />
-                <Node name="VerifyInfo.xaml" expanded="True" />
+                <Node name="SubscriptionPage.xaml" expanded="True">
+                  <Node name="SubscriptionPage.xaml.cs" selected="True" />
+                </Node>
               </Node>
-              <Node name="App.xaml" expanded="True" />
-              <Node name="MainPage.xaml" expanded="True" />
             </Node>
             <Node name="MTYD.Android" expanded="True">
               <Node name="Resources" expanded="True">
