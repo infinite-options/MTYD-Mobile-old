@@ -1,2 +1,2 @@
-# MTYD-Mobile
-# login integration
+# login
+Login with Google, Facebook, Apple and Direct
