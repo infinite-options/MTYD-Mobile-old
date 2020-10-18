@@ -147,7 +147,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BlankApp\BlankApp.csproj">
       <Project>{3266CF5A-5AAF-4129-A283-4A923B9E54FF}</Project>
-      <Name>BlankApp</Name>
+      <Name>MTYD</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
