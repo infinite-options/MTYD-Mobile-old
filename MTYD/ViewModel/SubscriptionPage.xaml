@@ -159,7 +159,7 @@
                        AbsoluteLayout.LayoutFlags="PositionProportional"/>
 
                     <ImageButton x:Name="payButton1" BorderColor="#FFBA00" BorderWidth="4" Clicked="clickedPayOp1"
-                                 AbsoluteLayout.LayoutBounds="0.2, 0.55" HeightRequest="70" WidthRequest="70"
+                                 AbsoluteLayout.LayoutBounds="0.2, 0.55" HeightRequest="70" WidthRequest="70" 
                                  AbsoluteLayout.LayoutFlags="PositionProportional" Source="noDiscount.png" Aspect="AspectFill"/>
 
                     <Label x:Name="payOp2" FontSize="13" FontAttributes="Bold" 
@@ -167,16 +167,16 @@
                        AbsoluteLayout.LayoutFlags="PositionProportional"/>
 
                     <ImageButton x:Name="payButton2" BorderColor="#FFBA00" BorderWidth="4" Clicked="clickedPayOp2"
-                                 AbsoluteLayout.LayoutBounds="0.5, 0.55" HeightRequest="70" WidthRequest="70"
-                                 AbsoluteLayout.LayoutFlags="PositionProportional" Source="5Discount.png" Aspect="AspectFill"/>
+                                 AbsoluteLayout.LayoutBounds="0.5, 0.55" HeightRequest="70" WidthRequest="70" 
+                                 AbsoluteLayout.LayoutFlags="PositionProportional" Source="Discount5.png" Aspect="AspectFill"/>
 
                     <Label x:Name="payOp3" FontSize="13" FontAttributes="Bold" 
                        AbsoluteLayout.LayoutBounds="0.82, 0.25"
                        AbsoluteLayout.LayoutFlags="PositionProportional"/>
 
                     <ImageButton x:Name="payButton3" BorderColor="#FFBA00" BorderWidth="4" Clicked="clickedPayOp3"
-                                 AbsoluteLayout.LayoutBounds="0.8, 0.55" HeightRequest="70" WidthRequest="70"
-                                 AbsoluteLayout.LayoutFlags="PositionProportional" Source="10Discount.png" />
+                                 AbsoluteLayout.LayoutBounds="0.8, 0.55" HeightRequest="70" WidthRequest="70" 
+                                 AbsoluteLayout.LayoutFlags="PositionProportional" Source="Discount10.png" />
 
                 </AbsoluteLayout>
                 

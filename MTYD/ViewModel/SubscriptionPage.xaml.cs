@@ -341,9 +341,14 @@ namespace MTYD.ViewModel
 
         private void clickedPayOp1(object sender, EventArgs e)
         {
-            payButton1.BackgroundColor = Color.FromHex("#FFF0C6");
-            payButton2.BackgroundColor = Color.Transparent;
-            payButton3.BackgroundColor = Color.Transparent;
+            //payButton1.BackgroundColor = Color.FromHex("#FFF0C6");
+            //payButton2.BackgroundColor = Color.Transparent;
+            //payButton3.BackgroundColor = Color.Transparent;
+
+            payButton1.Opacity = 1;
+            payButton2.Opacity = 0.3;
+            payButton3.Opacity = 0.3;
+
             //TryParse(TotalPrice.Text.Substring(1, 5), double val);
             Preferences.Set("freqSelected", "1");
             string meal_select = Preferences.Get("mealSelected", "");
@@ -376,9 +381,14 @@ namespace MTYD.ViewModel
 
         private void clickedPayOp2(object sender, EventArgs e)
         {
-            payButton1.BackgroundColor = Color.Transparent;
-            payButton2.BackgroundColor = Color.FromHex("#FFF0C6");
-            payButton3.BackgroundColor = Color.Transparent;
+            //payButton1.BackgroundColor = Color.Transparent;
+            //payButton2.BackgroundColor = Color.FromHex("#FFF0C6");
+            //payButton3.BackgroundColor = Color.Transparent;
+
+            payButton1.Opacity = 0.3;
+            payButton2.Opacity = 1;
+            payButton3.Opacity = 0.3;
+
             Preferences.Set("freqSelected", "2");
             string meal_select = Preferences.Get("mealSelected", "");
             if (meal_select == "1")
@@ -413,9 +423,14 @@ namespace MTYD.ViewModel
 
         private void clickedPayOp3(object sender, EventArgs e)
         {
-            payButton1.BackgroundColor = Color.Transparent;
-            payButton2.BackgroundColor = Color.Transparent;
-            payButton3.BackgroundColor = Color.FromHex("#FFF0C6");
+            //payButton1.BackgroundColor = Color.Transparent;
+            //payButton2.BackgroundColor = Color.Transparent;
+            //payButton3.BackgroundColor = Color.FromHex("#FFF0C6");
+
+            payButton1.Opacity = 0.3;
+            payButton2.Opacity = 0.3;
+            payButton3.Opacity = 1;
+
             Preferences.Set("freqSelected", "3");
 
             string meal_select = Preferences.Get("mealSelected", "");
@@ -447,6 +462,12 @@ namespace MTYD.ViewModel
 
         private async void clickedDone(object sender, EventArgs e)
         {
+            if (TotalPrice.Text == "$ TOTAL" || TotalPrice.Text == "$00.00" || TotalPrice.Text == "$0")
+            {
+                await DisplayAlert("Warning!", "pick a valid plan to continue", "OK");
+                return;
+            }
+
             int length = (TotalPrice.Text).Length;
             string price = TotalPrice.Text.Substring(1,length-1);
             Preferences.Set("price", price);
@@ -462,7 +483,8 @@ namespace MTYD.ViewModel
 
         async void clickedBack(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PopAsync(false);
+            //await Navigation.PopAsync(false);
+            await Navigation.PopToRootAsync(false);
         }
 
         async void clickedMenu(System.Object sender, System.EventArgs e)

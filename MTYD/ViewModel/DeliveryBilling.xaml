@@ -48,7 +48,7 @@
                    <Frame x:Name="firstName" Padding="10,5" Margin="20,0.5,1,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="0" HasShadow="False">
 
-                        <Entry x:Name="FNameEntry" Keyboard="Text" FontAttributes="Bold"
+                        <Editor x:Name="FNameEntry" Keyboard="Text" FontAttributes="Bold"
                    FontSize="17" Placeholder="First Name*"
                    HeightRequest="35" WidthRequest="12"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
@@ -58,7 +58,7 @@
                    <Frame x:Name="lastName" Padding="10,5" Margin="1,0.5,20,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="1" HasShadow="False">
 
-                        <Entry x:Name="LNameEntry" Keyboard="Text" FontAttributes="Bold"
+                        <Editor x:Name="LNameEntry" Keyboard="Text" FontAttributes="Bold"
                    FontSize="17" Placeholder="Last Name*"
                    HeightRequest="35" WidthRequest="12"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
@@ -79,7 +79,7 @@
                    <Frame x:Name="emailAdd" Padding="10,5" Margin="20,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="0" HasShadow="False">
                     
-                   <Entry x:Name="emailEntry" Keyboard="Text" FontAttributes="Bold"
+                   <Editor x:Name="emailEntry" Keyboard="Text" FontAttributes="Bold"
                    FontSize="17" Placeholder="Email*"
                    HeightRequest="35" WidthRequest="24"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
@@ -100,7 +100,7 @@
                    <Frame x:Name="street" Padding="10,5" Margin="20,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="0" HasShadow="False">
 
-                        <Entry x:Name="AddressEntry" Keyboard="Text" FontAttributes="Bold"
+                        <Editor x:Name="AddressEntry" Keyboard="Text" FontAttributes="Bold"
                    FontSize="17" Placeholder="Street*"
                    HeightRequest="35" WidthRequest="24"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
@@ -123,8 +123,8 @@
                    <Frame x:Name="unit" Padding="10,5" Margin="20,0.5,1,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="0" HasShadow="False">
 
-                        <Entry x:Name="AptEntry" Keyboard="Text" FontAttributes="Bold"
-                   FontSize="17" Placeholder="Unit*"
+                        <Editor x:Name="AptEntry" Keyboard="Text" FontAttributes="Bold"
+                   FontSize="17" Placeholder="Unit"
                    HeightRequest="35" WidthRequest="8"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
 
@@ -133,7 +133,7 @@
                    <Frame x:Name="city" Padding="10,5" Margin="1,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="1" HasShadow="False">
 
-                        <Entry x:Name="CityEntry" Keyboard="Text" FontAttributes="Bold"
+                        <Editor x:Name="CityEntry" Keyboard="Text" FontAttributes="Bold"
                    FontSize="17" Placeholder="City*"
                    HeightRequest="35" WidthRequest="12"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
@@ -143,7 +143,7 @@
                    <Frame x:Name="state" Padding="10,5" Margin="1,0.5,20,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="2" HasShadow="False">
 
-                        <Entry x:Name="StateEntry" Keyboard="Text" FontAttributes="Bold"
+                        <Editor x:Name="StateEntry" Keyboard="Text" FontAttributes="Bold"
                    FontSize="17" Placeholder="State*"
                    HeightRequest="35" WidthRequest="8"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
@@ -165,7 +165,7 @@
                    <Frame x:Name="zipCode" Padding="10,5" Margin="20,0.5,1,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="0" HasShadow="False">
 
-                        <Entry x:Name="ZipEntry" Keyboard="Text" FontAttributes="Bold"
+                        <Editor x:Name="ZipEntry" Keyboard="Text" FontAttributes="Bold"
                    FontSize="17" Placeholder="Zip*"
                    HeightRequest="35" WidthRequest="12"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
@@ -284,18 +284,18 @@
                            BackgroundColor="#FFE5B4">
                            <Picker.ItemsSource>
                                 <x:Array Type="{x:Type x:String}">
-                                <x:String>01-January</x:String>
-                                <x:String>02-February</x:String>
-                                <x:String>03-March</x:String>
-                                <x:String>04-April</x:String>
-                                <x:String>05-May</x:String>
-                                <x:String>06-June</x:String>
-                                <x:String>07-July</x:String>
-                                <x:String>08-August</x:String>
-                                <x:String>09-September</x:String>
-                                <x:String>10-October</x:String>
-                                <x:String>11-November</x:String>
-                                <x:String>12-December</x:String>
+                                <x:String>01</x:String>
+                                <x:String>02</x:String>
+                                <x:String>03</x:String>
+                                <x:String>04</x:String>
+                                <x:String>05</x:String>
+                                <x:String>06</x:String>
+                                <x:String>07</x:String>
+                                <x:String>08</x:String>
+                                <x:String>09</x:String>
+                                <x:String>10</x:String>
+                                <x:String>11</x:String>
+                                <x:String>12</x:String>
                                 </x:Array>
                             </Picker.ItemsSource>
 

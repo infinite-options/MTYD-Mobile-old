@@ -46,10 +46,19 @@ namespace MTYD
         [Obsolete]
         public MainPage()
         {
+            //both in pixels
+            var width = DeviceDisplay.MainDisplayInfo.Width; 
+            var height = DeviceDisplay.MainDisplayInfo.Height;
+            //DisplayAlert("Width", width.ToString(), "ok");
+            //DisplayAlert("Height", height.ToString(), "ok");
+            //Console.WriteLine("Width" + width.ToString());
+            //Console.WriteLine("Height" + height.ToString());
+
             InitializeComponent();
             store = AccountStore.Create();
             checkPlatform();
             forgotPass.CornerRadius = 0;
+            //BackgroundImageSource = "landing.png";
         }
 
         private void checkPlatform()
@@ -69,6 +78,7 @@ namespace MTYD
                 passFrame.CornerRadius = 20;
                 userFrame.CornerRadius = 20;
                 seePassword.CornerRadius = 14;
+                //Heading2.Margin = new Thickness(0, 120, 0, 0);
             }
             else if (Device.RuntimePlatform == Device.Android)
             {
@@ -80,7 +90,7 @@ namespace MTYD
                     }
                 }
 
-                Heading.CharacterSpacing = 1;
+                //Heading.CharacterSpacing = 1;
             }
         }
 
@@ -677,7 +687,10 @@ namespace MTYD
 
         async void clickedSignUp(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new SignUp(), false);
+            //temporary change for testing
+            await Navigation.PushAsync(new MainPageExperiment());
+
+            //await Navigation.PushAsync(new SignUp(), false);
         }
 
         /*public void updateLoginButton()

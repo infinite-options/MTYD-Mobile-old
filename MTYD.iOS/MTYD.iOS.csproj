@@ -176,15 +176,19 @@
     <BundleResource Include="Resources\appleicon2.png" />
     <BundleResource Include="Resources\eye.png" />
     <BundleResource Include="Resources\menu.png" />
-    <BundleResource Include="Resources\addCard.png" />
-    <BundleResource Include="Resources\rewrite.png" />
-    <BundleResource Include="Resources\add.png" />
-    <BundleResource Include="Resources\card.png" />
-    <BundleResource Include="Resources\5Discount.png" />
+    <BundleResource Include="Resources\landing1.jpg" />
+    <BundleResource Include="Resources\Discount10.png" />
     <BundleResource Include="Resources\noDiscount.png" />
-    <BundleResource Include="Resources\10Discount.png" />
+    <BundleResource Include="Resources\Discount5.png" />
     <BundleResource Include="Resources\takeout.png" />
-    <BundleResource Include="Resources\cardBigger.png" />
-    <BundleResource Include="Resources\menu2.png" />
+    <BundleResource Include="Resources\card.png" />
+    <BundleResource Include="Resources\landing2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\add.png" />
+    <AndroidResource Include="Resources\addCard.png" />
+    <AndroidResource Include="Resources\cardBigger.png" />
+    <AndroidResource Include="Resources\menu2.png" />
+    <AndroidResource Include="Resources\rewrite.png" />
   </ItemGroup>
 </Project>
