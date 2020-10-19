@@ -25,31 +25,46 @@ using System.IO;
 
 using System.Collections.Generic;
 using System.ComponentModel;
-
-
+using MTYD.Model.Login.LoginClasses.Apple;
+using MTYD.Model.Login.LoginClasses;
+using MTYD.Model.Login.Constants;
+using MTYD.LogInClasses;
 
 namespace MTYD
 {
     public partial class MainPage : ContentPage
     {
-        const string socialUrl = "https://uavi7wugua.execute-api.us-west-1.amazonaws.com/dev/api/v2/social/"; // api to check if user has a social media account; need email at end of link
-        const string socialLoginUrl = "https://uavi7wugua.execute-api.us-west-1.amazonaws.com/dev/api/v2/socialacc/"; // api to login the user with social account, need user id at end of link
-        
-        const string accountSaltUrl = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/accountsalt?email=quang@gmail.com";
-        const string loginUrl = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/login"; 
-        public HttpClient client = new HttpClient(); // client to handle all api calls
+        public HttpClient client = new HttpClient();
+        public static string accessToken = null;
+        public static string refreshToken = null;
+        public static string uid = null;
+        public event EventHandler SignIn;
 
         Account account;
         [Obsolete]
         AccountStore store;
 
-        [Obsolete]
         public MainPage()
         {
             InitializeComponent();
             store = AccountStore.Create();
             checkPlatform();
             forgotPass.CornerRadius = 0;
+
+            // APPLE
+            var vm = new LoginViewModel();
+            vm.AppleError += AppleError;
+            BindingContext = vm;
+
+            if (Device.RuntimePlatform == Device.Android)
+            {
+                appleLoginButton.IsEnabled = false;
+            }
+        }
+
+        private async void AppleError(object sender, EventArgs e)
+        {
+            await DisplayAlert("Error", "We weren't able to set an account for you", "OK");
         }
 
         private void checkPlatform()
@@ -84,657 +99,419 @@ namespace MTYD
             }
         }
 
-        // handles when the login button is clicked
+        // DIRECT LOGIN CLICK
         private async void clickedLogin(object sender, EventArgs e)
         {
-            //For testing purposes
-            await Navigation.PushAsync(new SubscriptionPage());
-            //loginButton.IsEnabled = false;
-            if (String.IsNullOrEmpty(this.loginUsername.Text) || String.IsNullOrEmpty(this.loginPassword.Text))
+            loginButton.IsEnabled = false;
+            if (String.IsNullOrEmpty(loginUsername.Text) || String.IsNullOrEmpty(loginPassword.Text))
             { // check if all fields are filled out
                 await DisplayAlert("Error", "Please fill in all fields", "OK");
                 loginButton.IsEnabled = true;
             }
             else
             {
-                await Navigation.PushAsync(new SubscriptionPage());
-                /*
-                var accountSalt = await retrieveAccountSalt(this.loginUsername.Text); // retrieve user's account salt
-                Console.WriteLine("after acct salt 84");
-                //System.Diagnostics.Debug.WriteLine("account salt count: " + accountSalt.result.Count);
+                var accountSalt = await retrieveAccountSalt(loginUsername.Text.ToLower().Trim());
 
-                //if (accountSalt != null && accountSalt.result.Count != 0)
-                //{ // make sure the account salt exists 
-                //var loginAttempt = await login(this.loginEmail.Text, this.loginPassword.Text, accountSalt);
-                login(this.loginUsername.Text, this.loginPassword.Text, accountSalt);
-                Console.WriteLine("login executed");
-                //System.Diagnostics.Debug.WriteLine("login attempt: " + loginAttempt.GetType());
-                /*
-                if (loginAttempt != null && loginAttempt.Message != "Request failed, wrong password.")
-                { // make sure the login attempt was successful
-                    captureLoginSession(loginAttempt);
-                    await Navigation.PopAsync();
+                if (accountSalt != null)
+                {
+                    var loginAttempt = await LogInUser(loginUsername.Text.ToLower(), loginPassword.Text, accountSalt);
 
+                    if (loginAttempt != null && loginAttempt.message != "Request failed, wrong password.")
+                    {
+                        System.Diagnostics.Debug.WriteLine("USER'S DATA");
+                        System.Diagnostics.Debug.WriteLine("USER CUSTOMER_UID: " + loginAttempt.result[0].customer_uid);
+                        System.Diagnostics.Debug.WriteLine("USER FIRST NAME: " + loginAttempt.result[0].customer_first_name);
+                        System.Diagnostics.Debug.WriteLine("USER LAST NAME: " + loginAttempt.result[0].customer_last_name);
+                        System.Diagnostics.Debug.WriteLine("USER EMAIL: " + loginAttempt.result[0].customer_email);
+                        System.Diagnostics.Debug.WriteLine("USER SOCIAL MEDIA: " + loginAttempt.result[0].user_social_media);
+                        System.Diagnostics.Debug.WriteLine("USER ACCESS TOKEN: " + loginAttempt.result[0].user_access_token);
+                        System.Diagnostics.Debug.WriteLine("USER REFRESH TOKEN: " + loginAttempt.result[0].user_refresh_token);
+
+                        Application.Current.Properties["social"] = "FALSE";
+                        Application.Current.MainPage = new CarlosHomePage();
+                    }
+                    else
+                    {
+                        await DisplayAlert("Error", "Wrong password was entered", "OK");
+                        loginButton.IsEnabled = true;
+                    }
                 }
                 else
                 {
-                    await DisplayAlert("Error", "Wrong password was entered", "OK");
+                    await DisplayAlert("Sign Up", "An account with that email does not exist. We are going to send you to our sign up page", "OK");
+                    Application.Current.MainPage = new CarlosSignUp();
                     loginButton.IsEnabled = true;
                 }
-                
-                //}
-                //else
-                if (accountSalt == null)
-                {
-                    await DisplayAlert("Error", "An account with that email does not exist", "OK");
-                    loginButton.IsEnabled = true;
-
-                }
-                */
             }
-
         }
 
-        public class UserInfo {
-            public string email { get; set; }
-            public string password { get; set; }
-        }
-
-        // logs the user into the app 
-        // returns a LoginResponse if successful and null if unsuccessful 
-        //public async Task<LoginResponse> login(string userEmail, string userPassword, AccountSalt accountSalt)
-        public async void login(string userEmail, string userPassword, AccountSalt accountSalt)
+        private async Task<AccountSalt> retrieveAccountSalt(string userEmail)
         {
-            Console.WriteLine("login email" + userEmail);
-            Console.WriteLine("login pw" + userPassword);
-            Console.WriteLine("login acct salt" + accountSalt);
-
-            const string deviceBrowserType = "Mobile";
-             var deviceIpAddress = Dns.GetHostAddresses(Dns.GetHostName()).FirstOrDefault();
-
-            //var deviceIpAddress = "0.0.0.0";
-            if (deviceIpAddress != null)
-            {
-                try
-                {
-                    /*
-                    LoginPost loginPostContent = new LoginPost()
-                    { // object that contains ip address and browser type; will be converted into a json object 
-                        ipAddress = deviceIpAddress.ToString(),
-                        browserType = deviceBrowserType
-                    };
-
-                    string loginPostContentJson = JsonConvert.SerializeObject(loginPostContent); // make orderContent into json
-
-                    var httpContent = new StringContent(loginPostContentJson, Encoding.UTF8, "application/json"); // encode orderContentJson into format to send to database
-                    */
-
-                    /*
-                    UserInfo ui = new UserInfo()
-                    {
-                        email = "quang@gmail.com",
-                        password = "64a7f1fb0df93d8f5b9df14077948afa1b75b4c5028d58326fb801d825c9cd24412f88c8b121c50ad5c62073c75d69f14557255da1a21e24b9183bc584efef71"
-                    };
-                    */
-
-
-
-                    SHA512 sHA512 = new SHA512Managed();
-                    Console.WriteLine("sha " + sHA512);
-
-                    byte[] data = sHA512.ComputeHash(Encoding.UTF8.GetBytes(userPassword + accountSalt.result[0].password_salt)); // take the password and account salt to generate hash
-                    Console.WriteLine("data " + data[0]);
-
-                    string hashedPassword = BitConverter.ToString(data).Replace("-", string.Empty).ToLower(); // convert hash to hex
-
-                    UserInfo ui = new UserInfo()
-                    {
-                        email = userEmail,
-                        password = hashedPassword,
-
-                    };
-
-                    Console.WriteLine("hash pw " + hashedPassword);
-
-                    var data2 = JsonConvert.SerializeObject(ui);
-                    var content = new StringContent(data2, Encoding.UTF8, "application/json");
-                    Console.WriteLine("data2 "  + data2 );
-                    Console.WriteLine("after content 176");
-                    Console.WriteLine("login url " + loginUrl);
-
-                    using (var httpClient = new HttpClient())
-                    {
-                        Console.WriteLine("HTTPclient " + httpClient);
-
-                        Console.WriteLine("inside using");
-
-                        var request1 = new HttpRequestMessage();
-                        Console.WriteLine("request " + request1);
-
-                        request1.Method = HttpMethod.Post;
-                        Console.WriteLine("rq method " + request1.Method);
-
-                        request1.Content = content;
-                        Console.WriteLine("request ctnt " + request1.Content);
-
-                        var httpResponse = await httpClient.PostAsync(loginUrl, content);
-                        //HttpResponseMessage response = await httpClient.SendAsync(request);
-                        //Console.WriteLine("This is the response from request" + response);
-                        /*
-                        var endpointresponse = await httpClient.GetAsync(loginUrl);
-                        string jsonobject = endpointresponse.Content.ReadAsStringAsync().Result;
-                        var data3 = httpClient.GetStringAsync(loginUrl);
-                        Console.WriteLine("data 3 " + httpResponse.RequestMessage.Content);
-                        */
-                    }
-                    Console.WriteLine("after 208");
-                    /*
-                    var request = new HttpRequestMessage();
-                    request.RequestUri = new Uri(loginUrl);
-                    request.Method = HttpMethod.Post;
-                    request.Content = content;
-
-                    var client = new HttpClient();
-                    HttpResponseMessage response = await client.SendAsync(request);
-                    string items = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine("items " + items);
-                    */
-                    //string uiString = JsonConvert.SerializeObject(ui);
-                    //var httpContent = new StringContent(uiString, Encoding.UTF8, "application/json"); // encode orderContentJson into format to send to database
-
-                    /*
-                    SHA512 sHA512 = new SHA512Managed();
-                    byte[] data = sHA512.ComputeHash(Encoding.UTF8.GetBytes(userPassword + accountSalt.result[0].passwordSalt)); // take the password and account salt to generate hash
-                    string hashedPassword = BitConverter.ToString(data).Replace("-", string.Empty).ToLower(); // convert hash to hex
-
-                    */
-
-                    //var respString = loginUrl + userEmail + "/" + hashedPassword;
-                    //var respString = loginUrl;
-                    //var response = await client.PostAsync(respString, httpContent); // try to post to database
-                    //var response = await client.PostAsync(respString, httpContent); // try to post to database
-                    //var answer = await client.GetStringAsync(loginUrl);
-                    //Console.WriteLine("Answer " + answer);
-                    /*
-                    if (response.Content != null)
-                    { // post was successful
-                        var responseContent = await response.Content.ReadAsStringAsync();
-                        var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(responseContent);
-                        System.Diagnostics.Debug.WriteLine("URL: " + respString + "\n" + uiString + "\n " + loginResponse);
-
-                        return loginResponse;
-
-                    }
-                    */
-
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("catch 225");
-
-                    System.Diagnostics.Debug.WriteLine("Exception message: " + e.Message);
-                    //return null;
-
-                }
-
-
-            }
-            //return null;
-
-                }
-
-
-        public async Task<LoginResponse> socialLogin(string userUid)
-        {
-            const string deviceBrowserType = "Mobile";
-            const string deviceIpAddress = "0.0.0.0";
-
-            LoginPost loginPostContent = new LoginPost()
-            { // object that contains ip address and browser type; will be converted into a json object 
-                ipAddress = deviceIpAddress.ToString(),
-                browserType = deviceBrowserType
-            };
-
-            string loginPostContentJson = JsonConvert.SerializeObject(loginPostContent); // make orderContent into json
-
-            var httpContent = new StringContent(loginPostContentJson, Encoding.UTF8, "application/json"); // encode orderContentJson into format to send to database
-
-            var response = await client.PostAsync(socialLoginUrl + userUid, httpContent); // try to post to database
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                var responseContent = await response.Content.ReadAsStringAsync();
-
-                var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(responseContent);
-                return loginResponse;
-            }
-            return null;
-        }
-
-        // uses account salt api to retrieve the user's account salt
-        // account salt is used to find the user's hashed password
-        public async Task<AccountSalt> retrieveAccountSalt(string userEmail)
-        {
-
             try
             {
-                /*
-                var url = accountSaltUrl + userEmail;
-                System.Diagnostics.Debug.WriteLine("url " + url);
-                var content = await client.GetStringAsync(accountSaltUrl + userEmail); // get the requested account salt
-                var accountSalt = JsonConvert.DeserializeObject<AccountSalt>(content);
-                System.Diagnostics.Debug.WriteLine("try" + accountSalt);
+                System.Diagnostics.Debug.WriteLine(userEmail);
 
-                //System.Diagnostics.Debug.WriteLine("account salt good " + accountSalt.result[0].password_salt);
-                //System.Diagnostics.Debug.WriteLine("account salt good " + accountSalt.result[0].password_algorithm);
-                return accountSalt;
-                */
+                SaltPost saltPost = new SaltPost();
+                saltPost.email = userEmail;
 
-                /*
-                var request = new HttpRequestMessage();
+                var saltPostSerilizedObject = JsonConvert.SerializeObject(saltPost);
+                var saltPostContent = new StringContent(saltPostSerilizedObject, Encoding.UTF8, "application/json");
 
-                request.RequestUri = new Uri(accountSaltUrl);
-                */
-                UriBuilder builder = new UriBuilder("https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/accountsalt");
-                builder.Query = "email=quang@gmail.com";
-                System.Diagnostics.Debug.WriteLine("builder " + builder);
-                System.Diagnostics.Debug.WriteLine("builderq " + builder.Query);
-
-                var result =  await client.GetStringAsync(builder.Uri);
-
-                Console.WriteLine("result line 287 = " + result);
-                /*
-                using (StreamReader sr = new StreamReader(result.Content.ReadAsStreamAsync().Result))
-                {
-                    Console.WriteLine(sr.ReadToEnd());
-                }
-                */
-                /*
-
-                request.Method = HttpMethod.Get;
+                System.Diagnostics.Debug.WriteLine(saltPostSerilizedObject);
 
                 var client = new HttpClient();
-                HttpResponseMessage response = await client.SendAsync(request);
+                var DRSResponse = await client.PostAsync(Constant.AccountSaltUrl, saltPostContent);
+                var DRSMessage = await DRSResponse.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine(DRSMessage);
 
-                string items = await response.Content.ReadAsStringAsync();
-                */
-                Console.WriteLine("line 303");
-                AccountSalt data = new AccountSalt();
-                Console.WriteLine("line 305");
-                data = JsonConvert.DeserializeObject<AccountSalt>(result);
-                Console.WriteLine("line 307 Data: " + data.result[0].password_salt.ToString());
+                AccountSalt userInformation = null;
+                if (DRSResponse.IsSuccessStatusCode)
+                {
+                    var result = await DRSResponse.Content.ReadAsStringAsync();
 
-                return data;
+                    AcountSaltCredentials data = new AcountSaltCredentials();
+                    data = JsonConvert.DeserializeObject<AcountSaltCredentials>(result);
+
+                    userInformation = new AccountSalt
+                    {
+                        password_algorithm = data.result[0].password_algorithm,
+                        password_salt = data.result[0].password_salt
+                    };
+                }
+
+                return userInformation;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("line 313");
+                System.Diagnostics.Debug.WriteLine(ex.Message);
                 return null;
             }
-            //return null;
         }
 
-        /*public async void captureLoginSession(LoginResponse loginResponse)
+        public async Task<LogInResponse> LogInUser(string userEmail, string userPassword, AccountSalt accountSalt)
         {
-
-            var userSessionInformation = new UserLoginSession
-            { // object to send into local database
-                UserUid = loginResponse.Result.Result[0].UserUid,
-                FirstName = loginResponse.Result.Result[0].FirstName,
-                SessionId = loginResponse.LoginAttemptLog.SessionId,
-                LoginId = loginResponse.LoginAttemptLog.LoginId,
-                Email = loginResponse.Result.Result[0].UserEmail
-            };
-
-            await App.Database.SaveItemAsync(userSessionInformation); // send login session to local database
-            System.Diagnostics.Debug.WriteLine("user logged in: " + App.Database.GetLastItem().Email);
-            App.setLoggedIn(true);
-            MainPage mainPage = (MainPage)Navigation.NavigationStack[0];
-            mainPage.updateLoginButton();
-        }*/
-
-        // handler for when google login button is clicked 
-        [Obsolete]
-        private async void googleLoginButtonClicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new GoogleLogin(), false);
-            /*
-            string clientId = null;
-            string redirectUri = null;
-
-            // retrieve client id based on the platform
-            switch (Device.RuntimePlatform)
+            try
             {
-                case Device.iOS:
-                    clientId = SocialMediaLoginConstants.GoogleiOSClientId;
-                    redirectUri = SocialMediaLoginConstants.GoogleiOSRedirectUrl;
-                    break;
+                SHA512 sHA512 = new SHA512Managed();
+                byte[] data = sHA512.ComputeHash(Encoding.UTF8.GetBytes(userPassword + accountSalt.password_salt)); // take the password and account salt to generate hash
+                string hashedPassword = BitConverter.ToString(data).Replace("-", string.Empty).ToLower(); // convert hash to hex
 
-                case Device.Android:
-                    clientId = SocialMediaLoginConstants.GoogleAndroidClientId;
-                    redirectUri = SocialMediaLoginConstants.GoogleAndroidRedirectUrl;
-                    break;
+                LogInPost loginPostContent = new LogInPost();
+                loginPostContent.email = userEmail;
+                loginPostContent.password = hashedPassword;
+
+                string loginPostContentJson = JsonConvert.SerializeObject(loginPostContent); // make orderContent into json
+
+                var httpContent = new StringContent(loginPostContentJson, Encoding.UTF8, "application/json"); // encode orderContentJson into format to send to database
+                var response = await client.PostAsync(Constant.LogInUrl, httpContent); // try to post to database
+
+
+                if (response.Content != null)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var loginResponse = JsonConvert.DeserializeObject<LogInResponse>(responseContent);
+                    return loginResponse;
+                }
+                return null;
             }
-
-            account = store.FindAccountsForService(SocialMediaLoginConstants.AppName).FirstOrDefault();
-
-            var authenticator = new OAuth2Authenticator(
-                clientId,
-                null,
-                SocialMediaLoginConstants.GoogleScope,
-                new Uri(SocialMediaLoginConstants.GoogleAuthorizeUrl),
-                new Uri(redirectUri),
-                new Uri(SocialMediaLoginConstants.GoogleAccessTokenUrl),
-                null,
-                true);
-
-            //authenticator.Completed += OnAuthCompleted;
-            //authenticator.Error += OnAuthError;
-
-            AuthenticationState.Authenticator = authenticator;
-
-            var presenter = new Xamarin.Auth.Presenters.OAuthLoginPresenter();
-
-            presenter.Login(authenticator);
-            */
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("Exception message: " + e.Message);
+                return null;
+            }
         }
 
-        // handler for when facebook login button is clicked
-        [Obsolete]
-        private async void facebookLoginButtonClicked(object sender, EventArgs e)
+
+        // FACEBOOK LOGIN CLICK
+        public async void facebookLoginButtonClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new FacebookLogin(), false);
-            /*
-            string clientId = null;
-            string redirectUri = null;
+            string clientID = string.Empty;
+            string redirectURL = string.Empty;
 
             switch (Device.RuntimePlatform)
             {
                 case Device.iOS:
-                    clientId = SocialMediaLoginConstants.FacebookiOSClientId;
-                    redirectUri = SocialMediaLoginConstants.FacebookiOSRedirectUrl;
+                    clientID = Constant.FacebookiOSClientID;
+                    redirectURL = Constant.FacebookiOSRedirectUrl;
                     break;
-
                 case Device.Android:
-                    clientId = SocialMediaLoginConstants.FacebookAndroidClientId;
-                    redirectUri = SocialMediaLoginConstants.FacebookAndroidRedirectUrl;
+                    clientID = Constant.FacebookAndroidClientID;
+                    redirectURL = Constant.FacebookAndroidRedirectUrl;
                     break;
             }
 
-            account = store.FindAccountsForService(SocialMediaLoginConstants.AppName).FirstOrDefault();
-
-            var authenticator = new OAuth2Authenticator(
-                clientId,
-                SocialMediaLoginConstants.FacebookScope,
-                new Uri(SocialMediaLoginConstants.FacebookAuthorizeUrl),
-                new Uri(SocialMediaLoginConstants.FacebookAccessTokenUrl),
-                null);
-
-            //authenticator.Completed += OnAuthCompleted;
-            //authenticator.Error += OnAuthError;
-
+            var authenticator = new OAuth2Authenticator(clientID, Constant.FacebookScope, new Uri(Constant.FacebookAuthorizeUrl), new Uri(redirectURL), null, false);
             var presenter = new Xamarin.Auth.Presenters.OAuthLoginPresenter();
-            presenter.Login(authenticator);
-            */
 
+            authenticator.Completed += FacebookAuthenticatorCompleted;
+            authenticator.Error += FacebookAutheticatorError;
+
+            presenter.Login(authenticator);
         }
 
-        // handler for when apple login button is clicked (copied from fb login)
-        [Obsolete]
-        private async void appleLoginButtonClicked(object sender, EventArgs e)
+        public async void FacebookAuthenticatorCompleted(object sender, AuthenticatorCompletedEventArgs e)
         {
-            await Navigation.PushAsync(new AppleLogin(), false);
-            /*
-            string clientId = null;
-            string redirectUri = null;
-
-            switch (Device.RuntimePlatform)
-            {
-                case Device.iOS:
-                    clientId = SocialMediaLoginConstants.FacebookiOSClientId;
-                    redirectUri = SocialMediaLoginConstants.FacebookiOSRedirectUrl;
-                    break;
-
-                case Device.Android:
-                    clientId = SocialMediaLoginConstants.FacebookAndroidClientId;
-                    redirectUri = SocialMediaLoginConstants.FacebookAndroidRedirectUrl;
-                    break;
-            }
-
-            account = store.FindAccountsForService(SocialMediaLoginConstants.AppName).FirstOrDefault();
-
-            var authenticator = new OAuth2Authenticator(
-                clientId,
-                SocialMediaLoginConstants.FacebookScope,
-                new Uri(SocialMediaLoginConstants.FacebookAuthorizeUrl),
-                new Uri(SocialMediaLoginConstants.FacebookAccessTokenUrl),
-                null);
-
-            //authenticator.Completed += OnAuthCompleted;
-            //authenticator.Error += OnAuthError;
-
-            var presenter = new Xamarin.Auth.Presenters.OAuthLoginPresenter();
-            presenter.Login(authenticator);
-            */
-
-        }
-
-        // function when the auth is completed without any errors
-        /*[Obsolete]
-        async void OnAuthCompleted(object sender, AuthenticatorCompletedEventArgs e)
-        {
-            var authenticator = sender as OAuth2Authenticator;
-            if (authenticator != null)
-            {
-                authenticator.Completed -= OnAuthCompleted;
-                authenticator.Error -= OnAuthError;
-            }
-            Debug.WriteLine("starting authentication");
             if (e.IsAuthenticated)
             {
-                Debug.WriteLine("first authentication");
-                if (authenticator.AuthorizeUrl.Host == "www.facebook.com")
+                // KEYS: access_token, data_access_expiration_time,  expires_in, state
+                if (accessToken == null && refreshToken == null)
                 {
-                    Debug.WriteLine("authenticated!!!");
-                    FacebookEmail facebookEmail = null;
-
-                    var json = await client.GetStringAsync($"https://graph.facebook.com/me?fields=id,name,first_name,last_name,email,picture.type(large)&access_token=" + e.Account.Properties["access_token"]);
-
-                    facebookEmail = JsonConvert.DeserializeObject<FacebookEmail>(json);
-
-                    await store.SaveAsync(account = e.Account, SocialMediaLoginConstants.AppName);
-
-                    Application.Current.Properties.Remove("Id");
-                    Application.Current.Properties.Remove("FirstName");
-                    Application.Current.Properties.Remove("LastName");
-                    Application.Current.Properties.Remove("DisplayName");
-                    Application.Current.Properties.Remove("EmailAddress");
-                    Application.Current.Properties.Remove("ProfilePicture");
-
-                    Application.Current.Properties.Add("Id", facebookEmail.Id);
-                    Application.Current.Properties.Add("FirstName", facebookEmail.First_Name);
-                    Application.Current.Properties.Add("LastName", facebookEmail.Last_Name);
-                    Application.Current.Properties.Add("DisplayName", facebookEmail.Name);
-                    Application.Current.Properties.Add("EmailAddress", facebookEmail.Email);
-                    Application.Current.Properties.Add("ProfilePicture", facebookEmail.Picture.Data.Url);
-
-                    try
-                    {
-                        var socialAccountJson = await client.GetStringAsync(socialUrl + facebookEmail.Email); // get the user's account from the social accounts table
-
-                        SocialAccountResponse socialAccountResponse = JsonConvert.DeserializeObject<SocialAccountResponse>(socialAccountJson);
-
-                        if (socialAccountResponse.Result.Result.Length == 0)
-                        { // if the social account doesn't exist, navigate to social sign up page
-                            Debug.WriteLine("no social account found");
-                            string accessToken = e.Account.Properties["access_token"]; // access token retrieved from facebook
-                            // facebook doesn't provide refresh token!
-                            string socialMedia = "Facebook";
-                            SocialMediaSignUpPage socialSignUpPage = new SocialMediaSignUpPage(facebookEmail.First_Name, facebookEmail.Last_Name, facebookEmail.Email, socialMedia, accessToken, ""); // declare new social sign up page with user's name, email, and tokens
-
-                            await Navigation.PushAsync(socialSignUpPage);
-                        }
-                        else
-                        { // user's social account exists and login attempt is made
-                            Debug.WriteLine("social account found, logging in");
-                            LoginResponse socialLoginAttempt = await socialLogin(socialAccountResponse.Result.Result[0].UserUid);
-                            captureLoginSession(socialLoginAttempt);
-                            await Navigation.PopAsync(); // go back to home page
-
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine(ex.Message);
-                    }
-
+                    accessToken = e.Account.Properties["access_token"];
+                    refreshToken = accessToken;
+                    FacebookUserProfileAsync(accessToken);
                 }
-                else
+                else if (!refreshToken.Equals(e.Account.Properties["access_token"]) && !accessToken.Equals(e.Account.Properties["access_token"]))
                 {
-                    User user = null;
+                    DateTime today = DateTime.Now;
+                    DateTime expirationDate = today.AddDays(Constant.days);
+                    Application.Current.Properties["time_stamp"] = expirationDate;
 
-                    // If the user is authenticated, request their basic user data from Google
-                    // UserInfoUrl https://www.googleapis.com/oauth2/v2/userinfo
+                    accessToken = e.Account.Properties["access_token"];
+                    refreshToken = e.Account.Properties["access_token"];
 
-                    var request = new OAuth2Request("GET", new Uri(SocialMediaLoginConstants.GoogleUserInfoUrl), null, e.Account); // create the request to get the user's google info
-                    var response = await request.GetResponseAsync();
-                    if (response != null)
+                    UpdateTokensPost updateTokens = new UpdateTokensPost();
+                    updateTokens.access_token = accessToken;
+                    updateTokens.refresh_token = refreshToken;
+                    updateTokens.uid = (string)Application.Current.Properties["uid"];
+                    updateTokens.social_timestamp = expirationDate.ToString("yyyy-MM-dd HH:mm:ss");
+
+                    var updatePostSerilizedObject = JsonConvert.SerializeObject(updateTokens);
+                    var updatePostContent = new StringContent(updatePostSerilizedObject, Encoding.UTF8, "application/json");
+
+                    var client = new HttpClient();
+                    var RDSrespose = await client.PostAsync(Constant.UpdateTokensUrl, updatePostContent);
+
+                    if (RDSrespose.IsSuccessStatusCode)
                     {
-                        // Deserialize the data and store it in the account store
-                        // The users email address will be used to identify data in SimpleDB
-                        string userJson = await response.GetResponseTextAsync();
-                        Debug.WriteLine("user json: " + userJson);
-                        user = JsonConvert.DeserializeObject<User>(userJson);
-
+                        FacebookUserProfileAsync(accessToken);
                     }
-
-                    if (account != null)
+                    else
                     {
-                        store.Delete(account, SocialMediaLoginConstants.AppName);
+                        System.Diagnostics.Debug.WriteLine("Unable to update google tokens");
                     }
-
-                    await store.SaveAsync(account = e.Account, SocialMediaLoginConstants.AppName);
-
-                    Application.Current.Properties.Remove("Id");
-                    Application.Current.Properties.Remove("FirstName");
-                    Application.Current.Properties.Remove("LastName");
-                    Application.Current.Properties.Remove("DisplayName");
-                    Application.Current.Properties.Remove("EmailAddress");
-                    Application.Current.Properties.Remove("ProfilePicture");
-
-                    Application.Current.Properties.Add("Id", user.Id);
-                    Application.Current.Properties.Add("FirstName", user.GivenName);
-                    Application.Current.Properties.Add("LastName", user.FamilyName);
-                    Application.Current.Properties.Add("DisplayName", user.Name);
-                    Application.Current.Properties.Add("EmailAddress", user.Email);
-                    Application.Current.Properties.Add("ProfilePicture", user.Picture);
-                    try
-                    {
-                        var socialAccountJson = await client.GetStringAsync(socialUrl + user.Email); // get the user's account from the social accounts table
-
-                        SocialAccountResponse socialAccountResponse = JsonConvert.DeserializeObject<SocialAccountResponse>(socialAccountJson);
-
-                        if (socialAccountResponse.Result.Result.Length == 0)
-                        { // if the social account doesn't exist, navigate to social sign up page
-                            string accessToken = e.Account.Properties["access_token"]; // access token retrieved from google 
-                            string refreshToken = e.Account.Properties["refresh_token"]; // refresh token retrieved from google 
-                            string socialMedia = "Google";
-                            SocialMediaSignUpPage socialSignUpPage = new SocialMediaSignUpPage(user.GivenName, user.FamilyName, user.Email, socialMedia, accessToken, refreshToken); // declare new social sign up page, maybe bind to certain info???
-
-                            await Navigation.PushAsync(socialSignUpPage);
-                        }
-                        else
-                        { // user's social account exists and login attempt is made
-                            LoginResponse socialLoginAttempt = await socialLogin(socialAccountResponse.Result.Result[0].UserUid);
-                            captureLoginSession(socialLoginAttempt);
-                            await Navigation.PopAsync(); // go back to home page
-
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine(ex.Message);
-                    }
-
-                    //await Navigation.PopAsync();
                 }
             }
         }
 
-        // function when authenticator gives an error
-        [Obsolete]
-        void OnAuthError(object sender, AuthenticatorErrorEventArgs e)
+        public async void FacebookUserProfileAsync(string accessToken)
+        {
+            // MECHANISM:
+
+            // 1. RETRIVE TOKEN FROM SOCIAL LOGIN
+            // 2. PASS THIS INFORMATION TO PARVA
+            // 3. WAIT FOR A RESPONSE
+            // 4. BASED ON THE RESPONSE I WOULD NEED TO REDIRECT THE USER TO THE CORRECT PAGE
+
+            var client = new HttpClient();
+            var socialLogInPost = new SocialLogInPost();
+
+            var facebookResponse = client.GetStringAsync(Constant.FacebookUserInfoUrl + accessToken);
+            var userData = facebookResponse.Result;
+
+            FacebookResponse facebookData = JsonConvert.DeserializeObject<FacebookResponse>(userData);
+
+            socialLogInPost.email = facebookData.email;
+            socialLogInPost.password = "";
+            socialLogInPost.token = accessToken;
+            socialLogInPost.signup_platform = "FACEBOOK";
+
+            var socialLogInPostSerialized = JsonConvert.SerializeObject(socialLogInPost);
+            var postContent = new StringContent(socialLogInPostSerialized, Encoding.UTF8, "application/json");
+
+            System.Diagnostics.Debug.WriteLine(socialLogInPostSerialized);
+
+            var RDSResponse = await client.PostAsync(Constant.LogInUrl, postContent);
+            var responseContent = await RDSResponse.Content.ReadAsStringAsync();
+
+            System.Diagnostics.Debug.WriteLine(responseContent);
+            System.Diagnostics.Debug.WriteLine(RDSResponse.IsSuccessStatusCode);
+
+            if (RDSResponse.IsSuccessStatusCode)
+            {
+                if (responseContent != null)
+                {
+                    if (responseContent.Contains(Constant.EmailNotFound))
+                    {
+                        Application.Current.MainPage = new CarlosSocialSignUp(facebookData.name, "", facebookData.email, accessToken, accessToken, "FACEBOOK");
+                    }
+                    if (responseContent.Contains(Constant.AutheticatedSuccesful))
+                    {
+                        Application.Current.MainPage = new CarlosHomePage();
+                    }
+                }
+            }
+        }
+
+        private async void FacebookAutheticatorError(object sender, AuthenticatorErrorEventArgs e)
         {
             var authenticator = sender as OAuth2Authenticator;
             if (authenticator != null)
             {
-                authenticator.Completed -= OnAuthCompleted;
-                authenticator.Error -= OnAuthError;
+                authenticator.Completed -= FacebookAuthenticatorCompleted;
+                authenticator.Error -= FacebookAutheticatorError;
             }
 
-            Debug.WriteLine("Authentication Error " + e.Message);
-        }*/
+            await DisplayAlert("Authentication error: ", e.Message, "OK");
+        }
 
+        // GOOGLE LOGIN CLICK
+        public async void googleLoginButtonClicked(object sender, EventArgs e)
+        {
+            string clientId = string.Empty;
+            string redirectUri = string.Empty;
+
+            switch (Device.RuntimePlatform)
+            {
+                case Device.iOS:
+                    clientId = Constant.GoogleiOSClientID;
+                    redirectUri = Constant.GoogleRedirectUrliOS;
+                    break;
+
+                case Device.Android:
+                    clientId = Constant.GoogleAndroidClientID;
+                    redirectUri = Constant.GoogleRedirectUrlAndroid;
+                    break;
+            }
+
+            var authenticator = new OAuth2Authenticator(clientId, string.Empty, Constant.GoogleScope, new Uri(Constant.GoogleAuthorizeUrl), new Uri(redirectUri), new Uri(Constant.GoogleAccessTokenUrl), null, true);
+            var presenter = new Xamarin.Auth.Presenters.OAuthLoginPresenter();
+
+            authenticator.Completed += GoogleAuthenticatorCompleted;
+            authenticator.Error += GoogleAuthenticatorError;
+
+            AuthenticationState.Authenticator = authenticator;
+            presenter.Login(authenticator);
+        }
+
+        private async void GoogleAuthenticatorCompleted(object sender, AuthenticatorCompletedEventArgs e)
+        {
+            var authenticator = sender as OAuth2Authenticator;
+
+            if (authenticator != null)
+            {
+                authenticator.Completed -= GoogleAuthenticatorCompleted;
+                authenticator.Error -= GoogleAuthenticatorError;
+            }
+
+            if (e.IsAuthenticated)
+            {
+                if (accessToken == null && refreshToken == null)
+                {
+                    accessToken = e.Account.Properties["access_token"];
+                    refreshToken = e.Account.Properties["refresh_token"];
+
+                    Application.Current.Properties["access_token"] = accessToken;
+                    Application.Current.Properties["refresh_token"] = refreshToken;
+
+                    GoogleUserProfileAsync(accessToken, refreshToken, e);
+                }
+                else if (!refreshToken.Equals(e.Account.Properties["refresh_token"]) && !accessToken.Equals(e.Account.Properties["access_token"]))
+                {
+                    DateTime today = DateTime.Now;
+                    DateTime expirationDate = today.AddDays(Constant.days);
+                    Application.Current.Properties["time_stamp"] = expirationDate;
+
+                    accessToken = e.Account.Properties["access_token"];
+                    refreshToken = e.Account.Properties["refresh_token"];
+
+                    UpdateTokensPost updateTokens = new UpdateTokensPost();
+                    updateTokens.access_token = accessToken;
+                    updateTokens.refresh_token = refreshToken;
+                    updateTokens.uid = (string)Application.Current.Properties["uid"];
+                    updateTokens.social_timestamp = expirationDate.ToString("yyyy-MM-dd HH:mm:ss");
+
+                    var updatePostSerilizedObject = JsonConvert.SerializeObject(updateTokens);
+                    var updatePostContent = new StringContent(updatePostSerilizedObject, Encoding.UTF8, "application/json");
+
+                    var client = new HttpClient();
+                    var RDSrespose = await client.PostAsync(Constant.UpdateTokensUrl, updatePostContent);
+
+                    if (RDSrespose.IsSuccessStatusCode)
+                    {
+                        GoogleUserProfileAsync(accessToken, refreshToken, e);
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("Unable to update google tokens");
+                    }
+                }
+            }
+            else
+            {
+                await DisplayAlert("Error", "Google was not able to autheticate your account", "OK");
+            }
+        }
+
+        public async void GoogleUserProfileAsync(string accessToken, string refreshToken, AuthenticatorCompletedEventArgs e)
+        {
+            var client = new HttpClient();
+            var socialLogInPost = new SocialLogInPost();
+
+            var request = new OAuth2Request("GET", new Uri(Constant.GoogleUserInfoUrl), null, e.Account);
+            var GoogleResponse = await request.GetResponseAsync();
+            var userData = GoogleResponse.GetResponseText();
+
+            GoogleResponse googleData = JsonConvert.DeserializeObject<GoogleResponse>(userData);
+
+            socialLogInPost.email = googleData.email;
+            socialLogInPost.password = "";
+            socialLogInPost.token = refreshToken;
+            socialLogInPost.signup_platform = "GOOGLE";
+
+            var socialLogInPostSerialized = JsonConvert.SerializeObject(socialLogInPost);
+            var postContent = new StringContent(socialLogInPostSerialized, Encoding.UTF8, "application/json");
+
+            System.Diagnostics.Debug.WriteLine(socialLogInPostSerialized);
+
+            var RDSResponse = await client.PostAsync(Constant.LogInUrl, postContent);
+            var responseContent = await RDSResponse.Content.ReadAsStringAsync();
+
+            System.Diagnostics.Debug.WriteLine(responseContent);
+            System.Diagnostics.Debug.WriteLine(RDSResponse.IsSuccessStatusCode);
+            if (RDSResponse.IsSuccessStatusCode)
+            {
+                if (responseContent != null)
+                {
+                    if (responseContent.Contains(Constant.EmailNotFound))
+                    {
+                        Application.Current.MainPage = new CarlosSocialSignUp(googleData.given_name, googleData.family_name, googleData.email, accessToken, refreshToken, "GOOGLE");
+                    }
+                    if (responseContent.Contains(Constant.AutheticatedSuccesful))
+                    {
+                        Application.Current.MainPage = new CarlosHomePage();
+                    }
+                }
+            }
+        }
+
+        private async void GoogleAuthenticatorError(object sender, AuthenticatorErrorEventArgs e)
+        {
+            var authenticator = sender as OAuth2Authenticator;
+
+            if (authenticator != null)
+            {
+                authenticator.Completed -= GoogleAuthenticatorCompleted;
+                authenticator.Error -= GoogleAuthenticatorError;
+            }
+
+            await DisplayAlert("Authentication error: ", e.Message, "OK");
+        }
+
+        // APPLE LOGIN CLICK
+        private async void appleLoginButtonClicked(object sender, EventArgs e)
+        {
+            SignIn?.Invoke(sender, e);
+            var c = (ImageButton)sender;
+            c.Command?.Execute(c.CommandParameter);
+        }
+
+        public void InvokeSignInEvent(object sender, EventArgs e)
+            => SignIn?.Invoke(sender, e);
 
         async void clickedSignUp(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new SignUp(), false);
         }
-
-        /*public void updateLoginButton()
-        {
-            if (!App.LoggedIn)
-            {
-                this.loginButton.Text = "Log in";
-                signUpButton.SetValue(IsVisibleProperty, true);
-                mainSubStack.IsVisible = false;
-
-            }
-            else
-            {
-                this.loginButton.Text = "Log out";
-                signUpButton.SetValue(IsVisibleProperty, false);
-                mainSubStack.IsVisible = true;
-
-            }
-        }
-
-        // Navigation Bar
-        private async void onNavClick(object sender, EventArgs e)
-        {
-            Button button = (Button)sender;
-            if (button.Equals(SubscribeNav))
-            {
-                await Navigation.PushAsync(new SubscriptionPage());
-            }
-            else if (button.Equals(ProfileNav))
-            {
-                await Navigation.PushAsync(new Profile());
-            }
-            else if (button.Equals(SelectNav))
-            {
-                await Navigation.PushAsync(new Select());
-            }
-        }
-
-        // Navigation Bar Icons
-        private async void onNavIconClick(object sender, EventArgs e)
-        {
-            ImageButton button = (ImageButton)sender;
-
-            if (button.Equals(SubscribeIconNav))
-            {
-                await Navigation.PushAsync(new SubscriptionPage());
-            }
-            else if (button.Equals(ProfileIconNav))
-            {
-                await Navigation.PushAsync(new Profile());
-            }
-            else if (button.Equals(SelectIconNav))
-            {
-                await Navigation.PushAsync(new Select());
-            }
-
-        }*/
 
         void clickedForgotPass(System.Object sender, System.EventArgs e)
         {

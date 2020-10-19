@@ -25,7 +25,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>MTYD</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.kristinaleo.MTYD</string>
+	<string>com.infiniteoptions.MTYD</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>UILaunchStoryboardName</key>
@@ -36,5 +36,16 @@
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>Google Auth</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.736355098040-dfnf83qu5t7ocibh2iajqpiddaoe0qq9</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

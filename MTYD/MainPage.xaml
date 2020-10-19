@@ -136,7 +136,8 @@
                           BackgroundColor="#E4E4E4"
                           HeightRequest="55" WidthRequest="55"
                           Clicked="appleLoginButtonClicked" Source="appleicon2.png"
-                          Aspect="AspectFill"/>
+                          Aspect="AspectFill"
+                          Command = "{Binding SignInWithAppleCommand}"/>
                
 
             </AbsoluteLayout>

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Xamarin.Auth;
 
-namespace MTYD.Model.Login
+namespace MTYD.Model.Login.LoginClasses
 {
     public class AuthenticationState
     {

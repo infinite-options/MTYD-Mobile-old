@@ -1,9 +1,28 @@
-﻿<Properties StartupConfiguration="{FAB6B3BB-6B8C-41F3-9565-69D18FC959BC}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/ViewModel/Menu.xaml">
+﻿<Properties StartupConfiguration="{46AB3B16-E84F-452C-9FC2-2827A0A70ABC}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/MainPage.xaml.cs">
     <Files>
-      <File FileName="MTYD/ViewModel/SubscriptionPage.xaml.cs" Line="457" Column="1" />
-      <File FileName="MTYD/ViewModel/Menu.xaml" Line="15" Column="1" />
-      <File FileName="MTYD/ViewModel/Menu.xaml.cs" />
+      <File FileName="MTYD/MainPage.xaml.cs" Line="80" Column="18" />
+      <File FileName="MTYD/CarlosHomePage.xaml.cs" />
+      <File FileName="MTYD/Model/Login/LoginClasses/Apple/LoginViewModel.cs" />
+      <File FileName="MTYD/App.xaml.cs" />
+      <File FileName="MTYD/CarlosSignUp.xaml.cs" />
+      <File FileName="MTYD/CarlosSocialSignUp.xaml" />
+      <File FileName="MTYD/CarlosSocialSignUp.xaml.cs" />
+      <File FileName="MTYD/CarlosSignUp.xaml" />
+      <File FileName="MTYD.Android/CustomUrlSchemeInterceptorActivity.cs" />
+      <File FileName="MTYD.Android/MainActivity.cs" />
+      <File FileName="MTYD.iOS/AppDelegate.cs" />
+      <File FileName="MTYD.iOS/Info.plist" />
+      <File FileName="MTYD.iOS/Entitlements.plist" />
+      <File FileName="MTYD.Android/Properties/AndroidManifest.xml" />
+      <File FileName="MTYD/Model/Login/Constants/Constant.cs" />
+      <File FileName="MTYD/CarlosHomePage.xaml" />
+      <File FileName="MTYD.iOS/Main.cs" />
+      <File FileName="MTYD/MainPage.xaml" />
+      <File FileName="MTYD/Model/Login/LoginClasses/Apple/AppleAccount.cs" />
+      <File FileName="MTYD/Model/Login/LoginClasses/Apple/AppleSignInButton.cs" />
+      <File FileName="MTYD.iOS/AppleSignIn/AppleSignInButtonRenderer.cs" />
+      <File FileName="MTYD.iOS/AppleSignIn/AppleSignInService.cs" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -11,49 +30,33 @@
           <Node name="MTYD" expanded="True">
             <Node name="MTYD" expanded="True">
               <Node name="Model" expanded="True">
-                <Node name="Database" expanded="True" />
-                <Node name="Login" expanded="True" />
-                <Node name="SignUp" expanded="True" />
-                <Node name="User" expanded="True" />
-              </Node>
-              <Node name="Resources" expanded="True" />
-              <Node name="ViewModel" expanded="True">
-                <Node name="AppleLogin.xaml" expanded="True" />
-                <Node name="DeliveryBilling.xaml" expanded="True" />
-                <Node name="FacebookLogin.xaml" expanded="True" />
-                <Node name="GoogleLogin.xaml" expanded="True" />
-                <Node name="MealSchedule.xaml" expanded="True" />
-                <Node name="Menu.xaml" expanded="True" selected="True" />
-                <Node name="Profile.xaml" expanded="True" />
-                <Node name="Select.xaml" expanded="True" />
-                <Node name="SignUp.xaml" expanded="True" />
-                <Node name="SocialMediaSignUpPage.xaml" expanded="True" />
-                <Node name="SubscriptionPage.xaml" expanded="True" />
-                <Node name="UserProfile.xaml" expanded="True" />
-                <Node name="VerifyInfo.xaml" expanded="True" />
+                <Node name="Login" expanded="True">
+                  <Node name="LoginClasses" expanded="True">
+                    <Node name="Apple" expanded="True" />
+                  </Node>
+                </Node>
               </Node>
               <Node name="App.xaml" expanded="True" />
-              <Node name="MainPage.xaml" expanded="True" />
-            </Node>
-            <Node name="MTYD.Android" expanded="True">
-              <Node name="Resources" expanded="True">
-                <Node name="drawable" expanded="True" />
-                <Node name="mipmap-xxxhdpi" expanded="True" />
+              <Node name="CarlosHomePage.xaml" expanded="True" />
+              <Node name="CarlosSignUp.xaml" expanded="True" />
+              <Node name="MainPage.xaml" expanded="True">
+                <Node name="MainPage.xaml.cs" selected="True" />
               </Node>
             </Node>
             <Node name="MTYD.iOS" expanded="True">
-              <Node name="Properties" expanded="True" />
-              <Node name="Resources" expanded="True" />
+              <Node name="AppleSignIn" expanded="True" />
             </Node>
           </Node>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.ItemProperties.MTYD.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.45378B49-DE2E-44A6-899E-E2DCB6A5819B" />
+  <MonoDevelop.Ide.ItemProperties.MTYD.iOS automaticSigning="True" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget">
+    <MonoDevelop.MacDev.AppleDevelopmentTeam DeveloperId="5M8R6389HP" TeamId="8V66NC2T37" />
+  </MonoDevelop.Ide.ItemProperties.MTYD.iOS>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.MTYD.Android AndroidDesignerPreferredTheme="Theme.AppCompat.Light.NoActionBar" PreferredExecutionTarget="Android.one_plus_6" />
+  <MonoDevelop.Ide.ItemProperties.MTYD.Android AndroidDesignerPreferredTheme="Theme.AppCompat.Light.NoActionBar" PreferredExecutionTarget="Android.EAGH1002961802D1" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
