@@ -28,7 +28,8 @@ namespace MTYD.ViewModel
         public Color orange = Color.FromHex("#f59a28");
         public Color green = Color.FromHex("#006633");
         public Color beige = Color.FromHex("#f3f2dc");
-        private const string purchaseId = "200-000010";
+        private const string purchaseId = "400-000388";
+        //NEW PURCHASE ID: 400-000010
         private static string jsonMeals;
         public static ObservableCollection<MealInfo> Meals1 = new ObservableCollection<MealInfo>();
         private const string postUrl = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selection?customer_uid=100-000001";
@@ -38,6 +39,8 @@ namespace MTYD.ViewModel
         private static List<MealInformation> mealsSaved = new List<MealInformation>();
         private static int mealsAllowed;
         public int count;
+        ArrayList itemsArray = new ArrayList();
+        ArrayList purchIdArray = new ArrayList();
 
         WebClient client = new WebClient();
         public Select()
@@ -163,6 +166,8 @@ namespace MTYD.ViewModel
 
                 datePicker.SelectedIndex = 0;
                 text1 = datePicker.SelectedItem.ToString();
+                Preferences.Set("dateSelected", text1.Substring(0, 11));
+                Console.WriteLine("dateSet: " + Preferences.Get("dateSelected",""));
             }
             catch
             {
@@ -192,6 +197,8 @@ namespace MTYD.ViewModel
                 totalCount.Text = "Count";
             }
             Preferences.Set("total", orig);
+            Preferences.Set("dateSelected", text1.Substring(0, 11));
+            Console.WriteLine("dateSelected: " + Preferences.Get("dateSelected", ""));
             mealsSaved.Clear();   //New Addition SV
         }
 
@@ -211,11 +218,21 @@ namespace MTYD.ViewModel
             }
             Console.WriteLine("meals allowed " + mealsAllowed);
 
+            int indexOfMealPlanSelected = (int)SubscriptionPicker.SelectedIndex;
+            Preferences.Set("purchId", purchIdArray[indexOfMealPlanSelected].ToString());
+            Console.WriteLine("Purch Id: " + Preferences.Get("purchId",""));
+
             string s = SubscriptionPicker.SelectedItem.ToString();
             s = s.Substring(0, 2);
             Preferences.Set("total", int.Parse(s));
             totalCount.Text = Preferences.Get("total", 0).ToString();
             Preferences.Set("origMax", int.Parse(s));
+           // Button b = (Button)sender;
+           // MealInfo ms = b.BindingContext as MealInfo;
+           // ms.MealQuantity = 0;
+            mealsSaved.Clear(); //New Addition SV
+            resetAll(); //New Addition SV
+            GetRecentSelection();
         }
 
         // Navigation Bar
@@ -362,7 +379,8 @@ namespace MTYD.ViewModel
                 JObject mealPlan_obj = JObject.Parse(userString);
                 this.NewPlan.Clear();
 
-                ArrayList itemsArray = new ArrayList();
+                //ArrayList itemsArray = new ArrayList();        //TESTING SV
+                //ArrayList purchIdArray = new ArrayList();      //TESTING SV
                 // List<Item> itemsArray = new List<Item>;
                 ArrayList namesArray = new ArrayList();
 
@@ -370,6 +388,8 @@ namespace MTYD.ViewModel
                 foreach (var m in mealPlan_obj["result"])
                 {
                     itemsArray.Add((m["items"].ToString()));
+                    purchIdArray.Add((m["purchase_id"].ToString()));
+
                 }
 
                 Console.WriteLine("itemsArray contents:" + itemsArray[0] + " " + itemsArray[1]);
@@ -476,11 +496,11 @@ namespace MTYD.ViewModel
                 IsAddon = false,
                 // Need to create json formatting for this
                 Items = mealsSaved,
-                PurchaseId = purchaseId,
+                PurchaseId = Preferences.Get("purchId",""),
                 MenuDate = datePicker.SelectedItem.ToString(),
                 DeliveryDay = "Testday",
             };
-
+            //PurchaseId = purchaseId //Inside above code
             string mealSelectInfoJson = JsonConvert.SerializeObject(mealSelectInfoTosend);
             Console.WriteLine("line 322 " + mealSelectInfoJson);
 
@@ -499,5 +519,87 @@ namespace MTYD.ViewModel
                 System.Diagnostics.Debug.WriteLine(ex.Message);
             }   // Clicked Save function
         }
-    }
+
+        private void resetAll()
+        {
+            for (int i = 0; i < Meals1.Count; i++)
+            {
+                if (Meals1[i].MealQuantity > 0)
+                {
+                    Meals1[i].MealQuantity = 0;
+                    /*
+                    mealsSaved.Add(new MealInformation
+                    {
+                        Qty = Meals1[i].MealQuantity.ToString(),
+                        Name = Meals1[i].MealName,
+                        Price = Meals1[i].MealPrice.ToString(),
+                        ItemUid = Meals1[i].ItemUid,
+                    }
+                    );*/
+                }
+
+            }
+        }
+
+        protected async Task GetRecentSelection()
+        {
+            var request = new HttpRequestMessage();
+            string purchaseID = Preferences.Get("purchId", "");
+            string date = Preferences.Get("dateSelected", "");
+            string urlSent = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected_specific?customer_uid=100-000082&purchase_id=" + purchaseID + "&menu_date=" + date;
+            Console.WriteLine("URL ENDPOINT TRYING TO BE REACHED:" + urlSent);
+            request.RequestUri = new Uri("https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected_specific?customer_uid=100-000082&purchase_id=" + purchaseID + "&menu_date=" + date);
+            request.Method = HttpMethod.Get;
+            var client = new HttpClient();
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                HttpContent content = response.Content;
+                var userString = await content.ReadAsStringAsync();
+                JObject recentMeals = JObject.Parse(userString);
+                this.NewPlan.Clear();
+
+                ArrayList qtyList = new ArrayList();
+                //ArrayList nameList = new ArrayList();
+                //ArrayList itemUidList = new ArrayList();
+                ArrayList namesArray = new ArrayList();
+                ArrayList combinedArray = new ArrayList();
+
+                foreach (var m in recentMeals["result"])
+                {
+                    //Console.WriteLine("PARSING DATA FROM DB: ITEM_UID: " + m["item_uid"].ToString());
+                    //qtyList.Add(double.Parse(m["qty"].ToString()));
+                    //nameList.Add(int.Parse(m["name"].ToString()));
+                    combinedArray.Add((m["combined_selection"].ToString()));
+                }
+
+                for (int i = 0; i < combinedArray.Count; i++)
+                {
+                    JArray newobj = Newtonsoft.Json.JsonConvert.DeserializeObject<JArray>(combinedArray[i].ToString());
+
+                    foreach (JObject config in newobj)
+                    {
+                        string qty = (string)config["qty"];
+                        string name = (string)config["name"];
+                        //string price = (string)config["price"];
+                        //string mealid = (string)config["item_uid"];
+
+                        namesArray.Add(name);
+                        qtyList.Add(qty);
+                    }
+                }
+
+                for (int i = 0; i < Meals1.Count; i++)
+                {
+
+                    Meals1[i].MealQuantity = (int)qtyList[i];
+
+                }
+                setMenu();
+                Console.WriteLine("END OF GET PLANS FUNCTION");
+            }
+        }
+            
+        }
 }
