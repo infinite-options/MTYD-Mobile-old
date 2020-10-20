@@ -29,6 +29,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
                 </Grid.RowDefinitions>
 
 
@@ -46,15 +47,36 @@
                     
                    <Entry x:Name="loginPassword" Keyboard="Text" FontAttributes="Bold"
                    FontSize="16" Placeholder="PASSWORD" IsPassword="True" TextColor="Black"
-                   BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
-
-                        
+                   BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>   
                    
                 </Frame>
+
+                <ImageButton Grid.Row="1" x:Name="seePassword" HorizontalOptions="End"
+                         HeightRequest="28" WidthRequest="28" Source="eye.png" Margin="0,0,10,0"
+                         Aspect="AspectFit" Opacity="0.5" Clicked="clickedSeePassword" />
+
+                <Button Text="Forgot Password?" TextColor="White" HorizontalOptions="End" FontSize="15"
+                        Grid.Row="2" Margin="0,-25,10,0" VerticalOptions="Start" FontAttributes="Bold"/>
 
                 <!--<ImageButton x:Name="seePassword" Grid.Row="1" HorizontalOptions="End" Margin="0,0,10,0"
                           Source="eye.png" Opacity="0.5" Clicked="clickedSeePassword" />-->
                 
+            </Grid>
+
+            <Grid x:Name="grid3" VerticalOptions="Center" ColumnSpacing="25">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="loginButton" Text="LOG IN" FontSize="17" FontAttributes="Bold"
+                    BackgroundColor="#F59A28" TextColor= "White" HorizontalOptions="End"
+                    Clicked="clickedLogin"/>
+
+            <Button x:Name= "signUpButton" Text="SIGN UP" FontSize="17" FontAttributes="Bold"
+                    BackgroundColor="#F59A28" TextColor= "White" HorizontalOptions="Start"
+                    Grid.Column="1" Clicked="clickedSignUp"></Button>
+
             </Grid>
 
             <!--<Grid x:Name="grid3" HorizontalOptions="Center" VerticalOptions="Center" 
