@@ -50,6 +50,7 @@ namespace MTYD.iOS.AppleSignIn
             tcsCredential = new TaskCompletionSource<ASAuthorizationAppleIdCredential>();
 
             var creds = await tcsCredential.Task;
+          
 
             if (creds == null)
                 return null;

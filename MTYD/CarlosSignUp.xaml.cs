@@ -12,12 +12,14 @@ using Newtonsoft.Json;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
+using MTYD.ViewModel;
 
 namespace MTYD
 {
     public partial class CarlosSignUp : ContentPage
     {
         public SignUpPost directSignUp = new SignUpPost();
+        public bool isAddessValidated = false;
 
         public CarlosSignUp()
         {
@@ -41,10 +43,13 @@ namespace MTYD
             directSignUp.longitude = "0.0";
             directSignUp.referral_source = "MOBILE";
             directSignUp.role = "CUSTOMER";
-            directSignUp.access_token = "NULL";
-            directSignUp.refresh_token = "NULL";
+            directSignUp.mobile_access_token = "FALSE";
+            directSignUp.mobile_refresh_token = "FALSE";
+            directSignUp.user_access_token = "FALSE";
+            directSignUp.user_refresh_token = "FALSE";
             directSignUp.social = "FALSE";
             directSignUp.password = "";
+            directSignUp.social_id = "NULL";
         }
 
         async void ValidateAddressClick(object sender, System.EventArgs e)
@@ -238,25 +243,11 @@ namespace MTYD
             }
             else
             {
+                isAddessValidated = true;
                 await DisplayAlert("We validated your address", "Please click on the Sign up button to create your account!", "OK");
+                await Application.Current.SavePropertiesAsync();
+                await tagUser(userEmailAddress.Text, userZipcode.Text);
             }
-
-            DateTime today = DateTime.Now;
-            directSignUp.social_timestamp = today.ToString("yyyy-MM-dd HH:mm:ss");
-
-            var directSignUpSerializedObject = JsonConvert.SerializeObject(directSignUp);
-            var content = new StringContent(directSignUpSerializedObject, Encoding.UTF8, "application/json");
-
-            System.Diagnostics.Debug.WriteLine(directSignUpSerializedObject);
-
-            var signUpclient = new HttpClient();
-            var DRSResponse = signUpclient.PostAsync(Constant.SignUpUrl, content);
-            var DRSMesage = DRSResponse.Result.IsSuccessStatusCode;
-
-            System.Diagnostics.Debug.WriteLine(DRSMesage);
-
-            await Application.Current.SavePropertiesAsync();
-            await tagUser(userEmailAddress.Text, userZipcode.Text);
         }
 
         public static string GetXMLElement(XElement element, string name)
@@ -325,9 +316,35 @@ namespace MTYD
             HttpResponseMessage updateRegistrationResponse = await updateRegistrationClient.SendAsync(updateRegistrationRequest);
         }
 
-        void SignUpNewUser(System.Object sender, System.EventArgs e)
+        async void SignUpNewUser(System.Object sender, System.EventArgs e)
         {
-            Application.Current.MainPage = new CarlosHomePage();
+            if (isAddessValidated)
+            {
+                var directSignUpSerializedObject = JsonConvert.SerializeObject(directSignUp);
+                var content = new StringContent(directSignUpSerializedObject, Encoding.UTF8, "application/json");
+
+                System.Diagnostics.Debug.WriteLine(directSignUpSerializedObject);
+
+                var signUpclient = new HttpClient();
+                var RDSResponse = await signUpclient.PostAsync(Constant.SignUpUrl, content);
+                var RDSMessage = await RDSResponse.Content.ReadAsStringAsync();
+
+                if (RDSResponse.IsSuccessStatusCode)
+                {
+                    var RDSData = JsonConvert.DeserializeObject<SignUpResponse>(RDSMessage);
+                    DateTime today = DateTime.Now;
+                    DateTime expDate = today.AddDays(Constant.days);
+
+                    Application.Current.Properties["uid"] = RDSData.result.customer_uid;
+                    Application.Current.Properties["time_stamp"] = expDate;
+                    Application.Current.Properties["platform"] = "DIRECT";
+                    Application.Current.MainPage = new SubscriptionPage();
+                }
+            }
+            else
+            {
+                await DisplayAlert("Message", "We weren't able to sign you up", "OK");
+            }
         }
     }
 }

@@ -10,6 +10,10 @@ using Xamarin.Forms.Xaml;
 using MTYD.Model.Database;
 
 using MTYD.ViewModel;
+using System.Net.Http;
+using MTYD.Model.Login.LoginClasses;
+using Newtonsoft.Json;
+using System.Text;
 
 [assembly: ExportFont("PlatNomor-WyVnn.ttf", Alias = "ButtonFont")]
 
@@ -25,6 +29,7 @@ namespace MTYD
         public const string LoggedInKey = "LoggedIn";
         public const string AppleUserIdKey = "AppleUserIdKey";
         string userId;
+        DateTime time_stamp;
 
         // MTYP ORIGINAL APP CONSTRUCTOR
         /*
@@ -48,60 +53,116 @@ namespace MTYD
             // MainPage = new Profile();
         }*/
 
-        // NEW MTYP APP CONSTRUCTOR
+        //// OLD MTYP APP CONSTRUCTOR 
+        //public App()
+        //{
+        //    InitializeComponent();
+
+        //    if (Preferences.Get(LoggedInKey, false))
+        //    {
+        //        MainPage = new CarlosHomePage();
+        //    }
+        //    else
+        //    {
+        //        DateTime today = DateTime.Now;
+        //        DateTime expTime = today;
+
+        //        if (this.Properties.ContainsKey("time_stamp"))
+        //        {
+        //            expTime = (DateTime)this.Properties["time_stamp"];
+        //        }
+
+        //        if (this.Properties.ContainsKey("access_token")
+        //            && this.Properties.ContainsKey("refresh_token")
+        //            && this.Properties.ContainsKey("time_stamp") && today <= expTime)
+        //        {
+
+        //            MainPage = new CarlosHomePage();
+
+        //        }
+        //        else if (this.Properties.ContainsKey("access_token")
+        //           && this.Properties.ContainsKey("refresh_token")
+        //           && this.Properties.ContainsKey("time_stamp") && today > expTime)
+        //        {
+
+        //            MainPage myPage = new MainPage();
+
+        //            System.Object sender = new System.Object();
+        //            System.EventArgs e = new System.EventArgs();
+
+        //            if (this.Properties["platform"].Equals(Constant.Google))
+        //            {
+        //                myPage.googleLoginButtonClicked(sender, e);
+        //            }
+        //            if (this.Properties["platform"].Equals(Constant.Facebook))
+        //            {
+        //                myPage.facebookLoginButtonClicked(sender, e);
+        //            }
+        //        }
+        //        else if (this.Properties.ContainsKey("social"))
+        //        {
+        //            MainPage = new CarlosHomePage();
+        //        }
+        //        else
+        //        {
+        //            MainPage = new MainPage();
+        //        }
+        //    }
+        //}
+
         public App()
         {
             InitializeComponent();
 
-            if (Preferences.Get(LoggedInKey, false))
+            if (Application.Current.Properties.ContainsKey("user_id"))
             {
-                MainPage = new CarlosHomePage();
-            }
-            else
-            {
-                DateTime today = DateTime.Now;
-                DateTime expTime = today;
-
-                if (this.Properties.ContainsKey("time_stamp"))
+                if (Application.Current.Properties.ContainsKey("time_stamp"))
                 {
-                    expTime = (DateTime)this.Properties["time_stamp"];
-                }
+                    DateTime today = DateTime.Now;
+                    DateTime expTime = (DateTime)Application.Current.Properties["time_stamp"];
 
-                if (this.Properties.ContainsKey("access_token")
-                    && this.Properties.ContainsKey("refresh_token")
-                    && this.Properties.ContainsKey("time_stamp") && today <= expTime)
-                {
-
-                    MainPage = new CarlosHomePage();
-
-                }
-                else if (this.Properties.ContainsKey("access_token")
-                   && this.Properties.ContainsKey("refresh_token")
-                   && this.Properties.ContainsKey("time_stamp") && today > expTime)
-                {
-
-                    MainPage myPage = new MainPage();
-
-                    System.Object sender = new System.Object();
-                    System.EventArgs e = new System.EventArgs();
-
-                    if (this.Properties["platform"].Equals(Constant.Google))
+                    if (today <= expTime)
                     {
-                        myPage.googleLoginButtonClicked(sender, e);
+                        MainPage = new CarlosHomePage();
                     }
-                    if (this.Properties["platform"].Equals(Constant.Facebook))
+                    else
                     {
-                        myPage.facebookLoginButtonClicked(sender, e);
+                        MainPage client = new MainPage();
+                        MainPage = client;
+
+                        if (Application.Current.Properties.ContainsKey("time_stamp"))
+                        {
+                            string socialPlatform = (string)Application.Current.Properties["platform"];
+
+                            if (socialPlatform.Equals("FACEBOOK"))
+                            {
+                                client.facebookLoginButtonClicked(new object(), new EventArgs());
+                            }
+                            else if (socialPlatform.Equals("GOOGLE"))
+                            {
+                                client.googleLoginButtonClicked(new object(), new EventArgs());
+                            }
+                            else if (socialPlatform.Equals("APPLE"))
+                            {
+                                client.appleLoginButtonClicked(new object(), new EventArgs());
+                            }
+                            else
+                            {
+                                MainPage = new MainPage();
+                            }
+                        }
                     }
-                }else if (this.Properties.ContainsKey("social"))
-                {
-                    MainPage = new CarlosHomePage();
                 }
                 else
                 {
                     MainPage = new MainPage();
                 }
             }
+            else
+            {
+                MainPage = new MainPage();
+            }
+        
         }
 
         protected override async void OnStart()

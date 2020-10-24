@@ -34,10 +34,13 @@ namespace MTYD.Model.Login.Constants
         public static string AccountSaltUrl = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/accountsalt";
         public static string LogInUrl = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/login";
         public static string SignUpUrl = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/signup";
-        public static string UpdateTokensUrl = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/access_refresh_update";
+        public static string UpdateTokensUrl = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/token_fetch_update/update_mobile";
 
         // RDS CODES
         public static string EmailNotFound = "404";
+        public static string ErrorPlatform = "411";
+        public static string ErrorUserDirectLogIn = "406";
+        public static string UseSocialMediaLogin = "401";
         public static string AutheticatedSuccesful = "200";
 
         // PLATFORM

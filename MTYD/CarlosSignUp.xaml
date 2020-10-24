@@ -18,18 +18,22 @@
                     Margin="10,10,10,0">
                     <Entry
                         x:Name="userEmailAddress"
-                        Placeholder="Email Address">
+                        Placeholder="Email Address"
+                        BackgroundColor="Orange">
                     </Entry>
                     <Entry
                         x:Name="userConfirmEmailAddress"
-                        Placeholder="Confirm Email Address"></Entry>
+                        Placeholder="Confirm Email Address"
+                        BackgroundColor="Orange"></Entry>
                     <Entry
                         x:Name="userPassword"
-                        Placeholder="Enter Password">
+                        Placeholder="Enter Password"
+                        BackgroundColor="Orange">
                     </Entry>
                     <Entry
                         x:Name="userConfirmPassword"
-                        Placeholder="Confirm Password">
+                        Placeholder="Confirm Password"
+                        BackgroundColor="Orange">
                     </Entry>
                     <Grid>
                         <Entry Placeholder="Push Notification" IsReadOnly="True"></Entry>
@@ -37,39 +41,47 @@
                     </Grid>
                     <Entry
                         x:Name="userFirstName"
-                        Placeholder="First name">
+                        Placeholder="First name"
+                        BackgroundColor="Orange">
                     </Entry>
                     <Entry
                         x:Name="userLastName"
-                        Placeholder="Last name">
+                        Placeholder="Last name"
+                        BackgroundColor="Orange">
                     </Entry>
                     <Entry
                         x:Name="userPhoneNumber"
-                        Placeholder="Phone number">
+                        Placeholder="Phone number"
+                        BackgroundColor="Orange">
                     </Entry>
                     <Entry
                         x:Name="usertAddress"
-                        Placeholder="Street Address">
+                        Placeholder="Street Address"
+                        BackgroundColor="Orange">
                     </Entry>
                     <Entry
                         x:Name="userUnitNumber"
-                        Placeholder="Apt number">
+                        Placeholder="Apt number"
+                        BackgroundColor="Orange">
                     </Entry>
                     <Grid>
                         <Entry
                             x:Name="userCity"
                             Grid.Column="0"
-                            Placeholder="City">
+                            Placeholder="City"
+                            BackgroundColor="Orange">
                         </Entry>
                         <Entry
                             x:Name="userState"
                             Grid.Column="1"
-                            Placeholder="State">
+                            Placeholder="State"
+                            BackgroundColor="Orange">
                         </Entry>
                         <Entry
                             x:Name="userZipcode"
                             Grid.Column="2"
-                            Placeholder="Zipcode">
+                            Placeholder="Zipcode"
+                            BackgroundColor="Orange">
                         </Entry>
                     </Grid>
                     <Button

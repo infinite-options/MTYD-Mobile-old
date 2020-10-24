@@ -1,0 +1,50 @@
+﻿<Properties StartupConfiguration="{FAB6B3BB-6B8C-41F3-9565-69D18FC959BC}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD.iOS/Info.plist">
+    <Files>
+      <File FileName="MTYD/Model/Login/LoginClasses/Apple/LoginViewModel.cs" Line="50" Column="65" IsPinned="True" />
+      <File FileName="MTYD/MainPage.xaml.cs" Line="324" Column="163" />
+      <File FileName="MTYD/CarlosHomePage.xaml.cs" Line="1" Column="1" />
+      <File FileName="MTYD.iOS/Info.plist" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="MTYD" expanded="True">
+            <Node name="MTYD" expanded="True">
+              <Node name="Model" expanded="True">
+                <Node name="Login" expanded="True">
+                  <Node name="Constants" expanded="True" />
+                  <Node name="LoginClasses" expanded="True">
+                    <Node name="Apple" expanded="True" />
+                  </Node>
+                </Node>
+              </Node>
+              <Node name="ViewModel" expanded="True">
+                <Node name="SubscriptionPage.xaml" expanded="True" />
+              </Node>
+              <Node name="App.xaml" expanded="True" />
+              <Node name="CarlosHomePage.xaml" expanded="True" />
+              <Node name="CarlosSignUp.xaml" expanded="True" />
+              <Node name="CarlosSocialSignUp.xaml" expanded="True" />
+              <Node name="MainPage.xaml" expanded="True" />
+            </Node>
+            <Node name="MTYD.iOS" expanded="True">
+              <Node name="AppleSignIn" expanded="True" />
+              <Node name="Info.plist" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.MTYD.iOS automaticSigning="True" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget.00063b86810639bd0ce638b04493e7bbf90fb1ed">
+    <MonoDevelop.MacDev.AppleDevelopmentTeam DeveloperId="5M8R6389HP" TeamId="8V66NC2T37" />
+  </MonoDevelop.Ide.ItemProperties.MTYD.iOS>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" />
+  <MonoDevelop.Ide.ItemProperties.MTYD.Android AndroidDesignerPreferredTheme="Theme.AppCompat.Light.NoActionBar" PreferredExecutionTarget="Android.pixel_2_pie_9_0_-_api_28" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

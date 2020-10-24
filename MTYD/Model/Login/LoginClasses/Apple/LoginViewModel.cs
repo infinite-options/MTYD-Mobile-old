@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using MTYD.Model.Login.Constants;
+using MTYD.ViewModel;
 using Newtonsoft.Json;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -19,6 +20,7 @@ namespace MTYD.Model.Login.LoginClasses.Apple
         public ICommand SignInWithAppleCommand { get; set; }
 
         public event EventHandler AppleError = delegate { };
+        public event EventHandler PlatformError = delegate { };
 
         IAppleSignInService appleSignInService = null;
         public LoginViewModel()
@@ -35,50 +37,23 @@ namespace MTYD.Model.Login.LoginClasses.Apple
                 Preferences.Set(App.LoggedInKey, true);
                 await SecureStorage.SetAsync(App.AppleUserIdKey, account.UserId);
 
-                // System.Diagnostics.Debug.WriteLine($"Signed in!\n  Name: {account?.Name ?? string.Empty}\n  Email: {account?.Email ?? string.Empty}\n  UserId: {account?.UserId ?? string.Empty}");
-
-                var client = new HttpClient();
-                var socialLogInPost = new SocialLogInPost();
-
-                System.Diagnostics.Debug.WriteLine("apple_token:" + apple_token);
-                System.Diagnostics.Debug.WriteLine("apple_email:" + apple_email);
-
-                if (apple_token == null && apple_email == null)
+                if (account.Token == null) { account.Token = ""; }
+                if (account.Email != null)
                 {
-                    System.Diagnostics.Debug.WriteLine("First time user");
-
-                    apple_token = account.Token.Substring(0, 500);
-                    apple_email = account.Email;
-                    AppleUserProfileAsync(apple_token, apple_email, account.Name);
-                }
-                else if (!apple_token.Equals(account.Token) && apple_token != null)
-                {
-                    System.Diagnostics.Debug.WriteLine("Second Time user");
-                    DateTime today = DateTime.Now;
-                    DateTime expirationDate = today.AddDays(Constant.days);
-                    Application.Current.Properties["time_stamp"] = expirationDate;
-
-                    apple_token = account.Token.Substring(0, 500);
-
-                    UpdateTokensPost updateTokens = new UpdateTokensPost();
-                    updateTokens.access_token = apple_token;
-                    updateTokens.refresh_token = apple_token;
-                    updateTokens.uid = (string)Application.Current.Properties["uid"];
-                    updateTokens.social_timestamp = expirationDate.ToString("yyyy-MM-dd HH:mm:ss");
-
-                    var updatePostSerilizedObject = JsonConvert.SerializeObject(updateTokens);
-                    var updatePostContent = new StringContent(updatePostSerilizedObject, Encoding.UTF8, "application/json");
-                    var RDSrespose = await client.PostAsync(Constant.UpdateTokensUrl, updatePostContent);
-
-                    if (RDSrespose.IsSuccessStatusCode)
+                    if (Application.Current.Properties.ContainsKey(account.UserId.ToString()))
                     {
-                        AppleUserProfileAsync(apple_token, apple_email, string.Empty);
+                        Application.Current.Properties[account.UserId.ToString()] = account.Email;
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine("We were not able to update your APPLE token");
+                        Application.Current.Properties[account.UserId.ToString()] = account.Email;
                     }
                 }
+                if (account.Email == null) { account.Email = ""; }
+                if (account.Name == null) { account.Name = ""; }
+
+                System.Diagnostics.Debug.WriteLine((string)Application.Current.Properties[account.UserId.ToString()]);
+                AppleUserProfileAsync(account.UserId, account.Token, (string)Application.Current.Properties[account.UserId.ToString()], account.Name);
             }
             else
             {
@@ -86,7 +61,7 @@ namespace MTYD.Model.Login.LoginClasses.Apple
             }
         }
 
-        public async void AppleUserProfileAsync(string appleToken, string appleUserEmail, string userName)
+        public async void AppleUserProfileAsync(string appleId, string appleToken, string appleUserEmail, string userName)
         {
             System.Diagnostics.Debug.WriteLine("LINE 95");
             var client = new HttpClient();
@@ -94,28 +69,76 @@ namespace MTYD.Model.Login.LoginClasses.Apple
 
             socialLogInPost.email = appleUserEmail;
             socialLogInPost.password = "";
-            socialLogInPost.token = appleToken;
+            socialLogInPost.social_id = appleId;
             socialLogInPost.signup_platform = "APPLE";
 
             var socialLogInPostSerialized = JsonConvert.SerializeObject(socialLogInPost);
+
+            System.Diagnostics.Debug.WriteLine(socialLogInPostSerialized);
+
             var postContent = new StringContent(socialLogInPostSerialized, Encoding.UTF8, "application/json");
             var RDSResponse = await client.PostAsync(Constant.LogInUrl, postContent);
             var responseContent = await RDSResponse.Content.ReadAsStringAsync();
 
             System.Diagnostics.Debug.WriteLine(responseContent);
+
             if (RDSResponse.IsSuccessStatusCode)
             {
                 if (responseContent != null)
                 {
                     if (responseContent.Contains(Constant.EmailNotFound))
                     {
-                        // SET MTYD SIGN UP PAGE
-                         Application.Current.MainPage = new CarlosSocialSignUp(userName, "", appleUserEmail, appleToken, appleToken, "APPLE");
+                        var signUp = await Application.Current.MainPage.DisplayAlert("Message", "It looks like you don't have a MTYD account. Please sign up!", "OK", "Cancel");
+                        if (signUp)
+                        {
+                            // HERE YOU NEED TO SUBSTITUTE MY SOCIAL SIGN UP PAGE WITH MTYD SOCIAL SIGN UP
+                            // NOTE THAT THIS SOCIAL SIGN UP PAGE NEEDS A CONSTRUCTOR LIKE THE FOLLOWING ONE
+                            // SocialSignUp(string socialId, string firstName, string lastName, string emailAddress, string accessToken, string refreshToken, string platform)
+                            Application.Current.MainPage = new CarlosSocialSignUp(appleId, userName, "", appleUserEmail, appleToken, appleToken, "APPLE");
+                        }
                     }
                     if (responseContent.Contains(Constant.AutheticatedSuccesful))
                     {
-                        // SET MTYD HOME PAGE
-                        Application.Current.MainPage = new CarlosHomePage();
+                        var data = JsonConvert.DeserializeObject<SuccessfulSocialLogIn>(responseContent);
+                        Application.Current.Properties["user_id"] = data.result[0].customer_uid;
+
+                        UpdateTokensPost updateTokesPost = new UpdateTokensPost();
+                        updateTokesPost.uid = data.result[0].customer_uid;
+                        updateTokesPost.mobile_access_token = appleToken;
+                        updateTokesPost.mobile_refresh_token = appleToken;
+
+                        var updateTokesPostSerializedObject = JsonConvert.SerializeObject(updateTokesPost);
+                        var updateTokesContent = new StringContent(updateTokesPostSerializedObject, Encoding.UTF8, "application/json");
+                        var updateTokesResponse = await client.PostAsync(Constant.UpdateTokensUrl, updateTokesContent);
+                        var updateTokenResponseContent = await updateTokesResponse.Content.ReadAsStringAsync();
+                        System.Diagnostics.Debug.WriteLine(updateTokenResponseContent);
+
+                        if (updateTokesResponse.IsSuccessStatusCode)
+                        {
+                            DateTime today = DateTime.Now;
+                            DateTime expDate = today.AddDays(Constant.days);
+
+                            Application.Current.Properties["time_stamp"] = expDate;
+                            Application.Current.Properties["platform"] = "APPLE";
+                            Application.Current.MainPage = new SubscriptionPage();
+
+                            // THIS IS HOW YOU CAN ACCESS YOUR USER ID FROM THE APP
+                            // string userID = (string)Application.Current.Properties["user_id"];
+                        }
+                        else
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Oops", "We are facing some problems with our internal system. We weren't able to update your credentials", "OK");
+                        }
+                    }
+                    if (responseContent.Contains(Constant.ErrorPlatform))
+                    {
+                        var RDSCode = JsonConvert.DeserializeObject<RDSLogInMessage>(responseContent);
+                        await Application.Current.MainPage.DisplayAlert("Message", RDSCode.message, "OK");
+                    }
+
+                    if (responseContent.Contains(Constant.ErrorUserDirectLogIn))
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Oops!", "You have an existing MTYD account. Please use direct login", "OK");
                     }
                 }
             }

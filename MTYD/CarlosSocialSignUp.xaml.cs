@@ -7,6 +7,7 @@ using System.Text;
 using System.Xml.Linq;
 using MTYD.Model.Login.Constants;
 using MTYD.Model.Login.LoginClasses;
+using MTYD.ViewModel;
 using Newtonsoft.Json;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
@@ -18,7 +19,7 @@ namespace MTYD
         public SignUpPost socialSignUp = new SignUpPost();
         public bool isAddressValidated = false;
 
-        public CarlosSocialSignUp(string firstName, string lastName, string emailAddress, string accessToken, string refreshToken, string platform)
+        public CarlosSocialSignUp(string socialId, string firstName, string lastName, string emailAddress, string accessToken, string refreshToken, string platform)
         {
             InitializeComponent();
             InitializeSignUpPost();
@@ -29,9 +30,12 @@ namespace MTYD
             socialSignUp.email = emailAddress;
             socialSignUp.first_name = firstName;
             socialSignUp.last_name = lastName;
-            socialSignUp.access_token = accessToken;
-            socialSignUp.refresh_token = refreshToken;
+            socialSignUp.mobile_access_token = accessToken;
+            socialSignUp.mobile_refresh_token = refreshToken;
+            socialSignUp.user_access_token = "FALSE";
+            socialSignUp.user_access_token = "FALSE";
             socialSignUp.social = platform;
+            socialSignUp.social_id = socialId;
         }
 
         void InitializeSignUpPost()
@@ -49,8 +53,10 @@ namespace MTYD
             socialSignUp.longitude = "0.0";
             socialSignUp.referral_source = "MOBILE";
             socialSignUp.role = "CUSTOMER";
-            socialSignUp.access_token = "";
-            socialSignUp.refresh_token = "";
+            socialSignUp.mobile_access_token = "";
+            socialSignUp.mobile_refresh_token = "";
+            socialSignUp.user_access_token = "FALSE";
+            socialSignUp.user_refresh_token = "FALSE";
             socialSignUp.social = "";
             socialSignUp.password = "";
         }
@@ -206,21 +212,13 @@ namespace MTYD
         {
             if (isAddressValidated)
             {
-                DateTime today = DateTime.Now;
-                DateTime expirationDate = today.AddDays(Constant.days);
-
-                Application.Current.Properties["time_stamp"] = expirationDate;
-                socialSignUp.social_timestamp = expirationDate.ToString("yyyy-MM-dd HH:mm:ss");
-
                 var signUpSerializedObject = JsonConvert.SerializeObject(socialSignUp);
                 var singUpContent = new StringContent(signUpSerializedObject, Encoding.UTF8, "application/json");
-
                 System.Diagnostics.Debug.WriteLine(signUpSerializedObject);
 
                 var client = new HttpClient();
                 var RDSResponse = await client.PostAsync(Constant.SignUpUrl, singUpContent);
                 var RDSMessage = await RDSResponse.Content.ReadAsStringAsync();
-
                 System.Diagnostics.Debug.WriteLine(RDSMessage);
 
                 if (RDSResponse.IsSuccessStatusCode)
@@ -234,9 +232,13 @@ namespace MTYD
                     System.Diagnostics.Debug.WriteLine("Access Token: " + RDSData.result.access_token);
                     System.Diagnostics.Debug.WriteLine("Refresh Token: " + RDSData.result.refresh_token);
 
+                    DateTime today = DateTime.Now;
+                    DateTime expDate = today.AddDays(Constant.days);
+
                     Application.Current.Properties["uid"] = RDSData.result.customer_uid;
+                    Application.Current.Properties["time_stamp"] = expDate;
                     Application.Current.Properties["platform"] = socialSignUp.social;
-                    Application.Current.MainPage = new CarlosHomePage();
+                    Application.Current.MainPage = new SubscriptionPage();
                 }
             }
             else

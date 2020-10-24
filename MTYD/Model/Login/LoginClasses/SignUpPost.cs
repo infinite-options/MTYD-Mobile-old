@@ -16,10 +16,12 @@ namespace MTYD.Model.Login.LoginClasses
         public string longitude { get; set; }
         public string referral_source { get; set; }
         public string role { get; set; }
-        public string access_token { get; set; }
-        public string refresh_token { get; set; }
+        public string mobile_access_token { get; set; }
+        public string mobile_refresh_token { get; set; }
+        public string user_access_token { get; set; }
+        public string user_refresh_token { get; set; }
         public string social { get; set; }
         public string password { get; set; }
-        public string social_timestamp { get; set; }
+        public string social_id { get; set; }
     }
 }

@@ -35,10 +35,8 @@ namespace MTYD
     public partial class MainPage : ContentPage
     {
         public HttpClient client = new HttpClient();
-        public static string accessToken = null;
-        public static string refreshToken = null;
-        public static string uid = null;
         public event EventHandler SignIn;
+        public bool createAccount = false;
 
         Account account;
         [Obsolete]
@@ -54,12 +52,23 @@ namespace MTYD
             // APPLE
             var vm = new LoginViewModel();
             vm.AppleError += AppleError;
+            vm.PlatformError += PlatformError;
             BindingContext = vm;
 
             if (Device.RuntimePlatform == Device.Android)
             {
                 appleLoginButton.IsEnabled = false;
             }
+        }
+
+        private async void PlatformError(object sender, EventArgs e)
+        {
+            if (Application.Current.Properties.ContainsKey("platform"))
+            {
+                string platform = (string) Application.Current.Properties["platform"];
+                await DisplayAlert("Alert!", "Our records show that you have an account associated with " + platform + ". Please log in with " + platform, "OK");
+            }
+            
         }
 
         private async void AppleError(object sender, EventArgs e)
@@ -123,11 +132,14 @@ namespace MTYD
                         System.Diagnostics.Debug.WriteLine("USER FIRST NAME: " + loginAttempt.result[0].customer_first_name);
                         System.Diagnostics.Debug.WriteLine("USER LAST NAME: " + loginAttempt.result[0].customer_last_name);
                         System.Diagnostics.Debug.WriteLine("USER EMAIL: " + loginAttempt.result[0].customer_email);
-                        System.Diagnostics.Debug.WriteLine("USER SOCIAL MEDIA: " + loginAttempt.result[0].user_social_media);
-                        System.Diagnostics.Debug.WriteLine("USER ACCESS TOKEN: " + loginAttempt.result[0].user_access_token);
-                        System.Diagnostics.Debug.WriteLine("USER REFRESH TOKEN: " + loginAttempt.result[0].user_refresh_token);
 
-                        Application.Current.Properties["social"] = "FALSE";
+                        DateTime today = DateTime.Now;
+                        DateTime expDate = today.AddDays(Constant.days);
+
+                        Application.Current.Properties["user_id"] = loginAttempt.result[0].customer_uid;
+                        Application.Current.Properties["time_stamp"] = expDate;
+                        Application.Current.Properties["platform"] = "DIRECT";
+
                         Application.Current.MainPage = new CarlosHomePage();
                     }
                     else
@@ -136,12 +148,7 @@ namespace MTYD
                         loginButton.IsEnabled = true;
                     }
                 }
-                else
-                {
-                    await DisplayAlert("Sign Up", "An account with that email does not exist. We are going to send you to our sign up page", "OK");
-                    Application.Current.MainPage = new CarlosSignUp();
-                    loginButton.IsEnabled = true;
-                }
+                loginButton.IsEnabled = true;
             }
         }
 
@@ -165,6 +172,7 @@ namespace MTYD
                 System.Diagnostics.Debug.WriteLine(DRSMessage);
 
                 AccountSalt userInformation = null;
+
                 if (DRSResponse.IsSuccessStatusCode)
                 {
                     var result = await DRSResponse.Content.ReadAsStringAsync();
@@ -172,11 +180,23 @@ namespace MTYD
                     AcountSaltCredentials data = new AcountSaltCredentials();
                     data = JsonConvert.DeserializeObject<AcountSaltCredentials>(result);
 
-                    userInformation = new AccountSalt
+                    if (DRSMessage.Contains(Constant.UseSocialMediaLogin))
                     {
-                        password_algorithm = data.result[0].password_algorithm,
-                        password_salt = data.result[0].password_salt
-                    };
+                        createAccount = true;
+                        System.Diagnostics.Debug.WriteLine(DRSMessage);
+                        await DisplayAlert("Oops!", data.message, "OK");
+                    }else if (DRSMessage.Contains(Constant.EmailNotFound))
+                    {
+                        await DisplayAlert("Oops!", "Our records show that you don't have an accout. Please sign up!", "OK");
+                    }
+                    else
+                    {
+                        userInformation = new AccountSalt
+                        {
+                            password_algorithm = data.result[0].password_algorithm,
+                            password_salt = data.result[0].password_salt
+                        };
+                    }
                 }
 
                 return userInformation;
@@ -187,6 +207,8 @@ namespace MTYD
                 return null;
             }
         }
+
+
 
         public async Task<LogInResponse> LogInUser(string userEmail, string userPassword, AccountSalt accountSalt)
         {
@@ -199,20 +221,26 @@ namespace MTYD
                 LogInPost loginPostContent = new LogInPost();
                 loginPostContent.email = userEmail;
                 loginPostContent.password = hashedPassword;
+                loginPostContent.social_id = "";
+                loginPostContent.signup_platform = "";
 
                 string loginPostContentJson = JsonConvert.SerializeObject(loginPostContent); // make orderContent into json
 
                 var httpContent = new StringContent(loginPostContentJson, Encoding.UTF8, "application/json"); // encode orderContentJson into format to send to database
                 var response = await client.PostAsync(Constant.LogInUrl, httpContent); // try to post to database
+                var message = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine(message);
 
+                if (message.Contains(Constant.AutheticatedSuccesful)){
 
-                if (response.Content != null)
-                {
                     var responseContent = await response.Content.ReadAsStringAsync();
                     var loginResponse = JsonConvert.DeserializeObject<LogInResponse>(responseContent);
                     return loginResponse;
                 }
-                return null;
+                else
+                {
+                    return null;
+                }
             }
             catch (Exception e)
             {
@@ -251,56 +279,22 @@ namespace MTYD
 
         public async void FacebookAuthenticatorCompleted(object sender, AuthenticatorCompletedEventArgs e)
         {
+            var authenticator = sender as OAuth2Authenticator;
+
+            if (authenticator != null)
+            {
+                authenticator.Completed -= FacebookAuthenticatorCompleted;
+                authenticator.Error -= FacebookAutheticatorError;
+            }
+
             if (e.IsAuthenticated)
             {
-                // KEYS: access_token, data_access_expiration_time,  expires_in, state
-                if (accessToken == null && refreshToken == null)
-                {
-                    accessToken = e.Account.Properties["access_token"];
-                    refreshToken = accessToken;
-                    FacebookUserProfileAsync(accessToken);
-                }
-                else if (!refreshToken.Equals(e.Account.Properties["access_token"]) && !accessToken.Equals(e.Account.Properties["access_token"]))
-                {
-                    DateTime today = DateTime.Now;
-                    DateTime expirationDate = today.AddDays(Constant.days);
-                    Application.Current.Properties["time_stamp"] = expirationDate;
-
-                    accessToken = e.Account.Properties["access_token"];
-                    refreshToken = e.Account.Properties["access_token"];
-
-                    UpdateTokensPost updateTokens = new UpdateTokensPost();
-                    updateTokens.access_token = accessToken;
-                    updateTokens.refresh_token = refreshToken;
-                    updateTokens.uid = (string)Application.Current.Properties["uid"];
-                    updateTokens.social_timestamp = expirationDate.ToString("yyyy-MM-dd HH:mm:ss");
-
-                    var updatePostSerilizedObject = JsonConvert.SerializeObject(updateTokens);
-                    var updatePostContent = new StringContent(updatePostSerilizedObject, Encoding.UTF8, "application/json");
-
-                    var client = new HttpClient();
-                    var RDSrespose = await client.PostAsync(Constant.UpdateTokensUrl, updatePostContent);
-
-                    if (RDSrespose.IsSuccessStatusCode)
-                    {
-                        FacebookUserProfileAsync(accessToken);
-                    }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine("Unable to update google tokens");
-                    }
-                }
+                FacebookUserProfileAsync(e.Account.Properties["access_token"]);
             }
         }
 
         public async void FacebookUserProfileAsync(string accessToken)
         {
-            // MECHANISM:
-
-            // 1. RETRIVE TOKEN FROM SOCIAL LOGIN
-            // 2. PASS THIS INFORMATION TO PARVA
-            // 3. WAIT FOR A RESPONSE
-            // 4. BASED ON THE RESPONSE I WOULD NEED TO REDIRECT THE USER TO THE CORRECT PAGE
 
             var client = new HttpClient();
             var socialLogInPost = new SocialLogInPost();
@@ -308,11 +302,13 @@ namespace MTYD
             var facebookResponse = client.GetStringAsync(Constant.FacebookUserInfoUrl + accessToken);
             var userData = facebookResponse.Result;
 
+            System.Diagnostics.Debug.WriteLine(userData);
+
             FacebookResponse facebookData = JsonConvert.DeserializeObject<FacebookResponse>(userData);
 
             socialLogInPost.email = facebookData.email;
             socialLogInPost.password = "";
-            socialLogInPost.token = accessToken;
+            socialLogInPost.social_id = facebookData.id;
             socialLogInPost.signup_platform = "FACEBOOK";
 
             var socialLogInPostSerialized = JsonConvert.SerializeObject(socialLogInPost);
@@ -332,11 +328,59 @@ namespace MTYD
                 {
                     if (responseContent.Contains(Constant.EmailNotFound))
                     {
-                        Application.Current.MainPage = new CarlosSocialSignUp(facebookData.name, "", facebookData.email, accessToken, accessToken, "FACEBOOK");
+                        var signUp = await DisplayAlert("Message", "It looks like you don't have a MTYD account. Please sign up!", "OK", "Cancel");
+                        if (signUp)
+                        {
+                            // HERE YOU NEED TO SUBSTITUTE MY SOCIAL SIGN UP PAGE WITH MTYD SOCIAL SIGN UP
+                            // NOTE THAT THIS SOCIAL SIGN UP PAGE NEEDS A CONSTRUCTOR LIKE THE FOLLOWING ONE
+                            // SocialSignUp(string socialId, string firstName, string lastName, string emailAddress, string accessToken, string refreshToken, string platform)
+                            Application.Current.MainPage = new CarlosSocialSignUp(facebookData.id, facebookData.name, "", facebookData.email, accessToken, accessToken, "FACEBOOK");
+                        }
                     }
+
                     if (responseContent.Contains(Constant.AutheticatedSuccesful))
                     {
-                        Application.Current.MainPage = new CarlosHomePage();
+                        var data = JsonConvert.DeserializeObject<SuccessfulSocialLogIn>(responseContent);
+                        Application.Current.Properties["user_id"] = data.result[0].customer_uid;
+
+                        UpdateTokensPost updateTokesPost = new UpdateTokensPost();
+                        updateTokesPost.uid = data.result[0].customer_uid;
+                        updateTokesPost.mobile_access_token = accessToken;
+                        updateTokesPost.mobile_refresh_token = accessToken;
+
+                        var updateTokesPostSerializedObject = JsonConvert.SerializeObject(updateTokesPost);
+                        var updateTokesContent = new StringContent(updateTokesPostSerializedObject, Encoding.UTF8, "application/json");
+                        var updateTokesResponse = await client.PostAsync(Constant.UpdateTokensUrl, updateTokesContent);
+                        var updateTokenResponseContent = await updateTokesResponse.Content.ReadAsStringAsync();
+                        System.Diagnostics.Debug.WriteLine(updateTokenResponseContent);
+
+                        if (updateTokesResponse.IsSuccessStatusCode)
+                        {
+                            DateTime today = DateTime.Now;
+                            DateTime expDate = today.AddDays(Constant.days);
+
+                            Application.Current.Properties["time_stamp"] = expDate;
+                            Application.Current.Properties["platform"] = "FACEBOOK";
+                            Application.Current.MainPage = new SubscriptionPage();
+
+                            // THIS IS HOW YOU CAN ACCESS YOUR USER ID FROM THE APP
+                            // string userID = (string)Application.Current.Properties["user_id"];
+                        }
+                        else
+                        {
+                            await DisplayAlert("Oops", "We are facing some problems with our internal system. We weren't able to update your credentials", "OK");
+                        }
+                    }
+
+                    if (responseContent.Contains(Constant.ErrorPlatform))
+                    {
+                        var RDSCode = JsonConvert.DeserializeObject<RDSLogInMessage>(responseContent);
+                        await DisplayAlert("Message", RDSCode.message, "OK");
+                    }
+
+                    if (responseContent.Contains(Constant.ErrorUserDirectLogIn))
+                    {
+                        await DisplayAlert("Oops!", "You have an existing MTYD account. Please use direct login", "OK");
                     }
                 }
             }
@@ -395,46 +439,7 @@ namespace MTYD
 
             if (e.IsAuthenticated)
             {
-                if (accessToken == null && refreshToken == null)
-                {
-                    accessToken = e.Account.Properties["access_token"];
-                    refreshToken = e.Account.Properties["refresh_token"];
-
-                    Application.Current.Properties["access_token"] = accessToken;
-                    Application.Current.Properties["refresh_token"] = refreshToken;
-
-                    GoogleUserProfileAsync(accessToken, refreshToken, e);
-                }
-                else if (!refreshToken.Equals(e.Account.Properties["refresh_token"]) && !accessToken.Equals(e.Account.Properties["access_token"]))
-                {
-                    DateTime today = DateTime.Now;
-                    DateTime expirationDate = today.AddDays(Constant.days);
-                    Application.Current.Properties["time_stamp"] = expirationDate;
-
-                    accessToken = e.Account.Properties["access_token"];
-                    refreshToken = e.Account.Properties["refresh_token"];
-
-                    UpdateTokensPost updateTokens = new UpdateTokensPost();
-                    updateTokens.access_token = accessToken;
-                    updateTokens.refresh_token = refreshToken;
-                    updateTokens.uid = (string)Application.Current.Properties["uid"];
-                    updateTokens.social_timestamp = expirationDate.ToString("yyyy-MM-dd HH:mm:ss");
-
-                    var updatePostSerilizedObject = JsonConvert.SerializeObject(updateTokens);
-                    var updatePostContent = new StringContent(updatePostSerilizedObject, Encoding.UTF8, "application/json");
-
-                    var client = new HttpClient();
-                    var RDSrespose = await client.PostAsync(Constant.UpdateTokensUrl, updatePostContent);
-
-                    if (RDSrespose.IsSuccessStatusCode)
-                    {
-                        GoogleUserProfileAsync(accessToken, refreshToken, e);
-                    }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine("Unable to update google tokens");
-                    }
-                }
+                GoogleUserProfileAsync(e.Account.Properties["access_token"], e.Account.Properties["refresh_token"], e);
             }
             else
             {
@@ -451,11 +456,12 @@ namespace MTYD
             var GoogleResponse = await request.GetResponseAsync();
             var userData = GoogleResponse.GetResponseText();
 
+            System.Diagnostics.Debug.WriteLine(userData);
             GoogleResponse googleData = JsonConvert.DeserializeObject<GoogleResponse>(userData);
 
             socialLogInPost.email = googleData.email;
             socialLogInPost.password = "";
-            socialLogInPost.token = refreshToken;
+            socialLogInPost.social_id = googleData.id;
             socialLogInPost.signup_platform = "GOOGLE";
 
             var socialLogInPostSerialized = JsonConvert.SerializeObject(socialLogInPost);
@@ -468,17 +474,64 @@ namespace MTYD
 
             System.Diagnostics.Debug.WriteLine(responseContent);
             System.Diagnostics.Debug.WriteLine(RDSResponse.IsSuccessStatusCode);
+
             if (RDSResponse.IsSuccessStatusCode)
             {
                 if (responseContent != null)
                 {
                     if (responseContent.Contains(Constant.EmailNotFound))
                     {
-                        Application.Current.MainPage = new CarlosSocialSignUp(googleData.given_name, googleData.family_name, googleData.email, accessToken, refreshToken, "GOOGLE");
+                        var signUp = await DisplayAlert("Message", "It looks like you don't have a MTYD account. Please sign up!", "OK", "Cancel");
+                        if (signUp)
+                        {
+                            // HERE YOU NEED TO SUBSTITUTE MY SOCIAL SIGN UP PAGE WITH MTYD SOCIAL SIGN UP
+                            // NOTE THAT THIS SOCIAL SIGN UP PAGE NEEDS A CONSTRUCTOR LIKE THE FOLLOWING ONE
+                            // SocialSignUp(string socialId, string firstName, string lastName, string emailAddress, string accessToken, string refreshToken, string platform)
+                            Application.Current.MainPage = new CarlosSocialSignUp(googleData.id, googleData.given_name, googleData.family_name, googleData.email, accessToken, refreshToken, "GOOGLE");
+                        }
                     }
                     if (responseContent.Contains(Constant.AutheticatedSuccesful))
                     {
-                        Application.Current.MainPage = new CarlosHomePage();
+                        var data = JsonConvert.DeserializeObject<SuccessfulSocialLogIn>(responseContent);
+                        Application.Current.Properties["user_id"] = data.result[0].customer_uid;
+
+                        UpdateTokensPost updateTokesPost = new UpdateTokensPost();
+                        updateTokesPost.uid = data.result[0].customer_uid;
+                        updateTokesPost.mobile_access_token = accessToken;
+                        updateTokesPost.mobile_refresh_token = refreshToken;
+
+                        var updateTokesPostSerializedObject = JsonConvert.SerializeObject(updateTokesPost);
+                        var updateTokesContent = new StringContent(updateTokesPostSerializedObject, Encoding.UTF8, "application/json");
+                        var updateTokesResponse = await client.PostAsync(Constant.UpdateTokensUrl, updateTokesContent);
+                        var updateTokenResponseContent = await updateTokesResponse.Content.ReadAsStringAsync();
+                        System.Diagnostics.Debug.WriteLine(updateTokenResponseContent);
+
+                        if (updateTokesResponse.IsSuccessStatusCode)
+                        {
+                            DateTime today = DateTime.Now;
+                            DateTime expDate = today.AddDays(Constant.days);
+
+                            Application.Current.Properties["time_stamp"] = expDate;
+                            Application.Current.Properties["platform"] = "GOOGLE";
+                            Application.Current.MainPage = new SubscriptionPage();
+
+                            // THIS IS HOW YOU CAN ACCESS YOUR USER ID FROM THE APP
+                            // string userID = (string)Application.Current.Properties["user_id"];
+                        }
+                        else
+                        {
+                            await DisplayAlert("Oops", "We are facing some problems with our internal system. We weren't able to update your credentials", "OK");
+                        }
+                    }
+                    if (responseContent.Contains(Constant.ErrorPlatform))
+                    {
+                        var RDSCode = JsonConvert.DeserializeObject<RDSLogInMessage>(responseContent);
+                        await DisplayAlert("Message", RDSCode.message, "OK");
+                    }
+
+                    if (responseContent.Contains(Constant.ErrorUserDirectLogIn))
+                    {
+                        await DisplayAlert("Oops!", "You have an existing MTYD account. Please use direct login", "OK");
                     }
                 }
             }
@@ -498,7 +551,7 @@ namespace MTYD
         }
 
         // APPLE LOGIN CLICK
-        private async void appleLoginButtonClicked(object sender, EventArgs e)
+        public async void appleLoginButtonClicked(object sender, EventArgs e)
         {
             SignIn?.Invoke(sender, e);
             var c = (ImageButton)sender;
@@ -510,7 +563,7 @@ namespace MTYD
 
         async void clickedSignUp(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new SignUp(), false);
+            Application.Current.MainPage = new CarlosSignUp();
         }
 
         void clickedForgotPass(System.Object sender, System.EventArgs e)
