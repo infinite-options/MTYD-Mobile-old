@@ -1,21 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MTYD.MainPage" NavigationPage.HasNavigationBar="False"
-             >
-        <!--<local:CustomEntry Text="In Shared Code" />-->
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="MTYD.MainPage" NavigationPage.HasNavigationBar="False">
 
-    <!--<ContentPage.Padding>
-        <OnPlatform x:TypeArguments="Thickness">
-			<On Platform="iOS" Value="0,20,0,0" />
-			<On Platform="Android" Value="0,0,0,0" />
-			<On Platform="UWP" Value="0,0,0,0"/>
-	    </OnPlatform>
-    </ContentPage.Padding>-->
 
     
     <StackLayout x:Name="mainStack">
-
 
             <AbsoluteLayout x:Name="absLayout" BackgroundColor="#000000">
             <Image  AbsoluteLayout.LayoutBounds="1, -15, 2, 1.0"
@@ -26,7 +14,7 @@
                    AbsoluteLayout.LayoutFlags="All"
                    BackgroundColor="Black" Aspect="AspectFill" Opacity="0.5"/>
 
-           <Label x:Name="Heading" Text="NUTRITION&#10;MADE EASY" FontAttributes="Bold" LineHeight="1"
+            <Label x:Name="Heading" Text="NUTRITION&#10;MADE EASY" FontAttributes="Bold" LineHeight="1"
 
 
                    AbsoluteLayout.LayoutBounds="0.5, 0.14"
@@ -46,12 +34,10 @@
 
                 <Frame x:Name="userFrame" Padding="20,10" Margin="0" BackgroundColor="#FFE5B4">
                     
-                   <Entry x:Name="loginUsername" FontAttributes="Bold"
-                   FontSize="16" Placeholder="USERNAME" Keyboard="Default"
-                   HeightRequest="20" WidthRequest="245" 
-                   BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4">
-
-                   </Entry>
+                   <Entry x:Name="loginUsername" Keyboard="Text" FontAttributes="Bold"
+                   FontSize="16" Placeholder="USERNAME"
+                   HeightRequest="20" WidthRequest="245"
+                   BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
 
                 </Frame>
 
@@ -64,8 +50,8 @@
                 <Frame x:Name="passFrame" Padding="20,10,35,10" Margin="0" BackgroundColor="#FFE5B4">
                     
                    <Entry x:Name="loginPassword" Keyboard="Text" FontAttributes="Bold"
-                   FontSize="16" Placeholder="PASSWORD" IsPassword="True" 
-                   HeightRequest="20" WidthRequest="230" TextColor="Black"
+                   FontSize="16" Placeholder="PASSWORD" IsPassword="True"
+                   HeightRequest="20" WidthRequest="230"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
 
                 </Frame>
@@ -150,7 +136,8 @@
                           BackgroundColor="#E4E4E4"
                           HeightRequest="55" WidthRequest="55"
                           Clicked="appleLoginButtonClicked" Source="appleicon2.png"
-                          Aspect="AspectFill"/>
+                          Aspect="AspectFill"
+                          Command = "{Binding SignInWithAppleCommand}"/>
                
 
             </AbsoluteLayout>

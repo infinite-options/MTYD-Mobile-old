@@ -7,6 +7,5 @@ namespace MTYD
 {
     public class CustomEntry: Entry
     {
-
     }
 }

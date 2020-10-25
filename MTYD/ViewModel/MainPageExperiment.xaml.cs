@@ -11,15 +11,15 @@ namespace MTYD.ViewModel
         {
             if (Device.RuntimePlatform == Device.iOS)
             {
-                subHeading.Margin = new Thickness(0, height / -100, 0, 0);
-                grid1.Margin = new Thickness(0, height / 16, 0, 0);
+                //subHeading.Margin = new Thickness(0, height / -100, 0, 0);
+                grid1.Margin = new Thickness(0, height / 21, 0, 0);
 
                 grid2.Margin = new Thickness(width / 13, height / 90, width / 13, 0);
                 userFrame.HeightRequest = height / 180;
-                userFrame.CornerRadius = 27;
+                userFrame.CornerRadius = (int)(height / 68);
                 loginUsername.Margin = new Thickness(0, height / (-120), 0, height / (-120));
                 passFrame.HeightRequest = height / 180;
-                passFrame.CornerRadius = 27;
+                passFrame.CornerRadius = (int)(height / 68);
                 loginPassword.Margin = new Thickness(0, height / (-120), width / 55, height / (-120));
 
 
@@ -27,20 +27,20 @@ namespace MTYD.ViewModel
                 signUpButton.HeightRequest = height / 35;
                 loginButton.WidthRequest = width / 7;
                 signUpButton.WidthRequest = width / 7;
-                loginButton.CornerRadius = (int)(height / 63);
-                signUpButton.CornerRadius = (int)(height / 63);
+                loginButton.CornerRadius = (int)(height / 62);
+                signUpButton.CornerRadius = (int)(height / 62);
                 grid4.Margin = new Thickness(width / 15, height / 80, width / 15, height / 100);
-                grid5.Margin = new Thickness(0, height / 80, 0, height / 80);
+                grid5.Margin = new Thickness(0, height / 80, 0, height / 21);
 
-                googleLoginButton.HeightRequest = height / 32;
-                googleLoginButton.WidthRequest = height / 32;
-                googleLoginButton.CornerRadius = (int)(height / 65);
-                facebookLoginButton.HeightRequest = height / 32;
-                facebookLoginButton.WidthRequest = height / 32;
-                facebookLoginButton.CornerRadius = (int)(height / 65);
-                appleLoginButton.HeightRequest = height / 32;
-                appleLoginButton.WidthRequest = height / 32;
-                appleLoginButton.CornerRadius = (int)(height / 65);
+                googleLoginButton.HeightRequest = width / 12;
+                googleLoginButton.WidthRequest = width / 12;
+                googleLoginButton.CornerRadius = (int)(height / 52);
+                facebookLoginButton.HeightRequest = width / 12;
+                facebookLoginButton.WidthRequest = width / 12;
+                facebookLoginButton.CornerRadius = (int)(height / 52);
+                appleLoginButton.HeightRequest = width / 12;
+                appleLoginButton.WidthRequest = width / 12;
+                appleLoginButton.CornerRadius = (int)(height / 52);
             }
             else //android
             {
@@ -58,7 +58,7 @@ namespace MTYD.ViewModel
                 signUpButton.HeightRequest = height / 40;
                 loginButton.WidthRequest = width / 10;
                 signUpButton.WidthRequest = width / 10;
-                forgotPass.Margin = new Thickness(0,-30,10,0);
+                forgotPass.Margin = new Thickness(0, -30, 10, 0);
 
                 loginButton.CornerRadius = (int)(height / 63);
                 signUpButton.CornerRadius = (int)(height / 63);
@@ -106,7 +106,7 @@ namespace MTYD.ViewModel
         async void clickedSignUp(object sender, EventArgs e)
         {
             //temporary change for testing
-            await Navigation.PushAsync(new MainPageExperiment());
+            Application.Current.MainPage = new CarlosSignUp();
 
             //await Navigation.PushAsync(new SignUp(), false);
         }
@@ -115,7 +115,7 @@ namespace MTYD.ViewModel
         private async void clickedLogin(object sender, EventArgs e)
         {
             //For testing purposes
-            await Navigation.PushAsync(new SubscriptionPage());
+            await Navigation.PopAsync(false);
             //loginButton.IsEnabled = false;
             if (String.IsNullOrEmpty(this.loginUsername.Text) || String.IsNullOrEmpty(this.loginPassword.Text))
             { // check if all fields are filled out

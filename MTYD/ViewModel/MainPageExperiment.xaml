@@ -14,11 +14,11 @@
                 </Grid.RowDefinitions>
 
                 <Label x:Name="Heading" Grid.Row="0" Text="NUTRITION&#10;MADE EASY" FontAttributes="Bold"
-                       LineHeight="1" FontSize="44" HorizontalTextAlignment="Center"
+                       LineHeight="1" FontSize="44" HorizontalTextAlignment="Center" VerticalOptions="End"
                        TextColor="#FFFFFF" CharacterSpacing="3" />
 
                 <Label x:Name="subHeading" Grid.Row="1" Text="LOCAL. ORGANIC. RESPONSIBLE."
-                   VerticalOptions="Center" TextColor="#FFB054" FontAttributes="Bold"
+                   VerticalOptions="Start" TextColor="#FFB054" FontAttributes="Bold"
                    HorizontalTextAlignment="Center" FontSize="20" CharacterSpacing="1"
                        />
 

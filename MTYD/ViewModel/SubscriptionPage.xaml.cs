@@ -357,17 +357,20 @@ namespace MTYD.ViewModel
                 TotalPrice.Text = "$" + m1price_f1.ToString();
                 Preferences.Set("item_name", m1f1name);
                 Preferences.Set("item_uid", m1f1uid);
-            } else if (meal_select == "2")
+            }
+            else if (meal_select == "2")
             {
                 TotalPrice.Text = "$" + m2price_f1.ToString();
                 Preferences.Set("item_name", m2f1name);
                 Preferences.Set("item_uid", m2f1uid);
-            } else if (meal_select == "3")
+            }
+            else if (meal_select == "3")
             {
                 TotalPrice.Text = "$" + m3price_f1.ToString();
                 Preferences.Set("item_name", m3f1name);
                 Preferences.Set("item_uid", m3f1uid);
-            } else if (meal_select == "4")
+            }
+            else if (meal_select == "4")
             {
                 TotalPrice.Text = "$" + m4price_f1.ToString();
                 Preferences.Set("item_name", m4f1name);
@@ -469,7 +472,7 @@ namespace MTYD.ViewModel
             }
 
             int length = (TotalPrice.Text).Length;
-            string price = TotalPrice.Text.Substring(1,length-1);
+            string price = TotalPrice.Text.Substring(1, length - 1);
             Preferences.Set("price", price);
 
             Console.WriteLine("Price selected: " + price);
@@ -483,8 +486,7 @@ namespace MTYD.ViewModel
 
         async void clickedBack(System.Object sender, System.EventArgs e)
         {
-            //await Navigation.PopAsync(false);
-            await Navigation.PopToRootAsync(false);
+            await Navigation.PopAsync(false);
         }
 
         async void clickedMenu(System.Object sender, System.EventArgs e)
@@ -493,5 +495,3 @@ namespace MTYD.ViewModel
         }
     }
 }
-
-//comment

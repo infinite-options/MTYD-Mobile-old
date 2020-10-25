@@ -51,11 +51,10 @@ namespace MTYD.ViewModel
             newPayment.delivery_latitude = "";
             newPayment.order_instructions = "slow";
             newPayment.purchase_notes = "new purch";
-            //make if statement to not send total, as a reminder
-            newPayment.amount_due = Preferences.Get("price", "00.00");  //has to be a number
+            newPayment.amount_due = Preferences.Get("price", "00.00");
             newPayment.amount_discount = "00.00";
-            newPayment.amount_paid = Preferences.Get("price", "00.00"); //has to be a number
-            newPayment.cc_num = CCEntry.Text; //the testing is always 4242424242424242
+            newPayment.amount_paid = Preferences.Get("price", "00.00");
+            newPayment.cc_num = CCEntry.Text;
             //newPayment.cc_exp_year = YearPicker.Items[YearPicker.SelectedIndex];
             newPayment.cc_exp_year = "2022";
             //newPayment.cc_exp_month = MonthPicker.Items[MonthPicker.SelectedIndex];
@@ -159,7 +158,8 @@ namespace MTYD.ViewModel
             await Navigation.PushAsync(new Menu()); 
         }
 
-        void clickedNotDone(object sender, EventArgs e) {
+        void clickedNotDone(object sender, EventArgs e)
+        {
             if (FNameEntry.Text == null || FNameEntry.Text == "")
             {
                 DisplayAlert("Warning!", "first name required", "okay");
@@ -250,7 +250,7 @@ namespace MTYD.ViewModel
                 return;
             }
 
-            clickedDone(sender, e); 
+            clickedDone(sender, e);
         }
 
         async void clickedBack(System.Object sender, System.EventArgs e) {
