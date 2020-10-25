@@ -154,7 +154,6 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
-
                         <StackLayout VerticalOptions="End" Grid.Column="0">
                             <ImageButton x:Name="SubscribeIconNav" Source="noun_subscribe_2445070.png" HeightRequest="40" WidthRequest="40" Margin="0, 10, 0, 0" Clicked="onNavIconClick"></ImageButton>
                             <Button x:Name="SubscribeNav" Text="Subscribe" FontSize="12" TextColor="#006633" BackgroundColor="Transparent" HorizontalOptions="Center" Margin="0, -20, 0, 0" Clicked="onNavClick">
