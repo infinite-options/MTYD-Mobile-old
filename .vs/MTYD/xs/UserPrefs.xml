@@ -1,8 +1,12 @@
 ﻿<Properties StartupConfiguration="{FAB6B3BB-6B8C-41F3-9565-69D18FC959BC}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/ViewModel/MainPageExperiment.xaml">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/ViewModel/SubscriptionPage.xaml.cs">
     <Files>
       <File FileName="MTYD/ViewModel/MainPageExperiment.xaml.cs" Line="7" Column="2" />
-      <File FileName="MTYD/ViewModel/MainPageExperiment.xaml" Line="107" Column="1" />
+      <File FileName="MTYD/ViewModel/MainPageExperiment.xaml" />
+      <File FileName="MTYD/MainPage.xaml" Line="1" Column="1" />
+      <File FileName="MTYD/MainPage.xaml.cs" Line="691" Column="62" />
+      <File FileName="MTYD/ViewModel/SubscriptionPage.xaml" Line="1" Column="1" />
+      <File FileName="MTYD/ViewModel/SubscriptionPage.xaml.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -17,8 +21,12 @@
               </Node>
               <Node name="Resources" expanded="True" />
               <Node name="ViewModel" expanded="True">
-                <Node name="MainPageExperiment.xaml" expanded="True" selected="True" />
+                <Node name="MainPageExperiment.xaml" expanded="True" />
+                <Node name="SubscriptionPage.xaml" expanded="True">
+                  <Node name="SubscriptionPage.xaml.cs" selected="True" />
+                </Node>
               </Node>
+              <Node name="MainPage.xaml" expanded="True" />
             </Node>
             <Node name="MTYD.Android" expanded="True">
               <Node name="Resources" expanded="True">
@@ -38,7 +46,7 @@
   <MonoDevelop.Ide.ItemProperties.MTYD.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.45378B49-DE2E-44A6-899E-E2DCB6A5819B" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.MTYD.Android AndroidDesignerPreferredTheme="Theme.AppCompat.Light.NoActionBar" PreferredExecutionTarget="Android.one_plus_6" />
+  <MonoDevelop.Ide.ItemProperties.MTYD.Android AndroidDesignerPreferredTheme="Theme.AppCompat.Light.NoActionBar" PreferredExecutionTarget="Android.pixel_3" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

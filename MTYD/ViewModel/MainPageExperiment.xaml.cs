@@ -12,29 +12,40 @@ namespace MTYD.ViewModel
             if (Device.RuntimePlatform == Device.iOS)
             {
                 subHeading.Margin = new Thickness(0, height / -100, 0, 0);
-                grid1.Margin = new Thickness(0, height / 14, 0, 0);
+                grid1.Margin = new Thickness(0, height / 16, 0, 0);
 
-                grid2.Margin = new Thickness(width / 13, height / 80, width / 13, 0);
+                grid2.Margin = new Thickness(width / 13, height / 90, width / 13, 0);
                 userFrame.HeightRequest = height / 180;
                 userFrame.CornerRadius = 27;
                 loginUsername.Margin = new Thickness(0, height / (-120), 0, height / (-120));
                 passFrame.HeightRequest = height / 180;
                 passFrame.CornerRadius = 27;
-                loginPassword.Margin = new Thickness(0, height / (-120), 0, height / (-120));
+                loginPassword.Margin = new Thickness(0, height / (-120), width / 55, height / (-120));
 
 
                 loginButton.HeightRequest = height / 35;
                 signUpButton.HeightRequest = height / 35;
                 loginButton.WidthRequest = width / 7;
                 signUpButton.WidthRequest = width / 7;
-                loginButton.CornerRadius = (int)(height / 80);
-                signUpButton.CornerRadius = (int)(height / 90);
+                loginButton.CornerRadius = (int)(height / 63);
+                signUpButton.CornerRadius = (int)(height / 63);
+                grid4.Margin = new Thickness(width / 15, height / 80, width / 15, height / 100);
+                grid5.Margin = new Thickness(0, height / 80, 0, height / 80);
 
+                googleLoginButton.HeightRequest = height / 32;
+                googleLoginButton.WidthRequest = height / 32;
+                googleLoginButton.CornerRadius = (int)(height / 65);
+                facebookLoginButton.HeightRequest = height / 32;
+                facebookLoginButton.WidthRequest = height / 32;
+                facebookLoginButton.CornerRadius = (int)(height / 65);
+                appleLoginButton.HeightRequest = height / 32;
+                appleLoginButton.WidthRequest = height / 32;
+                appleLoginButton.CornerRadius = (int)(height / 65);
             }
-            else
+            else //android
             {
-                subHeading.Margin = new Thickness(0, height / -100, 0, 0);
-                grid1.Margin = new Thickness(0, height / 17, 0, 0);
+                subHeading.Margin = new Thickness(0, height / -145, 0, 0);
+                grid1.Margin = new Thickness(0, height / 23, 0, 0);
 
                 grid2.Margin = new Thickness(width / 20, height / 80, width / 25, 0);
                 userFrame.HeightRequest = height / 180;
@@ -43,10 +54,26 @@ namespace MTYD.ViewModel
                 passFrame.HeightRequest = height / 180;
                 passFrame.CornerRadius = 27;
                 loginPassword.Margin = new Thickness(0, height / (-120), 0, height / (-120));
-                loginButton.HeightRequest = height / 100;
-                signUpButton.HeightRequest = height / 120;
-                loginButton.WidthRequest = width / 15;
-                signUpButton.WidthRequest = width / 14;
+                loginButton.HeightRequest = height / 40;
+                signUpButton.HeightRequest = height / 40;
+                loginButton.WidthRequest = width / 10;
+                signUpButton.WidthRequest = width / 10;
+                forgotPass.Margin = new Thickness(0,-30,10,0);
+
+                loginButton.CornerRadius = (int)(height / 63);
+                signUpButton.CornerRadius = (int)(height / 63);
+                grid4.Margin = new Thickness(width / 15, height / 80, width / 15, height / 120);
+                grid5.Margin = new Thickness(0, height / 80, 0, height / 80);
+
+                googleLoginButton.HeightRequest = height / 30;
+                googleLoginButton.WidthRequest = height / 30;
+                googleLoginButton.CornerRadius = (int)(height / 0.2);
+                facebookLoginButton.HeightRequest = height / 30;
+                facebookLoginButton.WidthRequest = height / 30;
+                facebookLoginButton.CornerRadius = (int)(height / 0.2);
+                appleLoginButton.HeightRequest = height / 30;
+                appleLoginButton.WidthRequest = height / 30;
+                appleLoginButton.CornerRadius = (int)(height / 0.2);
             }
         }
 
@@ -55,6 +82,8 @@ namespace MTYD.ViewModel
         {
             var width = DeviceDisplay.MainDisplayInfo.Width;
             var height = DeviceDisplay.MainDisplayInfo.Height;
+            Console.WriteLine("Width = " + width.ToString());
+            Console.WriteLine("Height = " + height.ToString());
             InitializeComponent();
             checkPlatform(height, width);
             NavigationPage.SetHasBackButton(this, false);
@@ -130,6 +159,24 @@ namespace MTYD.ViewModel
                 }
                 */
             }
+        }
+
+        [Obsolete]
+        private async void googleLoginButtonClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new GoogleLogin(), false);
+        }
+
+        [Obsolete]
+        private async void facebookLoginButtonClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new FacebookLogin(), false);
+        }
+
+        [Obsolete]
+        private async void appleLoginButtonClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new AppleLogin(), false);
         }
     }
 }
