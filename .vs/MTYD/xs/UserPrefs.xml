@@ -1,16 +1,16 @@
 ﻿<Properties StartupConfiguration="{FAB6B3BB-6B8C-41F3-9565-69D18FC959BC}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/App.xaml.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/Model/Login/LoginClasses/SuccessfulSocialLogIn.cs">
     <Files>
-      <File FileName="MTYD/App.xaml.cs" Line="155" Column="18" />
-      <File FileName="MTYD/CarlosSocialSignUp.xaml" />
-      <File FileName="MTYD/MainPage.xaml.cs" />
-      <File FileName="MTYD/Model/Login/LoginClasses/Apple/LoginViewModel.cs" Line="122" Column="82" />
-      <File FileName="MTYD/CarlosSignUp.xaml.cs" />
-      <File FileName="MTYD/CarlosSocialSignUp.xaml.cs" />
-      <File FileName="MTYD/ViewModel/UserProfile.xaml.cs" />
-      <File FileName="MTYD/ViewModel/UserProfile.xaml" />
-      <File FileName="MTYD/CarlosHomePage.xaml.cs" />
-      <File FileName="MTYD/CarlosSignUp.xaml" />
+      <File FileName="MTYD/App.xaml.cs" Line="72" Column="33" />
+      <File FileName="MTYD/MainPage.xaml" />
+      <File FileName="MTYD/MainPage.xaml.cs" Line="365" Column="71" />
+      <File FileName="MTYD/CarlosHomePage.xaml" />
+      <File FileName="MTYD/CarlosSocialSignUp.xaml" Line="1" Column="1" />
+      <File FileName="MTYD/CarlosSocialSignUp.xaml.cs" Line="1" Column="1" />
+      <File FileName="MTYD/CarlosSignUp.xaml" Line="1" Column="1" />
+      <File FileName="MTYD/CarlosSignUp.xaml.cs" Line="347" Column="21" />
+      <File FileName="MTYD/Model/Login/Constants/Constant.cs" Line="35" Column="115" />
+      <File FileName="MTYD/Model/Login/LoginClasses/SuccessfulSocialLogIn.cs" Line="42" Column="18" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -19,14 +19,16 @@
             <Node name="MTYD" expanded="True">
               <Node name="Model" expanded="True">
                 <Node name="Login" expanded="True">
+                  <Node name="Constants" expanded="True" />
                   <Node name="LoginClasses" expanded="True">
-                    <Node name="Apple" expanded="True" />
+                    <Node name="SuccessfulSocialLogIn.cs" selected="True" />
                   </Node>
                 </Node>
               </Node>
-              <Node name="App.xaml" expanded="True">
-                <Node name="App.xaml.cs" selected="True" />
-              </Node>
+              <Node name="App.xaml" expanded="True" />
+              <Node name="CarlosSignUp.xaml" expanded="True" />
+              <Node name="CarlosSocialSignUp.xaml" expanded="True" />
+              <Node name="MainPage.xaml" expanded="True" />
             </Node>
             <Node name="MTYD.Android" expanded="True" />
             <Node name="MTYD.iOS" expanded="True" />
@@ -35,7 +37,7 @@
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.ItemProperties.MTYD.iOS automaticSigning="True" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.A342705D-135D-4B1C-85E6-C1A53574EB35">
+  <MonoDevelop.Ide.ItemProperties.MTYD.iOS automaticSigning="True" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.DA9CF15E-CA19-45CB-8B99-589AFE3C18F1">
     <MonoDevelop.MacDev.AppleDevelopmentTeam DeveloperId="5M8R6389HP" TeamId="8V66NC2T37" />
   </MonoDevelop.Ide.ItemProperties.MTYD.iOS>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

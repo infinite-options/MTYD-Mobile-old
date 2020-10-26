@@ -26,117 +26,50 @@ namespace MTYD
         static UserLoginDatabase database;
         static Boolean loggedIn = false;
 
+        // Initialize variables for Apple Login
         public const string LoggedInKey = "LoggedIn";
         public const string AppleUserIdKey = "AppleUserIdKey";
         string userId;
-        DateTime time_stamp;
 
-        // MTYP ORIGINAL APP CONSTRUCTOR
-        /*
-        public App()
-        {
-            InitializeComponent();
-
-            if (database == null)
-            {
-                database = new UserLoginDatabase();
-            }
-
-
-
-
-            MainPage = new NavigationPage(new MainPage());
-
-            // MainPage = new Login();
-            // MainPage = new NavigationPage(new MealSchedule());
-            // MainPage = new PaymentPage();
-            // MainPage = new Profile();
-        }*/
-
-        //// OLD MTYP APP CONSTRUCTOR 
-        //public App()
-        //{
-        //    InitializeComponent();
-
-        //    if (Preferences.Get(LoggedInKey, false))
-        //    {
-        //        MainPage = new CarlosHomePage();
-        //    }
-        //    else
-        //    {
-        //        DateTime today = DateTime.Now;
-        //        DateTime expTime = today;
-
-        //        if (this.Properties.ContainsKey("time_stamp"))
-        //        {
-        //            expTime = (DateTime)this.Properties["time_stamp"];
-        //        }
-
-        //        if (this.Properties.ContainsKey("access_token")
-        //            && this.Properties.ContainsKey("refresh_token")
-        //            && this.Properties.ContainsKey("time_stamp") && today <= expTime)
-        //        {
-
-        //            MainPage = new CarlosHomePage();
-
-        //        }
-        //        else if (this.Properties.ContainsKey("access_token")
-        //           && this.Properties.ContainsKey("refresh_token")
-        //           && this.Properties.ContainsKey("time_stamp") && today > expTime)
-        //        {
-
-        //            MainPage myPage = new MainPage();
-
-        //            System.Object sender = new System.Object();
-        //            System.EventArgs e = new System.EventArgs();
-
-        //            if (this.Properties["platform"].Equals(Constant.Google))
-        //            {
-        //                myPage.googleLoginButtonClicked(sender, e);
-        //            }
-        //            if (this.Properties["platform"].Equals(Constant.Facebook))
-        //            {
-        //                myPage.facebookLoginButtonClicked(sender, e);
-        //            }
-        //        }
-        //        else if (this.Properties.ContainsKey("social"))
-        //        {
-        //            MainPage = new CarlosHomePage();
-        //        }
-        //        else
-        //        {
-        //            MainPage = new MainPage();
-        //        }
-        //    }
-        //}
 
         public App()
         {
             InitializeComponent();
-
+            
+            // User id and time_stamp are retrieved from local phone memory (written by Login View Model, Signup, Social Signup and MainPage.xaml.cs)
             if (Application.Current.Properties.ContainsKey("user_id"))
+
             {
+                System.Diagnostics.Debug.WriteLine("UserID is:" + (string)Application.Current.Properties["user_id"]);
                 if (Application.Current.Properties.ContainsKey("time_stamp"))
+                    
                 {
+                    System.Diagnostics.Debug.WriteLine("Time Stamp is:" + (string)Application.Current.Properties["time_stamp"]);
                     DateTime today = DateTime.Now;
                     DateTime expTime = (DateTime)Application.Current.Properties["time_stamp"];
+                    Console.WriteLine("today" + today.ToString());
+                    Console.WriteLine("expTime" + expTime.ToString());
 
                     if (today <= expTime)
                     {
-                        MainPage = new CarlosHomePage();
+                        // MainPage = new CarlosHomePage();
+                        Console.WriteLine("entered time check");
+                        MainPage = new NavigationPage(new SubscriptionPage());
                     }
                     else
                     {
                         MainPage client = new MainPage();
                         MainPage = client;
 
-                        if (Application.Current.Properties.ContainsKey("time_stamp"))
+                        if (Application.Current.Properties.ContainsKey("platform"))
                         {
+                            System.Diagnostics.Debug.WriteLine("platform is:" + (string)Application.Current.Properties["platform"]);
                             string socialPlatform = (string)Application.Current.Properties["platform"];
 
                             if (socialPlatform.Equals("FACEBOOK"))
                             {
                                 client.facebookLoginButtonClicked(new object(), new EventArgs());
+                                // Goes to MainPage.xaml.cs
                             }
                             else if (socialPlatform.Equals("GOOGLE"))
                             {

@@ -253,11 +253,14 @@ namespace MTYD
         // FACEBOOK LOGIN CLICK
         public async void facebookLoginButtonClicked(object sender, EventArgs e)
         {
+
+            // Initialize variables
             string clientID = string.Empty;
             string redirectURL = string.Empty;
 
             switch (Device.RuntimePlatform)
             {
+                // depending on the device, get constants from Login>Constants>Constants.cs file
                 case Device.iOS:
                     clientID = Constant.FacebookiOSClientID;
                     redirectURL = Constant.FacebookiOSRedirectUrl;
@@ -268,27 +271,38 @@ namespace MTYD
                     break;
             }
 
+            // Store all the information in a variable called authenticator (for client) and presenter for http client (who is going to present the credentials)
             var authenticator = new OAuth2Authenticator(clientID, Constant.FacebookScope, new Uri(Constant.FacebookAuthorizeUrl), new Uri(redirectURL), null, false);
             var presenter = new Xamarin.Auth.Presenters.OAuthLoginPresenter();
 
+            // Creates Completed and Error Event Handler functions;  "+=" means create
             authenticator.Completed += FacebookAuthenticatorCompleted;
             authenticator.Error += FacebookAutheticatorError;
 
+
+            // This is the actual call to Facebook
             presenter.Login(authenticator);
+            // Facebooks sends back an authenticator that goes directly into the Event Handlers created above as "sender".  Data is stored in arguement "e" (account, user name, access token, etc).
         }
 
+
+
+
+        // sender contains nothing then there is an error.  sender contains an authenticator from Facebook
         public async void FacebookAuthenticatorCompleted(object sender, AuthenticatorCompletedEventArgs e)
         {
             var authenticator = sender as OAuth2Authenticator;
-
+            Console.WriteLine("authenticator" + authenticator.ToString());
             if (authenticator != null)
             {
+                // Removes Event Handler functions;  "-=" means delete
                 authenticator.Completed -= FacebookAuthenticatorCompleted;
                 authenticator.Error -= FacebookAutheticatorError;
             }
 
             if (e.IsAuthenticated)
             {
+                // Uses access token from Facebook as an input to FacebookUserProfileAsync
                 FacebookUserProfileAsync(e.Account.Properties["access_token"]);
             }
         }
@@ -299,11 +313,15 @@ namespace MTYD
             var client = new HttpClient();
             var socialLogInPost = new SocialLogInPost();
 
-            var facebookResponse = client.GetStringAsync(Constant.FacebookUserInfoUrl + accessToken);
-            var userData = facebookResponse.Result;
+            // Actual call to Facebooks end point now that we have the token (appending accessToken to URL in constants file)
+            var facebookResponse = client.GetStringAsync(Constant.FacebookUserInfoUrl + accessToken);  // makes the call to Facebook and returns True/False
+            var userData = facebookResponse.Result;  // returns Facebook email and social ID
 
+            System.Diagnostics.Debug.WriteLine(facebookResponse);
             System.Diagnostics.Debug.WriteLine(userData);
 
+
+            // Deserializes JSON object from info provided by Facebook
             FacebookResponse facebookData = JsonConvert.DeserializeObject<FacebookResponse>(userData);
 
             socialLogInPost.email = facebookData.email;
@@ -311,21 +329,24 @@ namespace MTYD
             socialLogInPost.social_id = facebookData.id;
             socialLogInPost.signup_platform = "FACEBOOK";
 
+            // Create JSON object for Login Endpoint
             var socialLogInPostSerialized = JsonConvert.SerializeObject(socialLogInPost);
             var postContent = new StringContent(socialLogInPostSerialized, Encoding.UTF8, "application/json");
 
             System.Diagnostics.Debug.WriteLine(socialLogInPostSerialized);
 
-            var RDSResponse = await client.PostAsync(Constant.LogInUrl, postContent);
-            var responseContent = await RDSResponse.Content.ReadAsStringAsync();
+            // Call to RDS database with endpoint and JSON data
+            var RDSResponse = await client.PostAsync(Constant.LogInUrl, postContent);  //  True or False if Parva's endpoint ran preperly.
+            var responseContent = await RDSResponse.Content.ReadAsStringAsync();  // Contains Parva's code containing all the user data including userid
 
-            System.Diagnostics.Debug.WriteLine(responseContent);
-            System.Diagnostics.Debug.WriteLine(RDSResponse.IsSuccessStatusCode);
-
+            System.Diagnostics.Debug.WriteLine(RDSResponse.IsSuccessStatusCode);  // Response code is Yes/True if successful from httpclient system.net package
+            System.Diagnostics.Debug.WriteLine(responseContent);  // Response JSON that RDS returns
+            
             if (RDSResponse.IsSuccessStatusCode)
             {
                 if (responseContent != null)
                 {
+                    // Do I don't have the email in RDS
                     if (responseContent.Contains(Constant.EmailNotFound))
                     {
                         var signUp = await DisplayAlert("Message", "It looks like you don't have a MTYD account. Please sign up!", "OK", "Cancel");
@@ -335,29 +356,32 @@ namespace MTYD
                             // NOTE THAT THIS SOCIAL SIGN UP PAGE NEEDS A CONSTRUCTOR LIKE THE FOLLOWING ONE
                             // SocialSignUp(string socialId, string firstName, string lastName, string emailAddress, string accessToken, string refreshToken, string platform)
                             Application.Current.MainPage = new CarlosSocialSignUp(facebookData.id, facebookData.name, "", facebookData.email, accessToken, accessToken, "FACEBOOK");
+                            // need to write new statment here ...
                         }
                     }
 
+
+                    // if Response content contains 200
                     if (responseContent.Contains(Constant.AutheticatedSuccesful))
                     {
                         var data = JsonConvert.DeserializeObject<SuccessfulSocialLogIn>(responseContent);
-                        Application.Current.Properties["user_id"] = data.result[0].customer_uid;
+                        Application.Current.Properties["user_id"] = data.result[0].customer_uid;  // converts RDS data into appication data.
 
-                        UpdateTokensPost updateTokesPost = new UpdateTokensPost();
-                        updateTokesPost.uid = data.result[0].customer_uid;
-                        updateTokesPost.mobile_access_token = accessToken;
-                        updateTokesPost.mobile_refresh_token = accessToken;
+                        UpdateTokensPost updateTokensPost = new UpdateTokensPost();
+                        updateTokensPost.uid = data.result[0].customer_uid;
+                        updateTokensPost.mobile_access_token = accessToken;
+                        updateTokensPost.mobile_refresh_token = accessToken;  // only get access token from Facebook so we store the data again
 
-                        var updateTokesPostSerializedObject = JsonConvert.SerializeObject(updateTokesPost);
-                        var updateTokesContent = new StringContent(updateTokesPostSerializedObject, Encoding.UTF8, "application/json");
-                        var updateTokesResponse = await client.PostAsync(Constant.UpdateTokensUrl, updateTokesContent);
-                        var updateTokenResponseContent = await updateTokesResponse.Content.ReadAsStringAsync();
+                        var updateTokensPostSerializedObject = JsonConvert.SerializeObject(updateTokensPost);
+                        var updateTokensContent = new StringContent(updateTokensPostSerializedObject, Encoding.UTF8, "application/json");
+                        var updateTokensResponse = await client.PostAsync(Constant.UpdateTokensUrl, updateTokensContent);  // This calls the database and returns True or False
+                        var updateTokenResponseContent = await updateTokensResponse.Content.ReadAsStringAsync();
                         System.Diagnostics.Debug.WriteLine(updateTokenResponseContent);
 
-                        if (updateTokesResponse.IsSuccessStatusCode)
+                        if (updateTokensResponse.IsSuccessStatusCode)
                         {
                             DateTime today = DateTime.Now;
-                            DateTime expDate = today.AddDays(Constant.days);
+                            DateTime expDate = today.AddDays(Constant.days);  // Internal assignment - not from the database
 
                             Application.Current.Properties["time_stamp"] = expDate;
                             Application.Current.Properties["platform"] = "FACEBOOK";
@@ -372,12 +396,15 @@ namespace MTYD
                         }
                     }
 
+                    // Wrong Platform message
                     if (responseContent.Contains(Constant.ErrorPlatform))
                     {
                         var RDSCode = JsonConvert.DeserializeObject<RDSLogInMessage>(responseContent);
                         await DisplayAlert("Message", RDSCode.message, "OK");
                     }
 
+
+                    // Wrong LOGIN method message
                     if (responseContent.Contains(Constant.ErrorUserDirectLogIn))
                     {
                         await DisplayAlert("Oops!", "You have an existing MTYD account. Please use direct login", "OK");
@@ -385,6 +412,8 @@ namespace MTYD
                 }
             }
         }
+
+
 
         private async void FacebookAutheticatorError(object sender, AuthenticatorErrorEventArgs e)
         {
@@ -397,6 +426,17 @@ namespace MTYD
 
             await DisplayAlert("Authentication error: ", e.Message, "OK");
         }
+
+
+
+
+
+
+
+
+
+
+
 
         // GOOGLE LOGIN CLICK
         public async void googleLoginButtonClicked(object sender, EventArgs e)

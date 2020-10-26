@@ -138,7 +138,7 @@ namespace MTYD
             var url = "http://production.shippingapis.com/ShippingAPI.dll?API=Verify&XML=" + requestDoc;
             Console.WriteLine(url);
             var client = new WebClient();
-            var response = client.DownloadString(url);
+            var response = client.DownloadString(url);  // USPS endpoint call
 
             var xdoc = XDocument.Parse(response.ToString());
             Console.WriteLine(xdoc);
@@ -217,7 +217,7 @@ namespace MTYD
                 System.Diagnostics.Debug.WriteLine(signUpSerializedObject);
 
                 var client = new HttpClient();
-                var RDSResponse = await client.PostAsync(Constant.SignUpUrl, singUpContent);
+                var RDSResponse = await client.PostAsync(Constant.SignUpUrl, singUpContent);  // Post to RDS database
                 var RDSMessage = await RDSResponse.Content.ReadAsStringAsync();
                 System.Diagnostics.Debug.WriteLine(RDSMessage);
 
@@ -235,7 +235,7 @@ namespace MTYD
                     DateTime today = DateTime.Now;
                     DateTime expDate = today.AddDays(Constant.days);
 
-                    Application.Current.Properties["uid"] = RDSData.result.customer_uid;
+                    Application.Current.Properties["user_id"] = RDSData.result.customer_uid;
                     Application.Current.Properties["time_stamp"] = expDate;
                     Application.Current.Properties["platform"] = socialSignUp.social;
                     Application.Current.MainPage = new SubscriptionPage();
