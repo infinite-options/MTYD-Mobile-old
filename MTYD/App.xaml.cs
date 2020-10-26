@@ -44,7 +44,7 @@ namespace MTYD
                 if (Application.Current.Properties.ContainsKey("time_stamp"))
                     
                 {
-                    System.Diagnostics.Debug.WriteLine("Time Stamp is:" + (string)Application.Current.Properties["time_stamp"]);
+                    System.Diagnostics.Debug.WriteLine("Time Stamp is:" + (DateTime)Application.Current.Properties["time_stamp"]);
                     DateTime today = DateTime.Now;
                     DateTime expTime = (DateTime)Application.Current.Properties["time_stamp"];
                     Console.WriteLine("today" + today.ToString());
