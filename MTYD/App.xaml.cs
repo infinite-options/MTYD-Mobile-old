@@ -37,11 +37,14 @@ namespace MTYD
             InitializeComponent();
             //MainPage = new NavigationPage(new MainPage());
 
-            // User id and time_stamp are retrieved from local phone memory (written by Login View Model, Signup, Social Signup and MainPage.xaml.cs)
+            // user_id and time_stamp are retrieved from local phone memory (written by Login View Model, Signup, Social Signup and MainPage.xaml.cs)
+            // Question: What else is stored in local memory? (user_id, time_stamp, ??)
             if (Application.Current.Properties.ContainsKey("user_id"))
 
             {
-                System.Diagnostics.Debug.WriteLine("UserID is:" + (string)Application.Current.Properties["user_id"]);
+                // Use System.Diagnostics.Debug.Writeline for comments to see output in in Blue in Application Output tab
+                System.Diagnostics.Debug.WriteLine("UserID is:" + (string)Application.Current.Properties["user_id"])
+                // Question: How do I find out what is contained within Application.Current.Properties?  Can you just add variable without pre-defining them?
                 if (Application.Current.Properties.ContainsKey("time_stamp"))
                     
                 {
