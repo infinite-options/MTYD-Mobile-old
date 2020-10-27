@@ -477,6 +477,7 @@ namespace MTYD.ViewModel
 
             Console.WriteLine("Price selected: " + price);
             await Navigation.PushAsync(new DeliveryBilling());
+            //await NavigationPage.PushAsync(DeliveryBilling());
         }
 
         async void clickedPfp(System.Object sender, System.EventArgs e)

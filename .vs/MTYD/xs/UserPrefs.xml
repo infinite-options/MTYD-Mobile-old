@@ -1,13 +1,10 @@
 ﻿<Properties StartupConfiguration="{FAB6B3BB-6B8C-41F3-9565-69D18FC959BC}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/MainPage.xaml">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/ViewModel/Menu.xaml.cs">
     <Files>
-      <File FileName="MTYD/ViewModel/MainPageExperiment.xaml.cs" Line="5" Column="1" />
+      <File FileName="MTYD/ViewModel/MainPageExperiment.xaml.cs" Line="101" Column="22" />
       <File FileName="MTYD/ViewModel/MainPageExperiment.xaml" />
-      <File FileName="MTYD/MainPage.xaml" Line="1" Column="1" />
-      <File FileName="MTYD/MainPage.xaml.cs" />
-      <File FileName="MTYD/ViewModel/Menu.xaml" />
-      <File FileName="MTYD/ViewModel/Menu.xaml.cs" />
-      <File FileName="MTYD/App.xaml.cs" Line="1" Column="1" />
+      <File FileName="MTYD/ViewModel/Menu.xaml" Line="10" Column="1" />
+      <File FileName="MTYD/ViewModel/Menu.xaml.cs" Line="19" Column="39" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -24,12 +21,15 @@
               <Node name="ViewModel" expanded="True">
                 <Node name="DeliveryBilling.xaml" expanded="True" />
                 <Node name="MainPageExperiment.xaml" expanded="True" />
-                <Node name="Menu.xaml" expanded="True" />
+                <Node name="Menu.xaml" expanded="True">
+                  <Node name="Menu.xaml.cs" selected="True" />
+                </Node>
                 <Node name="SubscriptionPage.xaml" expanded="True" />
                 <Node name="VerifyInfo.xaml" expanded="True" />
               </Node>
               <Node name="App.xaml" expanded="True" />
-              <Node name="MainPage.xaml" expanded="True" selected="True" />
+              <Node name="CarlosSignUp.xaml" expanded="True" />
+              <Node name="MainPage.xaml" expanded="True" />
             </Node>
             <Node name="MTYD.Android" expanded="True">
               <Node name="Resources" expanded="True">

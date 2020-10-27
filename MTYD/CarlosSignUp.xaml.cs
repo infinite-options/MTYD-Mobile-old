@@ -28,6 +28,7 @@ namespace MTYD
             
         }
 
+        // This is what is written into the db
         public void InitializeSignUpPost()
         {
             directSignUp.email = "";
@@ -329,16 +330,25 @@ namespace MTYD
                 var RDSResponse = await signUpclient.PostAsync(Constant.SignUpUrl, content);
                 var RDSMessage = await RDSResponse.Content.ReadAsStringAsync();
 
+                // if Sign up is has successfully ie 200 response code
                 if (RDSResponse.IsSuccessStatusCode)
                 {
                     var RDSData = JsonConvert.DeserializeObject<SignUpResponse>(RDSMessage);
                     DateTime today = DateTime.Now;
                     DateTime expDate = today.AddDays(Constant.days);
 
-                    Application.Current.Properties["uid"] = RDSData.result.customer_uid;
+
+                    // Local Variables in Xamarin that can be used throughout the App
+                    Application.Current.Properties["user_id"] = RDSData.result.customer_uid;
                     Application.Current.Properties["time_stamp"] = expDate;
                     Application.Current.Properties["platform"] = "DIRECT";
+                    System.Diagnostics.Debug.WriteLine("UserID is:" + (string)Application.Current.Properties["user_id"]);
+                    System.Diagnostics.Debug.WriteLine("Time Stamp is:" + (string)Application.Current.Properties["time_stamp"]);
+                    System.Diagnostics.Debug.WriteLine("platform is:" + (string)Application.Current.Properties["platform"]);
+
+                    // Go to Subscripton page
                     Application.Current.MainPage = new SubscriptionPage();
+                   
                 }
             }
             else

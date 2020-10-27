@@ -3,9 +3,10 @@
              >
     <ContentPage.Content>
 
+        <Grid VerticalOptions="CenterAndExpand">
         <StackLayout>
 
-
+            
             <!--heading and subheading-->
             <Grid x:Name="grid1" VerticalOptions="Center" HorizontalOptions="Center">
                 <Grid.RowDefinitions>
@@ -116,6 +117,8 @@
 
             </Grid>
 
+            
+
             <!--<Grid x:Name="grid3" HorizontalOptions="Center" VerticalOptions="Center" 
                   BackgroundColor="LightGray">
                 
@@ -138,6 +141,7 @@
             
 
         </StackLayout>
+            </Grid>
 
     </ContentPage.Content>
 </ContentPage>

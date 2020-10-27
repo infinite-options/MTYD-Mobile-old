@@ -150,12 +150,14 @@ namespace MTYD.ViewModel
             //MainPage = PaymentPage();
         }
 
-        async void clickedPfp(System.Object sender, System.EventArgs e) {
-            await Navigation.PushAsync(new UserProfile()); 
+        async void clickedPfp(System.Object sender, System.EventArgs e)
+        {
+            await Navigation.PushAsync(new UserProfile());
         }
 
-        async void clickedMenu(System.Object sender, System.EventArgs e) {
-            await Navigation.PushAsync(new Menu()); 
+        async void clickedMenu(System.Object sender, System.EventArgs e)
+        {
+            await Navigation.PushAsync(new Menu());
         }
 
         void clickedNotDone(object sender, EventArgs e)
@@ -253,8 +255,9 @@ namespace MTYD.ViewModel
             clickedDone(sender, e);
         }
 
-        async void clickedBack(System.Object sender, System.EventArgs e) {
-            await Navigation.PopAsync(false); 
+        async void clickedBack(System.Object sender, System.EventArgs e)
+        {
+            await Navigation.PopAsync(false);
         }
 
         /*//Saving CC and Address Info
