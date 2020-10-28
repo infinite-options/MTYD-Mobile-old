@@ -120,7 +120,8 @@ namespace MTYD.Model.Login.LoginClasses.Apple
 
                             Application.Current.Properties["time_stamp"] = expDate;
                             Application.Current.Properties["platform"] = "APPLE";
-                            Application.Current.MainPage = new SubscriptionPage();
+                            // Application.Current.MainPage = new SubscriptionPage();
+                            Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
 
                             // THIS IS HOW YOU CAN ACCESS YOUR USER ID FROM THE APP
                             // string userID = (string)Application.Current.Properties["user_id"];

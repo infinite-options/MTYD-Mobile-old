@@ -140,7 +140,9 @@ namespace MTYD
                         Application.Current.Properties["time_stamp"] = expDate;
                         Application.Current.Properties["platform"] = "DIRECT";
 
-                        Application.Current.MainPage = new CarlosHomePage();
+                        // Application.Current.MainPage = new CarlosHomePage();
+                        // This statement initializes the stack to Subscription Page
+                        Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
                     }
                     else
                     {
@@ -385,7 +387,8 @@ namespace MTYD
 
                             Application.Current.Properties["time_stamp"] = expDate;
                             Application.Current.Properties["platform"] = "FACEBOOK";
-                            Application.Current.MainPage = new SubscriptionPage();
+                            // Application.Current.MainPage = new SubscriptionPage();
+                            Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
 
                             // THIS IS HOW YOU CAN ACCESS YOUR USER ID FROM THE APP
                             // string userID = (string)Application.Current.Properties["user_id"];
@@ -553,7 +556,8 @@ namespace MTYD
 
                             Application.Current.Properties["time_stamp"] = expDate;
                             Application.Current.Properties["platform"] = "GOOGLE";
-                            Application.Current.MainPage = new SubscriptionPage();
+                            // Application.Current.MainPage = new SubscriptionPage();
+                            Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
 
                             // THIS IS HOW YOU CAN ACCESS YOUR USER ID FROM THE APP
                             // string userID = (string)Application.Current.Properties["user_id"];

@@ -238,7 +238,8 @@ namespace MTYD
                     Application.Current.Properties["user_id"] = RDSData.result.customer_uid;
                     Application.Current.Properties["time_stamp"] = expDate;
                     Application.Current.Properties["platform"] = socialSignUp.social;
-                    Application.Current.MainPage = new SubscriptionPage();
+                    // Application.Current.MainPage = new SubscriptionPage();
+                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
                 }
             }
             else

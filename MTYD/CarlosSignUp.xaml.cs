@@ -347,8 +347,9 @@ namespace MTYD
                     System.Diagnostics.Debug.WriteLine("platform is:" + (string)Application.Current.Properties["platform"]);
 
                     // Go to Subscripton page
-                    Application.Current.MainPage = new SubscriptionPage();
-                   
+                    // Application.Current.MainPage = new SubscriptionPage();
+                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+
                 }
             }
             else

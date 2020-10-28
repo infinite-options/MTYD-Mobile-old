@@ -55,6 +55,14 @@ namespace MTYD
                         // MainPage = new CarlosHomePage();
                         Console.WriteLine("entered time check");
                         MainPage = new NavigationPage(new SubscriptionPage());
+
+
+                        // Push Pop Navigation examples
+                        // MainPage = new NavigationPage(new MainPage());          // Initializes stack and pushes the first stack element
+                        // MainPage.Navigation.PushAsync(new SubscriptionPage());  // Pushes new element on top of stack
+                        // MainPage.Navigation.PushAsync(new Select());            // Pushes another element on top of stack
+                        // MainPage.Navigation.PopAsync();                         // Pops the last element from the stack
+
                     }
                     else
                     {

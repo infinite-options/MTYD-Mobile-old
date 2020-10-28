@@ -1,16 +1,17 @@
 ﻿<Properties StartupConfiguration="{FAB6B3BB-6B8C-41F3-9565-69D18FC959BC}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/Model/Login/LoginClasses/SuccessfulSocialLogIn.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/App.xaml.cs">
     <Files>
-      <File FileName="MTYD/App.xaml.cs" Line="72" Column="33" />
-      <File FileName="MTYD/MainPage.xaml" />
-      <File FileName="MTYD/MainPage.xaml.cs" Line="365" Column="71" />
-      <File FileName="MTYD/CarlosHomePage.xaml" />
-      <File FileName="MTYD/CarlosSocialSignUp.xaml" Line="1" Column="1" />
-      <File FileName="MTYD/CarlosSocialSignUp.xaml.cs" Line="1" Column="1" />
-      <File FileName="MTYD/CarlosSignUp.xaml" Line="1" Column="1" />
-      <File FileName="MTYD/CarlosSignUp.xaml.cs" Line="347" Column="21" />
-      <File FileName="MTYD/Model/Login/Constants/Constant.cs" Line="35" Column="115" />
-      <File FileName="MTYD/Model/Login/LoginClasses/SuccessfulSocialLogIn.cs" Line="42" Column="18" />
+      <File FileName="MTYD/ViewModel/Menu.xaml" Line="10" Column="1" />
+      <File FileName="MTYD/ViewModel/Menu.xaml.cs" Line="19" Column="39" />
+      <File FileName="MTYD.iOS/Main.cs" Line="17" Column="1" />
+      <File FileName="MTYD/App.xaml.cs" Line="91" Column="33" />
+      <File FileName="MTYD/MainPage.xaml.cs" Line="559" Column="32" />
+      <File FileName="MTYD/ViewModel/Select.xaml.cs" Line="96" Column="40" />
+      <File FileName="MTYD/ViewModel/UserProfile.xaml.cs" Line="41" Column="10" />
+      <File FileName="MTYD/CarlosSocialSignUp.xaml.cs" Line="242" Column="21" />
+      <File FileName="MTYD/Model/Login/LoginClasses/Apple/LoginViewModel.cs" Line="130" Column="26" />
+      <File FileName="MTYD/CarlosSignUp.xaml.cs" Line="350" Column="78" />
+      <File FileName="MTYD/MainPage.xaml" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -19,30 +20,33 @@
             <Node name="MTYD" expanded="True">
               <Node name="Model" expanded="True">
                 <Node name="Login" expanded="True">
-                  <Node name="Constants" expanded="True" />
                   <Node name="LoginClasses" expanded="True">
-                    <Node name="SuccessfulSocialLogIn.cs" selected="True" />
+                    <Node name="Apple" expanded="True" />
                   </Node>
                 </Node>
               </Node>
-              <Node name="App.xaml" expanded="True" />
+              <Node name="ViewModel" expanded="True">
+                <Node name="Menu.xaml" expanded="True" />
+                <Node name="Select.xaml" expanded="True" />
+                <Node name="SubscriptionPage.xaml" expanded="True" />
+                <Node name="UserProfile.xaml" expanded="True" />
+              </Node>
+              <Node name="App.xaml" expanded="True">
+                <Node name="App.xaml.cs" selected="True" />
+              </Node>
               <Node name="CarlosSignUp.xaml" expanded="True" />
               <Node name="CarlosSocialSignUp.xaml" expanded="True" />
               <Node name="MainPage.xaml" expanded="True" />
             </Node>
-            <Node name="MTYD.Android" expanded="True" />
             <Node name="MTYD.iOS" expanded="True" />
           </Node>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.ItemProperties.MTYD.iOS automaticSigning="True" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.DA9CF15E-CA19-45CB-8B99-589AFE3C18F1">
-    <MonoDevelop.MacDev.AppleDevelopmentTeam DeveloperId="5M8R6389HP" TeamId="8V66NC2T37" />
-  </MonoDevelop.Ide.ItemProperties.MTYD.iOS>
+  <MonoDevelop.Ide.ItemProperties.MTYD.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.802F87A0-1671-4771-8737-02C992AD7203" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.MTYD.Android AndroidDesignerPreferredTheme="Theme.AppCompat.Light.NoActionBar" PreferredExecutionTarget="Android.pixel_2_pie_9_0_-_api_28" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
