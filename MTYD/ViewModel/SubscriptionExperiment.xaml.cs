@@ -15,7 +15,7 @@ using Xamarin.Forms.Xaml;
 
 namespace MTYD.ViewModel
 {
-    public partial class SubscriptionPage : ContentPage
+    public partial class SubscriptionExperiment : ContentPage
     {
         public ObservableCollection<Plans> NewPlan = new ObservableCollection<Plans>();
 
@@ -188,7 +188,7 @@ namespace MTYD.ViewModel
                 Console.WriteLine("END OF GET PLANS FUNCTION");
             }
         }
-        public SubscriptionPage()
+        public SubscriptionExperiment()
         {
             InitializeComponent();
             NavigationPage.SetHasBackButton(this, false);

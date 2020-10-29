@@ -32,22 +32,32 @@ namespace MTYD.ViewModel
 
         async void clickedPlan(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new SubscriptionPage());
+            Navigation.PushAsync(new SubscriptionPage(), false);
+            Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 2]);
         }
 
         async void clickedDelivery(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new DeliveryBilling());
+            Navigation.PushAsync(new DeliveryBilling(), false);
+            Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 1]);
         }
 
         async void clickedMealSelect(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PopAsync();
+            Navigation.PushAsync(new Select(), false);
+            Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 2]);
         }
 
         async void clickedVerify(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new VerifyInfo());
+            Navigation.PushAsync(new VerifyInfo(), false);
+            Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 2]);
+        }
+
+        async void clickedSubscriptionTest(System.Object sender, System.EventArgs e)
+        {
+            Navigation.PushAsync(new SubscriptionExperiment(), false);
+            Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 2]);
         }
     }
 }

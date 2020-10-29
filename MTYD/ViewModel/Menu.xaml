@@ -35,6 +35,9 @@
             <Button Margin="0,5" HorizontalOptions="FillAndExpand" Text="- Verify Info -" FontSize="30"
                     TextColor="Black" FontAttributes="Bold" BackgroundColor="AliceBlue" Clicked="clickedVerify"/>
 
+            <Button Margin="0,5" HorizontalOptions="FillAndExpand" Text="- Subscription Test -" FontSize="30"
+                    TextColor="Black" FontAttributes="Bold" BackgroundColor="AliceBlue" Clicked="clickedSubscriptionTest"/>
+
         </StackLayout>
         </ScrollView>
 

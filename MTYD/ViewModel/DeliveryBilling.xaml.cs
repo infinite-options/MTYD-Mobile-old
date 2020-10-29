@@ -81,6 +81,30 @@ namespace MTYD.ViewModel
         public DeliveryBilling()
         {
             InitializeComponent();
+            NavigationPage.SetHasBackButton(this, false);
+            NavigationPage.SetHasNavigationBar(this, false);
+
+            if (Device.RuntimePlatform == Device.iOS)
+            {
+                orangeBox.CornerRadius = 35;
+                pfp.CornerRadius = 20;
+                firstName.CornerRadius = 22;
+                lastName.CornerRadius = 22;
+                emailAdd.CornerRadius = 22;
+                street.CornerRadius = 22;
+                unit.CornerRadius = 22;
+                city.CornerRadius = 22;
+                state.CornerRadius = 22;
+                zipCode.CornerRadius = 22;
+                phoneNum.CornerRadius = 22;
+                deliveryInstr.CornerRadius = 22;
+                creditCard.CornerRadius = 22;
+                cvv.CornerRadius = 22;
+                zipCode2.CornerRadius = 22;
+                month.CornerRadius = 22;
+                year.CornerRadius = 22;
+                SignUpButton.CornerRadius = 25;
+            }
         }
 
         /*
@@ -126,22 +150,114 @@ namespace MTYD.ViewModel
             //MainPage = PaymentPage();
         }
 
-        async void clickedPfp(System.Object sender, System.EventArgs e) {
-            await Navigation.PushAsync(new UserProfile()); 
+        async void clickedPfp(System.Object sender, System.EventArgs e)
+        {
+            await Navigation.PushAsync(new UserProfile());
         }
 
-        async void clickedMenu(System.Object sender, System.EventArgs e) {
-            await Navigation.PushAsync(new Menu()); 
+        async void clickedMenu(System.Object sender, System.EventArgs e)
+        {
+            await Navigation.PushAsync(new Menu());
         }
 
-        void clickedNotDone(object sender, EventArgs e) { 
-            if (MonthPicker.SelectedIndex == -1) 
-                DisplayAlert("title", "month is null", "cancel");
-            else clickedDone(sender, e); 
+        void clickedNotDone(object sender, EventArgs e)
+        {
+            if (FNameEntry.Text == null || FNameEntry.Text == "")
+            {
+                DisplayAlert("Warning!", "first name required", "okay");
+                return;
+            }
+
+            if (LNameEntry.Text == null || LNameEntry.ToString() == "")
+            {
+                DisplayAlert("Warning!", "last name required", "okay");
+                return;
+            }
+
+            if (emailEntry.Text == null || emailEntry.Text == "")
+            {
+                DisplayAlert("Warning!", "email required", "okay");
+                return;
+            }
+
+            if (AddressEntry.Text == null || AddressEntry.Text == "")
+            {
+                DisplayAlert("Warning!", "address required", "okay");
+                return;
+            }
+
+            if (CityEntry.Text == null || CityEntry.Text == "")
+            {
+                DisplayAlert("Warning!", "city required", "okay");
+                return;
+            }
+
+            if (StateEntry.Text == null || StateEntry.Text == "")
+            {
+                DisplayAlert("Warning!", "state required", "okay");
+                return;
+            }
+
+            if (ZipEntry.Text == null || ZipEntry.Text == "")
+            {
+                DisplayAlert("Warning!", "address zip code required", "okay");
+                return;
+            }
+
+            if (StateEntry.Text == null || StateEntry.Text == "")
+            {
+                DisplayAlert("Warning!", "state required", "okay");
+                return;
+            }
+
+            if (ZipEntry.Text == null || ZipEntry.Text == "")
+            {
+                DisplayAlert("Warning!", "address zip code required", "okay");
+                return;
+            }
+
+            if (PhoneEntry.Text == null || PhoneEntry.Text == "")
+            {
+                DisplayAlert("Warning!", "phone number required", "okay");
+                return;
+            }
+
+            if (CCEntry.Text == null || CCEntry.Text == "")
+            {
+                DisplayAlert("Warning!", "credit card number required", "okay");
+                return;
+            }
+
+            if (CVVEntry.Text == null || CVVEntry.Text == "")
+            {
+                DisplayAlert("Warning!", "CVV required", "okay");
+                return;
+            }
+
+            if (ZipCCEntry.Text == null || ZipCCEntry.Text == "")
+            {
+                DisplayAlert("Warning!", "credit card zip code required", "okay");
+                return;
+            }
+
+            if (MonthPicker.SelectedIndex == -1)
+            {
+                DisplayAlert("Warning!", "select a month", "okay");
+                return;
+            }
+
+            if (YearPicker.SelectedIndex == -1)
+            {
+                DisplayAlert("Warning!", "select a year", "okay");
+                return;
+            }
+
+            clickedDone(sender, e);
         }
 
-        async void clickedBack(System.Object sender, System.EventArgs e) {
-            await Navigation.PopAsync(false); 
+        async void clickedBack(System.Object sender, System.EventArgs e)
+        {
+            await Navigation.PopAsync(false);
         }
 
         /*//Saving CC and Address Info

@@ -44,10 +44,12 @@ namespace MTYD
 
         public MainPage()
         {
+            var width = DeviceDisplay.MainDisplayInfo.Width;
+            var height = DeviceDisplay.MainDisplayInfo.Height;
             InitializeComponent();
             store = AccountStore.Create();
-            checkPlatform();
-            forgotPass.CornerRadius = 0;
+            checkPlatform(height, width);
+            BackgroundImageSource = "landing2.jpg";
 
             // APPLE
             var vm = new LoginViewModel();
@@ -76,36 +78,75 @@ namespace MTYD
             await DisplayAlert("Error", "We weren't able to set an account for you", "OK");
         }
 
-        private void checkPlatform()
+        private void checkPlatform(double height, double width)
         {
             if (Device.RuntimePlatform == Device.iOS)
             {
-                foreach (var button in absLayout.Children)
-                {
-                    if (button is Button)
-                    {
-                        ((Button)button).CornerRadius = 25;
-                    }
-                }
-                googleLoginButton.CornerRadius = 27;
-                appleLoginButton.CornerRadius = 27;
-                facebookLoginButton.CornerRadius = 27;
-                passFrame.CornerRadius = 20;
-                userFrame.CornerRadius = 20;
-                seePassword.CornerRadius = 14;
-            }
-            else if (Device.RuntimePlatform == Device.Android)
-            {
-                foreach (var button in absLayout.Children)
-                {
-                    if (button is Button)
-                    {
-                        ((Button)button).CornerRadius = 20;
-                    }
-                }
+                //username and password entry
+                grid2.Margin = new Thickness(width / 13, height / 90, width / 13, 0);
+                loginUsername.Margin = new Thickness(0, height / (-120), 0, height / (-120));
+                loginPassword.Margin = new Thickness(0, height / (-120), width / 55, height / (-120));
 
-                Heading.CharacterSpacing = 1;
+                //login and signup buttons
+                loginButton.HeightRequest = height / 35;
+                signUpButton.HeightRequest = height / 35;
+                loginButton.WidthRequest = width / 7;
+                signUpButton.WidthRequest = width / 7;
+                loginButton.CornerRadius = (int)(height / 70);
+                signUpButton.CornerRadius = (int)(height / 70);
+
+                //or divider
+                grid4.Margin = new Thickness(width / 15, height / 80, width / 15, height / 100);
+
+                //social media buttons
+                googleLoginButton.HeightRequest = width / 13;
+                googleLoginButton.WidthRequest = width / 13;
+                googleLoginButton.CornerRadius = (int)(width / 26);
+                facebookLoginButton.HeightRequest = width / 13;
+                facebookLoginButton.WidthRequest = width / 13;
+                facebookLoginButton.CornerRadius = (int)(width / 26);
+                appleLoginButton.HeightRequest = width / 13;
+                appleLoginButton.WidthRequest = width / 13;
+                appleLoginButton.CornerRadius = (int)(width / 26);
             }
+            else //android
+            {
+                //username and password entry
+                grid2.Margin = new Thickness(width / 20, height / 80, width / 25, 0);
+                loginUsername.Margin = new Thickness(0, height / (-120), 0, height / (-120));
+                loginPassword.Margin = new Thickness(0, height / (-120), 0, height / (-120));
+
+                //login and signup buttons, forgot password
+                loginButton.HeightRequest = height / 40;
+                signUpButton.HeightRequest = height / 40;
+                loginButton.WidthRequest = width / 10;
+                signUpButton.WidthRequest = width / 10;
+                forgotPass.Margin = new Thickness(0, -30, 10, 0);
+                loginButton.CornerRadius = (int)(height / 80);
+                signUpButton.CornerRadius = (int)(height / 80);
+
+                //or divider
+                grid4.Margin = new Thickness(width / 15, height / 80, width / 15, height / 120);
+
+                //social media buttons
+                googleLoginButton.HeightRequest = width / 18;
+                googleLoginButton.WidthRequest = width / 18;
+                googleLoginButton.CornerRadius = (int)(width / 36);
+                facebookLoginButton.HeightRequest = width / 18;
+                facebookLoginButton.WidthRequest = width / 18;
+                facebookLoginButton.CornerRadius = (int)(width / 36);
+                appleLoginButton.HeightRequest = width / 18;
+                appleLoginButton.WidthRequest = width / 18;
+                appleLoginButton.CornerRadius = (int)(width / 36);
+            }
+
+            //adjustments regardless of device
+            //grid1.Margin = new Thickness(0, 0, 0, 0);
+            grid5.Margin = new Thickness(0, height / 80, 0, 0);
+            userFrame.HeightRequest = height / 180;
+            passFrame.HeightRequest = height / 180;
+            //userFrame.CornerRadius = 25;
+            //passFrame.CornerRadius = 25;
         }
 
         // DIRECT LOGIN CLICK
@@ -621,5 +662,12 @@ namespace MTYD
                 loginPassword.IsPassword = false;
             else loginPassword.IsPassword = true;
         }
+
+        void Button_Clicked(System.Object sender, System.EventArgs e)
+        {
+            Application.Current.MainPage = new MainPageExperiment();
+            //Navigation.PushAsync(new MainPageExperiment());
+        }
+
     }
 }
