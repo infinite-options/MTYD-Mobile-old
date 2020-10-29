@@ -4,7 +4,8 @@
 ## Get latest from https://github.com/github. (Need to fill in the rest)
 
 # Project-specific files 
-MTYD/MTYD/MTYD/Model/Login/Constants/
+# MTYD/MTYD/MTYD/Model/Login/Constants/    -- OLD Code should be deleted after checking
+MTYD/Model/Login/Constants/   
 
 
 # User-specific files
@@ -26,3 +27,12 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+
+
+
+# Visual Studio 2015/2017 cache/options directory
+.vs/
+
+# Visual Studio 2017 auto generated files
+Generated\ Files/
+
