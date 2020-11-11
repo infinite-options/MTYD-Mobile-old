@@ -17,7 +17,7 @@ namespace MTYD.ViewModel
 {
     public partial class SubscriptionExperiment : ContentPage
     {
-        public ObservableCollection<Plans> NewPlan = new ObservableCollection<Plans>();
+        /*public ObservableCollection<Plans> NewPlan = new ObservableCollection<Plans>();
 
         double m1price_f1 = 0.0; double m1price_f2 = 0.0; double m1price_f3 = 0.0; double m2price_f1 = 0.0; double m2price_f2 = 0.0; double m2price_f3 = 0.0;
         double m3price_f1 = 0.0; double m3price_f2 = 0.0; double m3price_f3 = 0.0; double m4price_f1 = 0.0; double m4price_f2 = 0.0; double m4price_f3 = 0.0;
@@ -188,8 +188,25 @@ namespace MTYD.ViewModel
                 Console.WriteLine("END OF GET PLANS FUNCTION");
             }
         }
+
+        void checkPlatform(double height, double width)
+        {
+            if (Device.RuntimePlatform == Device.iOS)
+            {
+
+            }
+            else //android
+            {
+
+            }
+
+            //common adjustments regardless of platform
+        }
+
         public SubscriptionExperiment()
         {
+            var width = DeviceDisplay.MainDisplayInfo.Width;
+            var height = DeviceDisplay.MainDisplayInfo.Height;
             InitializeComponent();
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
@@ -501,6 +518,6 @@ namespace MTYD.ViewModel
         {
             await Navigation.PushAsync(new Menu());
             //Application.Current.MainPage = new Menu();
-        }
+        }*/
     }
 }

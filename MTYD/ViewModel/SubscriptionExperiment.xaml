@@ -5,7 +5,16 @@
             <ScrollView>
             <StackLayout x:Name="StackL" BackgroundColor="White">
 
-                <AbsoluteLayout>
+                <Grid VerticalOptions="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <BoxView x:Name="orangeBox" BackgroundColor="#FF9E19" HorizontalOptions="Fill"/> 
+
+                </Grid>
+
+                <!--<AbsoluteLayout>
                     
                     <BoxView x:Name="orangeBox" BackgroundColor="#FF9E19" 
                            Margin="0, -100, 0, 0"
@@ -201,7 +210,7 @@
                             Text="PROCEED" TextColor="White" HorizontalOptions="Center" FontAttributes="Bold"
                             FontSize="20"  WidthRequest="150" Margin="-15,4,4,4" VerticalOptions="Center"
                             HeightRequest="60" Clicked="clickedDone"/>
-                </Grid>
+                </Grid>-->
 
                 
 

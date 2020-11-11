@@ -46,6 +46,8 @@ namespace MTYD
         {
             var width = DeviceDisplay.MainDisplayInfo.Width;
             var height = DeviceDisplay.MainDisplayInfo.Height;
+            Console.WriteLine("Width = " + width.ToString());
+            Console.WriteLine("Height = " + height.ToString());
             InitializeComponent();
             store = AccountStore.Create();
             checkPlatform(height, width);
@@ -80,7 +82,40 @@ namespace MTYD
 
         private void checkPlatform(double height, double width)
         {
-            if (Device.RuntimePlatform == Device.iOS)
+            if (width == 1125 && height == 2436) //iPhone X only
+            {
+                Console.WriteLine("entered for iPhone X");
+
+                //username and password entry
+                grid2.Margin = new Thickness(width / 22, height / 90, width / 22, 0);
+                loginUsername.Margin = new Thickness(0, height / (-120), 0, height / (-120));
+                loginPassword.Margin = new Thickness(0, height / (-120), width / 55, height / (-120));
+                userFrame.CornerRadius = 27;
+                passFrame.CornerRadius = 27;
+
+                //login and signup buttons
+                loginButton.HeightRequest = height / 47;
+                signUpButton.HeightRequest = height / 47;
+                loginButton.WidthRequest = width / 10;
+                signUpButton.WidthRequest = width / 10;
+                loginButton.CornerRadius = (int)(height / 94);
+                signUpButton.CornerRadius = (int)(height / 94);
+
+                //or divider
+                grid4.Margin = new Thickness(width / 16, height / 80, width / 16, height / 100);
+
+                //social media buttons
+                googleLoginButton.HeightRequest = width / 17;
+                googleLoginButton.WidthRequest = width / 17;
+                googleLoginButton.CornerRadius = (int)(width / 34);
+                facebookLoginButton.HeightRequest = width / 17;
+                facebookLoginButton.WidthRequest = width / 17;
+                facebookLoginButton.CornerRadius = (int)(width / 34);
+                appleLoginButton.HeightRequest = width / 17;
+                appleLoginButton.WidthRequest = width / 17;
+                appleLoginButton.CornerRadius = (int)(width / 34);
+            }
+            else if (Device.RuntimePlatform == Device.iOS)
             {
                 //username and password entry
                 grid2.Margin = new Thickness(width / 13, height / 90, width / 13, 0);
@@ -432,7 +467,9 @@ namespace MTYD
                             Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
 
                             // THIS IS HOW YOU CAN ACCESS YOUR USER ID FROM THE APP
-                            // string userID = (string)Application.Current.Properties["user_id"];
+                            //string userID = (string)Application.Current.Properties["user_id"];
+                            //printing id for testing
+                            //System.Diagnostics.Debug.WriteLine("user ID after success: " + userID);
                         }
                         else
                         {

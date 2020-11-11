@@ -1,10 +1,11 @@
 ﻿<Properties StartupConfiguration="{FAB6B3BB-6B8C-41F3-9565-69D18FC959BC}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/ViewModel/SubscriptionExperiment.xaml.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/ViewModel/Select.xaml.cs">
     <Files>
-      <File FileName="MTYD/ViewModel/SubscriptionExperiment.xaml" Line="13" Column="1" />
-      <File FileName="MTYD/ViewModel/SubscriptionExperiment.xaml.cs" Line="194" Column="1" />
-      <File FileName="MTYD/ViewModel/SubscriptionPage.xaml" />
-      <File FileName="MTYD/ViewModel/SubscriptionPage.xaml.cs" />
+      <File FileName="MTYD/ViewModel/DeliveryBilling.xaml" Line="38" Column="1" />
+      <File FileName="MTYD/ViewModel/DeliveryBilling.xaml.cs" Line="17" Column="2" />
+      <File FileName="MTYD/ViewModel/SubscriptionPage.xaml.cs" Line="476" Column="14" />
+      <File FileName="MTYD/ViewModel/Select.xaml.cs" Line="45" Column="11" />
+      <File FileName="MTYD/ViewModel/Select.xaml" Line="6" Column="105" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -13,29 +14,20 @@
             <Node name="MTYD" expanded="True">
               <Node name="ViewModel" expanded="True">
                 <Node name="DeliveryBilling.xaml" expanded="True" />
-                <Node name="MainPageExperiment.xaml" expanded="True" />
-                <Node name="Menu.xaml" expanded="True" />
-                <Node name="SubscriptionExperiment.xaml" expanded="True">
-                  <Node name="SubscriptionExperiment.xaml.cs" selected="True" />
+                <Node name="Select.xaml" expanded="True">
+                  <Node name="Select.xaml.cs" selected="True" />
                 </Node>
                 <Node name="SubscriptionPage.xaml" expanded="True" />
               </Node>
               <Node name="MainPage.xaml" expanded="True" />
             </Node>
-            <Node name="MTYD.Android" expanded="True">
-              <Node name="Resources" expanded="True">
-                <Node name="drawable" expanded="True" />
-              </Node>
-            </Node>
-            <Node name="MTYD.iOS" expanded="True">
-              <Node name="Resources" expanded="True" />
-            </Node>
+            <Node name="MTYD.iOS" expanded="True" />
           </Node>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.ItemProperties.MTYD.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.B453BA24-949A-4D6E-95E1-703875CA7E94" />
+  <MonoDevelop.Ide.ItemProperties.MTYD.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.DB6E6992-C7C1-4C75-9395-1E0A24021EF0" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.ItemProperties.MTYD.Android PreferredExecutionTarget="Android.pixel_3" />
