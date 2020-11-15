@@ -22,7 +22,7 @@ namespace MTYD.ViewModel
         {
             Console.WriteLine("SetPaymentInfo Func Started!");
             PaymentInfo newPayment = new PaymentInfo();
-
+            //need to add item_business_id
             Item item1 = new Item();
             item1.name = Preferences.Get("item_name", "");
             item1.price = Preferences.Get("price", "00.00");

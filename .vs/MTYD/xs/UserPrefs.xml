@@ -1,25 +1,20 @@
-﻿<Properties StartupConfiguration="{FAB6B3BB-6B8C-41F3-9565-69D18FC959BC}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/ViewModel/Select.xaml.cs">
+﻿<Properties StartupConfiguration="{46AB3B16-E84F-452C-9FC2-2827A0A70ABC}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD.iOS/Main.cs">
     <Files>
-      <File FileName="MTYD/ViewModel/DeliveryBilling.xaml" Line="38" Column="1" />
-      <File FileName="MTYD/ViewModel/DeliveryBilling.xaml.cs" Line="17" Column="2" />
-      <File FileName="MTYD/ViewModel/SubscriptionPage.xaml.cs" Line="476" Column="14" />
-      <File FileName="MTYD/ViewModel/Select.xaml.cs" Line="45" Column="11" />
-      <File FileName="MTYD/ViewModel/Select.xaml" Line="6" Column="105" />
+      <File FileName="MTYD/ViewModel/SubscriptionExperiment.xaml" Line="133" Column="35" />
+      <File FileName="MTYD/ViewModel/SubscriptionExperiment.xaml.cs" />
+      <File FileName="MTYD/ViewModel/SubscriptionPage.xaml" />
+      <File FileName="MTYD/ViewModel/SubscriptionPage.xaml.cs" />
+      <File FileName="MTYD.iOS/AppDelegate.cs" Line="23" Column="11" />
+      <File FileName="MTYD/App.xaml.cs" Line="37" Column="35" />
+      <File FileName="MTYD.iOS/Main.cs" Line="4" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="MTYD" expanded="True">
-            <Node name="MTYD" expanded="True">
-              <Node name="ViewModel" expanded="True">
-                <Node name="DeliveryBilling.xaml" expanded="True" />
-                <Node name="Select.xaml" expanded="True">
-                  <Node name="Select.xaml.cs" selected="True" />
-                </Node>
-                <Node name="SubscriptionPage.xaml" expanded="True" />
-              </Node>
-              <Node name="MainPage.xaml" expanded="True" />
+            <Node name="MTYD" expanded="True" selected="True">
+              <Node name="App.xaml" expanded="True" />
             </Node>
             <Node name="MTYD.iOS" expanded="True" />
           </Node>

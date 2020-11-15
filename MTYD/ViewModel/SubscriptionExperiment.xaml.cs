@@ -187,13 +187,81 @@ namespace MTYD.ViewModel
                 }
                 Console.WriteLine("END OF GET PLANS FUNCTION");
             }
-        }
+        }*/
 
+        //jonathantly.01@gmail.com
         void checkPlatform(double height, double width)
         {
             if (Device.RuntimePlatform == Device.iOS)
             {
+                orangeBox.HeightRequest = height / 2;
+                orangeBox.Margin = new Thickness(0, -height / 2.2, 0, 0);
+                orangeBox.CornerRadius = height / 40;
+                heading.FontSize = width / 32;
+                heading.Margin = new Thickness(0, 0, 0, 30);
+                pfp.HeightRequest = width / 20;
+                pfp.WidthRequest = width / 20;
+                pfp.CornerRadius = (int)(width / 40);
+                pfp.Margin = new Thickness(0, 0, 23, 27);
+                menu.HeightRequest = width / 25;
+                menu.WidthRequest = width / 25;
+                menu.Margin = new Thickness(25, 0, 0, 30);
 
+                takeoutGrid.Margin = new Thickness(20, 10, 20, 10);
+                takeout.HeightRequest = width / 18;
+                takeout.WidthRequest = width / 18;
+                deliveryDays.FontSize = width / 38;
+                deliveryDays2.FontSize = width / 38;
+                numMeals.FontSize = width / 37;
+                numMeals.Margin = new Thickness(25, 10, 0, 10);
+
+                meals1.HeightRequest = height / 30;
+                meals1.WidthRequest = width / 4;
+                meals1.CornerRadius = (int)(height / 60);
+                meals1.FontSize = width / 40;
+                meals1.Margin = new Thickness(30, 0, 15, 0);
+                meals2.HeightRequest = height / 30;
+                meals2.WidthRequest = width / 4;
+                meals2.CornerRadius = (int)(height / 60);
+                meals2.FontSize = width / 40;
+                meals2.Margin = new Thickness(30, 0, 15, 0);
+
+                meals3.HeightRequest = height / 30;
+                meals3.WidthRequest = width / 4;
+                meals3.CornerRadius = (int)(height / 60);
+                meals3.FontSize = width / 40;
+                meals3.Margin = new Thickness(15, 0, 30, 0);
+                meals4.HeightRequest = height / 30;
+                meals4.WidthRequest = width / 4;
+                meals4.CornerRadius = (int)(height / 60);
+                meals4.FontSize = width / 40;
+                meals4.Margin = new Thickness(15, 0, 30, 0);
+
+                prepay.Margin = new Thickness(30, 0, 0, 0);
+                prepay.FontSize = width / 37;
+
+                payFrame.HeightRequest = height / 12;
+                payOp1.FontSize = width / 50;
+                payOp2.FontSize = width / 50;
+                payOp3.FontSize = width / 50;
+                payButton1.HeightRequest = width / 11;
+                payButton1.WidthRequest = width / 11;
+                payButton1.CornerRadius = (int)(width / 22);
+                payButton2.HeightRequest = width / 11;
+                payButton2.WidthRequest = width / 11;
+                payButton2.CornerRadius = (int)(width / 22);
+                payButton3.HeightRequest = width / 11;
+                payButton3.WidthRequest = width / 11;
+                payButton3.CornerRadius = (int)(width / 22);
+
+                PriceFrame.HeightRequest = height / 30;
+                PriceFrame.WidthRequest = width / 6;
+                PriceFrame.CornerRadius = 30;
+                TotalPrice.FontSize = width / 40;
+                SignUpButton.HeightRequest = height / 30;
+                SignUpButton.WidthRequest = width / 6;
+                SignUpButton.CornerRadius = (int)(height / 60);
+                SignUpButton.FontSize = width / 40;
             }
             else //android
             {
@@ -210,25 +278,12 @@ namespace MTYD.ViewModel
             InitializeComponent();
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
-            if (Device.RuntimePlatform == Device.iOS)
-            {
-                orangeBox.CornerRadius = 35;
-                pfp.CornerRadius = 20;
-                meals1.CornerRadius = 31;
-                meals2.CornerRadius = 31;
-                meals3.CornerRadius = 31;
-                meals4.CornerRadius = 31;
-                payButton1.CornerRadius = 34;
-                payButton2.CornerRadius = 34;
-                payButton3.CornerRadius = 34;
-                payFrame.CornerRadius = 80;
-                PriceFrame.CornerRadius = 31;
-                SignUpButton.CornerRadius = 31;
-            }
-            GetPlans();
+            checkPlatform(height, width);
+            //GetPlans();
             Preferences.Set("freqSelected", "");
         }
 
+        /*
         private void clickedMeals1(object sender, EventArgs e)
         {
             meals1.BackgroundColor = Color.FromHex("#FFBA00");
@@ -507,7 +562,7 @@ namespace MTYD.ViewModel
         {
             await Navigation.PushAsync(new UserProfile());
             //Application.Current.MainPage = new UserProfile();
-        }
+        }*/
 
         async void clickedBack(System.Object sender, System.EventArgs e)
         {
@@ -518,6 +573,6 @@ namespace MTYD.ViewModel
         {
             await Navigation.PushAsync(new Menu());
             //Application.Current.MainPage = new Menu();
-        }*/
+        }
     }
 }
