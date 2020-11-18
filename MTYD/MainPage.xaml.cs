@@ -523,6 +523,8 @@ namespace MTYD
         // GOOGLE LOGIN CLICK
         public async void googleLoginButtonClicked(object sender, EventArgs e)
         {
+            Console.WriteLine("googleLoginButtonClicked entered");
+
             string clientId = string.Empty;
             string redirectUri = string.Empty;
 
@@ -539,18 +541,29 @@ namespace MTYD
                     break;
             }
 
+            Console.WriteLine("after switch entered");
+
             var authenticator = new OAuth2Authenticator(clientId, string.Empty, Constant.GoogleScope, new Uri(Constant.GoogleAuthorizeUrl), new Uri(redirectUri), new Uri(Constant.GoogleAccessTokenUrl), null, true);
             var presenter = new Xamarin.Auth.Presenters.OAuthLoginPresenter();
+
+            Console.WriteLine("after vars entered");
 
             authenticator.Completed += GoogleAuthenticatorCompleted;
             authenticator.Error += GoogleAuthenticatorError;
 
+            Console.WriteLine("after completed/error entered");
+
             AuthenticationState.Authenticator = authenticator;
+
+            Console.WriteLine("before Login entered");
             presenter.Login(authenticator);
+            Console.WriteLine("after Login entered");
         }
 
         private async void GoogleAuthenticatorCompleted(object sender, AuthenticatorCompletedEventArgs e)
         {
+            Console.WriteLine("googleAuthenticatorCompleted entered");
+
             var authenticator = sender as OAuth2Authenticator;
 
             if (authenticator != null)
@@ -558,6 +571,8 @@ namespace MTYD
                 authenticator.Completed -= GoogleAuthenticatorCompleted;
                 authenticator.Error -= GoogleAuthenticatorError;
             }
+
+            Console.WriteLine("Authenticator authenticated:" + e.IsAuthenticated);
 
             if (e.IsAuthenticated)
             {
@@ -571,6 +586,8 @@ namespace MTYD
 
         public async void GoogleUserProfileAsync(string accessToken, string refreshToken, AuthenticatorCompletedEventArgs e)
         {
+            Console.WriteLine("googleUserProfileAsync entered");
+
             var client = new HttpClient();
             var socialLogInPost = new SocialLogInPost();
 
@@ -636,6 +653,7 @@ namespace MTYD
                             Application.Current.Properties["time_stamp"] = expDate;
                             Application.Current.Properties["platform"] = "GOOGLE";
                             // Application.Current.MainPage = new SubscriptionPage();
+
                             Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
 
                             // THIS IS HOW YOU CAN ACCESS YOUR USER ID FROM THE APP
@@ -662,6 +680,8 @@ namespace MTYD
 
         private async void GoogleAuthenticatorError(object sender, AuthenticatorErrorEventArgs e)
         {
+            Console.WriteLine("googleAuthenticatorError entered");
+
             var authenticator = sender as OAuth2Authenticator;
 
             if (authenticator != null)

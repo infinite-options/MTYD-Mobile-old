@@ -42,16 +42,16 @@
                         <ColumnDefinition Width="16*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="40*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                    <Frame x:Name="firstName" Padding="10,5" Margin="20,0.5,1,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="0" HasShadow="False">
 
                         <Entry x:Name="FNameEntry" Keyboard="Text" FontAttributes="Bold"
-                   FontSize="17" Placeholder="First Name*"
-                   HeightRequest="35" WidthRequest="12"
-                   BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
+                   FontSize="17" TextColor="Black"
+                   WidthRequest="12"
+                   BackgroundColor="#FFE5B4" />
 
                    </Frame>
 
@@ -59,8 +59,8 @@
                           Grid.Row="0" Grid.Column="1" HasShadow="False">
 
                         <Entry x:Name="LNameEntry" Keyboard="Text" FontAttributes="Bold"
-                   FontSize="17" Placeholder="Last Name*"
-                   HeightRequest="35" WidthRequest="12"
+                   FontSize="17" 
+                   WidthRequest="12"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
 
                    </Frame>
@@ -73,15 +73,15 @@
                         <ColumnDefinition Width="16*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="40*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                    <Frame x:Name="emailAdd" Padding="10,5" Margin="20,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="0" HasShadow="False">
                     
-                   <Entry x:Name="emailEntry" Keyboard="Text" FontAttributes="Bold"
-                   FontSize="17" Placeholder="Email*"
-                   HeightRequest="35" WidthRequest="24"
+                   <Entry x:Name="emailEntry" Keyboard="Email" FontAttributes="Bold"
+                   FontSize="17"
+                   WidthRequest="24"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
 
                    </Frame>
@@ -94,15 +94,15 @@
                         <ColumnDefinition Width="16*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="40*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                    <Frame x:Name="street" Padding="10,5" Margin="20,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="0" HasShadow="False">
 
                         <Entry x:Name="AddressEntry" Keyboard="Text" FontAttributes="Bold"
-                   FontSize="17" Placeholder="Street*"
-                   HeightRequest="35" WidthRequest="24"
+                   FontSize="17" 
+                   WidthRequest="24"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
 
                    </Frame>
@@ -117,15 +117,15 @@
                         <ColumnDefinition Width="12*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="40*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                    <Frame x:Name="unit" Padding="10,5" Margin="20,0.5,1,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="0" HasShadow="False">
 
                         <Entry x:Name="AptEntry" Keyboard="Text" FontAttributes="Bold"
-                   FontSize="17" Placeholder="Unit*"
-                   HeightRequest="35" WidthRequest="8"
+                   FontSize="17" 
+                    WidthRequest="8"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
 
                    </Frame>
@@ -134,8 +134,8 @@
                           Grid.Row="0" Grid.Column="1" HasShadow="False">
 
                         <Entry x:Name="CityEntry" Keyboard="Text" FontAttributes="Bold"
-                   FontSize="17" Placeholder="City*"
-                   HeightRequest="35" WidthRequest="12"
+                   FontSize="17" 
+                    WidthRequest="12"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
 
                    </Frame>
@@ -144,8 +144,8 @@
                           Grid.Row="0" Grid.Column="2" HasShadow="False">
 
                         <Entry x:Name="StateEntry" Keyboard="Text" FontAttributes="Bold"
-                   FontSize="17" Placeholder="State*"
-                   HeightRequest="35" WidthRequest="8"
+                   FontSize="17" 
+                    WidthRequest="8"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
 
                    </Frame>
@@ -159,15 +159,15 @@
                         <ColumnDefinition Width="20*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="40*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                    <Frame x:Name="zipCode" Padding="10,5" Margin="20,0.5,1,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="0" HasShadow="False">
 
-                        <Entry x:Name="ZipEntry" Keyboard="Text" FontAttributes="Bold"
-                   FontSize="17" Placeholder="Zip*"
-                   HeightRequest="35" WidthRequest="12"
+                        <Entry x:Name="ZipEntry" Keyboard="Numeric" FontAttributes="Bold"
+                   FontSize="17" 
+                    WidthRequest="12"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
 
                    </Frame>
@@ -175,9 +175,9 @@
                    <Frame x:Name="phoneNum" Padding="10,5" Margin="1,0.5,20,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="1" HasShadow="False">
 
-                        <Editor x:Name="PhoneEntry" Keyboard="Text" FontAttributes="Bold"
-                   FontSize="17" Placeholder="Phone Number*"
-                   HeightRequest="35" WidthRequest="12"
+                        <Entry x:Name="PhoneEntry" Keyboard="Numeric" FontAttributes="Bold"
+                   FontSize="17" 
+                    WidthRequest="12"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
 
                    </Frame>
@@ -197,9 +197,9 @@
                           Grid.Row="0" Grid.Column="0" HasShadow="False" >
 
                         <Editor x:Name="DeliveryEntry" Keyboard="Text" FontAttributes="Bold"
-                   FontSize="17" Placeholder="Delivery Instructions"
+                   FontSize="17" TextColor="White"
                    HeightRequest="100" WidthRequest="24" Margin="0,2,0,0"
-                   BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4" />
+                   BackgroundColor="#FFE5B4"  />
 
                    </Frame>
 
@@ -219,15 +219,15 @@
                         <ColumnDefinition Width="16*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="40*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                    <Frame x:Name="creditCard" Padding="10,5" Margin="20,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="0" HasShadow="False">
 
-                        <Editor x:Name="CCEntry" Keyboard="Text" FontAttributes="Bold"
-                   FontSize="17" Placeholder="Credit Card Number*"
-                   HeightRequest="35" WidthRequest="24"
+                        <Entry x:Name="CCEntry" Keyboard="Text" FontAttributes="Bold"
+                   FontSize="17" 
+                   WidthRequest="24"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
 
                    </Frame>
@@ -241,15 +241,15 @@
                         <ColumnDefinition Width="18*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="40*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                    <Frame x:Name="cvv" Padding="10,5" Margin="20,0.5,1,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="0" HasShadow="False">
 
-                        <Editor x:Name="CVVEntry" Keyboard="Text" FontAttributes="Bold"
-                   FontSize="17" Placeholder="CVC/CVV*"
-                   HeightRequest="35" WidthRequest="12"
+                        <Entry x:Name="CVVEntry" Keyboard="Numeric" FontAttributes="Bold"
+                   FontSize="17" 
+                    WidthRequest="12"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
 
                    </Frame>
@@ -257,9 +257,9 @@
                    <Frame x:Name="zipCode2" Padding="10,5" Margin="1,0.5,20,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="1" HasShadow="False">
 
-                        <Editor x:Name="ZipCCEntry" Keyboard="Text" FontAttributes="Bold"
-                   FontSize="17" Placeholder="Zip*"
-                   HeightRequest="35" WidthRequest="12"
+                        <Entry x:Name="ZipCCEntry" Keyboard="Numeric" FontAttributes="Bold"
+                   FontSize="17" 
+                    WidthRequest="12"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
 
                    </Frame>
@@ -273,15 +273,15 @@
                         <ColumnDefinition Width="16*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="40*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                    <Frame x:Name="month" Padding="10,5" Margin="20,0.5,1,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="0" HasShadow="False">
 
                     <Frame HasShadow="False" Padding="0" BorderColor="#FFE5B4">
-                            <Picker x:Name="MonthPicker" TitleColor="#B4B4B4" FontSize="17" FontAttributes="Bold" Title="Select Month*"
-                           BackgroundColor="#FFE5B4">
+                            <Picker x:Name="MonthPicker"  FontSize="17" FontAttributes="Bold" Title="Select Month*"
+                           BackgroundColor="#FFE5B4" TextColor="White">
                            <Picker.ItemsSource>
                                 <x:Array Type="{x:Type x:String}">
                                 <x:String>01-January</x:String>
@@ -308,8 +308,8 @@
                           Grid.Row="0" Grid.Column="1" HasShadow="False">
 
                     <Frame HasShadow="False" Padding="0" BorderColor="#FFE5B4">
-                   <Picker x:Name="YearPicker" TitleColor="#B4B4B4" FontSize="17" FontAttributes="Bold" Title="Select Year*"
-                           BackgroundColor="#FFE5B4" > 
+                   <Picker x:Name="YearPicker" FontSize="17" FontAttributes="Bold" Title="Select Year*"
+                           BackgroundColor="#FFE5B4" TextColor="White"> 
                            <Picker.ItemsSource>
                                 <x:Array Type="{x:Type x:String}">
                                 <x:String>2020</x:String> <x:String>2021</x:String>
@@ -507,7 +507,7 @@
                     </Frame>
                 </Grid>-->
 
-                <Label x:Name="spacer5" HeightRequest="4"/>
+                <Label x:Name="spacer5" HeightRequest="25"/>
 
                 <!-- <Grid HorizontalOptions="Center" VerticalOptions="Center">
                     <Grid.RowDefinitions>

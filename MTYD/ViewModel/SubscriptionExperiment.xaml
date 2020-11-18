@@ -11,9 +11,9 @@
                     </Grid.RowDefinitions>
                     
                     <BoxView x:Name="orangeBox" BackgroundColor="#FF9E19" HorizontalOptions="Fill"/>
-                    <Label x:Name="heading" Text="CHOOSE MEAL PLAN" FontAttributes="Bold" VerticalOptions="End" HorizontalTextAlignment="Center"/>
-                    <ImageButton x:Name="pfp" BackgroundColor="LightGray" VerticalOptions="End" HorizontalOptions="End"/>
-                    <ImageButton x:Name="menu" Source="menu.png" VerticalOptions="End" HorizontalOptions="Start"/>
+                    <Label x:Name="heading" Text="CHOOSE MEAL PLAN" FontAttributes="Bold" VerticalOptions="End" HorizontalTextAlignment="Center" TextColor="Black"/>
+                    <ImageButton x:Name="pfp" BackgroundColor="LightGray" VerticalOptions="End" HorizontalOptions="End" Clicked="clickedPfp"/>
+                    <ImageButton x:Name="menu" Source="menu2.png" VerticalOptions="End" HorizontalOptions="Start" BackgroundColor="Transparent" Clicked="clickedMenu"/>
 
                 </Grid>
 
@@ -48,7 +48,7 @@
                 </Grid>
 
                 <Label x:Name="numMeals" Text="NUMBER OF MEALS PER DELIVERY" HorizontalTextAlignment="Start"
-                       HorizontalOptions="Start" FontAttributes="Bold"/>
+                       HorizontalOptions="Start" FontAttributes="Bold" TextColor="Black"/>
 
                 <Grid x:Name="ButtonStack2" HorizontalOptions="Center" VerticalOptions="Center" RowSpacing="20">
                     <Grid.ColumnDefinitions>
@@ -60,15 +60,15 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Button x:Name="meals1" HorizontalOptions="Center" VerticalOptions="Center"
-                    BackgroundColor="#FFF0C6" Text="5 MEALS" TextColor="Black" FontAttributes="Bold" FontSize="20"/>
+                <Button x:Name="meals1" HorizontalOptions="Center" VerticalOptions="Center" Clicked="clickedMeals1"
+                    BackgroundColor="#FFF0C6" Text="" TextColor="Black" FontAttributes="Bold" FontSize="20"/>
 
                 <Button 
                     x:Name="meals2"
                     HorizontalOptions="Center"
                     BackgroundColor="#FFF0C6"
                     VerticalOptions="Center"
-                    Text="10 MEALS"
+                    Clicked="clickedMeals2"
                     TextColor="Black"
                     FontAttributes="Bold"
                     Grid.Column="0"
@@ -79,7 +79,7 @@
                     HorizontalOptions="Center"
                     BackgroundColor="#FFF0C6"
                     VerticalOptions="Center"
-                    Text="15 MEALS"
+                    Clicked="clickedMeals3"
                     TextColor="Black"
                     FontAttributes="Bold"
                     Grid.Column="1"
@@ -90,7 +90,7 @@
                     HorizontalOptions="Center"
                     BackgroundColor="#FFF0C6"
                     VerticalOptions="Center"
-                    Text="20 MEALS"
+                    Clicked="clickedMeals4"
                     TextColor="Black"
                     FontAttributes="Bold"
                     Grid.Column="1"
@@ -105,12 +105,11 @@
                 <Label x:Name="spacer" HeightRequest="5"/>
 
                 <Label x:Name="prepay" Text="PRE PAY OPTIONS" HorizontalOptions="Start" FontAttributes="Bold"
-                       HorizontalTextAlignment="Start"/>
+                       HorizontalTextAlignment="Start" TextColor="Black"/>
 
                 <Label x:Name="spacer2" HeightRequest="5"/>
 
                 
-
                 <Grid x:Name="payGrid" ColumnSpacing="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -124,22 +123,22 @@
                     <Frame x:Name="payFrame" HorizontalOptions="Fill" Margin="25, 0" CornerRadius="90" Grid.ColumnSpan="3"/>
 
                     <StackLayout x:Name="payStack1" Grid.Column="0" VerticalOptions="Center" HorizontalOptions="End">
-                        <Label x:Name="payOp1" FontAttributes="Bold" HorizontalTextAlignment="Center" HorizontalOptions="Center" Text="WEEKLY"/>
+                        <Label x:Name="payOp1" FontAttributes="Bold" HorizontalTextAlignment="Center" HorizontalOptions="Center" TextColor="Black"/>
 
-                        <ImageButton x:Name="payButton1" BorderColor="#FFBA00" BorderWidth="4"
+                        <ImageButton x:Name="payButton1" BorderColor="#FFBA00" BorderWidth="4" Clicked="clickedPayOp1"
                                      Source="noDiscount.png" Aspect="AspectFill" HorizontalOptions="Center"/>
                     </StackLayout>
                     
                     <StackLayout x:Name="payStack2" Grid.Column="1" VerticalOptions="Center">
-                    <Label x:Name="payOp2" FontAttributes="Bold" HorizontalTextAlignment="Center" HorizontalOptions="Center" Text="2 WEEKS"/>
+                    <Label x:Name="payOp2" FontAttributes="Bold" HorizontalTextAlignment="Center" HorizontalOptions="Center" TextColor="Black"/>
 
-                    <ImageButton x:Name="payButton2" BorderColor="#FFBA00" BorderWidth="4" HorizontalOptions="Center" Source="Discount5.png" Aspect="AspectFill"/>
+                    <ImageButton x:Name="payButton2" BorderColor="#FFBA00" BorderWidth="4" HorizontalOptions="Center" Source="Discount5.png" Aspect="AspectFill"  Clicked="clickedPayOp2"/>
                     </StackLayout>
 
                     <StackLayout x:Name="payStack3" Grid.Column="2" VerticalOptions="Center" HorizontalOptions="Start">
-                    <Label x:Name="payOp3" FontAttributes="Bold" HorizontalTextAlignment="Center" HorizontalOptions="Center" Text="4 WEEKS"/>
+                    <Label x:Name="payOp3" FontAttributes="Bold" HorizontalTextAlignment="Center" HorizontalOptions="Center" TextColor="Black"/>
 
-                    <ImageButton x:Name="payButton3" BorderColor="#FFBA00" BorderWidth="4" Source="Discount10.png" HorizontalOptions="Center"/>
+                    <ImageButton x:Name="payButton3" BorderColor="#FFBA00" BorderWidth="4" Source="Discount10.png" HorizontalOptions="Center"  Clicked="clickedPayOp3"/>
                     </StackLayout>
 
                 </Grid>
@@ -157,11 +156,13 @@
                     <Frame x:Name="PriceFrame" Grid.Row="0" Grid.Column="0" HorizontalOptions="Center"
                            VerticalOptions="Center"  Padding="0" HasShadow="False"
                            BackgroundColor="#FFF0C6">
-                    <Label x:Name="TotalPrice" Text="$ TOTAL" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold"/>
+                    <Label x:Name="TotalPrice" Text="$ TOTAL" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold"  TextColor="Black"/>
                     </Frame>
-                    <Button x:Name= "SignUpButton" Grid.Row="0" Grid.Column="1" BackgroundColor="#FF9400"
+                    <Button x:Name= "SignUpButton" Grid.Row="0" Grid.Column="1" BackgroundColor="#FF9400" Clicked="clickedDone"
                             Text="PROCEED" TextColor="White" HorizontalOptions="Center" FontAttributes="Bold" VerticalOptions="Center"/>
                 </Grid>
+
+                <Label x:Name="spacer5" HeightRequest="10"/>
 
                 <!--<AbsoluteLayout>
                     

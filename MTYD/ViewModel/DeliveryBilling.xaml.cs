@@ -18,6 +18,8 @@ namespace MTYD.ViewModel
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DeliveryBilling : ContentPage
     {
+        public ObservableCollection<Plans> NewDeliveryInfo = new ObservableCollection<Plans>();
+
         protected async Task setPaymentInfo()
         {
             Console.WriteLine("SetPaymentInfo Func Started!");
@@ -27,7 +29,8 @@ namespace MTYD.ViewModel
             item1.name = Preferences.Get("item_name", "");
             item1.price = Preferences.Get("price", "00.00");
             item1.qty = "1";
-            item1.item_uid = Preferences.Get("item_uid", ""); ;
+            item1.item_uid = Preferences.Get("item_uid", "");
+            item1.itm_business_uid = "200-000001"; 
             List<Item> itemsList = new List<Item> { item1 };
             Preferences.Set("unitNum", AptEntry.Text);
 
@@ -35,7 +38,7 @@ namespace MTYD.ViewModel
             Console.WriteLine("YOUR userID is " + userID);
             newPayment.customer_uid = userID;
             //newPayment.customer_uid = "100-000082";
-            newPayment.business_uid = "200-000001";
+            //newPayment.business_uid = "200-000002";
             newPayment.items = itemsList;
             //newPayment.salt = "64a7f1fb0df93d8f5b9df14077948afa1b75b4c5028d58326fb801d825c9cd24412f88c8b121c50ad5c62073c75d69f14557255da1a21e24b9183bc584efef71";
             //newPayment.salt = "cec35d4fc0c5e83527f462aeff579b0c6f098e45b01c8b82e311f87dc6361d752c30293e27027653adbb251dff5d03242c8bec68a3af1abd4e91c5adb799a01b";
@@ -82,6 +85,162 @@ namespace MTYD.ViewModel
             Console.WriteLine("CHECKOUT JSON OBJECT BEING SENT: " + newPaymentJSONString);
             Console.WriteLine("SetPaymentInfo Func ENDED!");
         }
+
+        public async void fillEntries()
+        {
+            Console.WriteLine("fillEntries entered");
+            var request = new HttpRequestMessage();
+            Console.WriteLine("user_id: " + (string)Application.Current.Properties["user_id"]);
+            //string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + (string)Application.Current.Properties["user_id"];
+            string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + "100-000256";
+            request.RequestUri = new Uri(url);
+            //request.RequestUri = new Uri("https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/get_delivery_info/400-000453");
+            request.Method = HttpMethod.Get;
+            var client = new HttpClient();
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                HttpContent content = response.Content;
+                Console.WriteLine("content: " + content);
+                var userString = await content.ReadAsStringAsync();
+                JObject info_obj = JObject.Parse(userString);
+                this.NewDeliveryInfo.Clear();
+
+                //ArrayList item_price = new ArrayList();
+                //ArrayList num_items = new ArrayList();
+                //ArrayList payment_frequency = new ArrayList();
+                //ArrayList groupArray = new ArrayList();
+
+                //Console.WriteLine("delivery first name: " + (info_obj["result"])[0]["selection_uid"]);
+                FNameEntry.Text = (info_obj["result"])[0]["delivery_first_name"].ToString();
+                if (FNameEntry.Text == "")
+                    FNameEntry.Placeholder = "First Name*";
+
+                LNameEntry.Text = (info_obj["result"])[0]["delivery_last_name"].ToString();
+                if (LNameEntry.Text == "")
+                    LNameEntry.Placeholder = "Last Name*";
+
+                emailEntry.Text = (info_obj["result"])[0]["delivery_email"].ToString();
+                if (emailEntry.Text == "")
+                    emailEntry.Placeholder = "Email*";
+
+                AddressEntry.Text = (info_obj["result"])[0]["delivery_address"].ToString();
+                if (AddressEntry.Text == "")
+                    AddressEntry.Placeholder = "Street*";
+
+                AptEntry.Text = (info_obj["result"])[0]["delivery_unit"].ToString();
+                if (AptEntry.Text == "")
+                    AptEntry.Placeholder = "Unit";
+
+                CityEntry.Text = (info_obj["result"])[0]["delivery_city"].ToString();
+                if (CityEntry.Text == "")
+                    CityEntry.Placeholder = "City*";
+
+                StateEntry.Text = (info_obj["result"])[0]["delivery_state"].ToString();
+                if (StateEntry.Text == "")
+                    StateEntry.Placeholder = "State*";
+
+                ZipEntry.Text = (info_obj["result"])[0]["delivery_zip"].ToString();
+                if (ZipEntry.Text == "")
+                    ZipEntry.Placeholder = "Zip*";
+
+                PhoneEntry.Text = (info_obj["result"])[0]["delivery_phone_num"].ToString();
+                if (PhoneEntry.Text == "")
+                    PhoneEntry.Placeholder = "Phone Number*";
+
+                DeliveryEntry.Text = (info_obj["result"])[0]["delivery_instructions"].ToString();
+                if (DeliveryEntry.Text == "")
+                    DeliveryEntry.Placeholder = "Delivery Instructions";
+
+                CCEntry.Text = (info_obj["result"])[0]["cc_num"].ToString();
+                if (CCEntry.Text == "")
+                    CCEntry.Placeholder = "Credit Card Number*";
+
+                CVVEntry.Text = (info_obj["result"])[0]["cc_cvv"].ToString();
+                if (CVVEntry.Text == "")
+                    CVVEntry.Placeholder = "CVC/CVV*";
+
+                ZipCCEntry.Text = (info_obj["result"])[0]["cc_zip"].ToString();
+                if (ZipCCEntry.Text == "")
+                    ZipCCEntry.Placeholder = "Zip*";
+
+                int chosenMonth = int.Parse(((info_obj["result"])[0]["cc_exp_date"].ToString()).Substring(5, 2));
+                if (chosenMonth == 1)
+                    MonthPicker.SelectedIndex = 0;
+                else if (chosenMonth == 2)
+                    MonthPicker.SelectedIndex = 1;
+                else if (chosenMonth == 3)
+                    MonthPicker.SelectedIndex = 2;
+                else if (chosenMonth == 4)
+                    MonthPicker.SelectedIndex = 3;
+                else if (chosenMonth == 5)
+                    MonthPicker.SelectedIndex = 4;
+                else if (chosenMonth == 6)
+                    MonthPicker.SelectedIndex = 5;
+                else if (chosenMonth == 7)
+                    MonthPicker.SelectedIndex = 6;
+                else if (chosenMonth == 8)
+                    MonthPicker.SelectedIndex = 7;
+                else if (chosenMonth == 9)
+                    MonthPicker.SelectedIndex = 8;
+                else if (chosenMonth == 10)
+                    MonthPicker.SelectedIndex = 9;
+                else if (chosenMonth == 11)
+                    MonthPicker.SelectedIndex = 10;
+                else MonthPicker.SelectedIndex = 11;
+
+                int chosenYear = int.Parse(((info_obj["result"])[0]["cc_exp_date"].ToString()).Substring(0, 4));
+                if (chosenYear == 2020)
+                    YearPicker.SelectedIndex = 0;
+                else if (chosenYear == 2021)
+                    YearPicker.SelectedIndex = 1;
+                else if (chosenYear == 2022)
+                    YearPicker.SelectedIndex = 2;
+                else if (chosenYear == 2023)
+                    YearPicker.SelectedIndex = 3;
+                else if (chosenYear == 2024)
+                    YearPicker.SelectedIndex = 4;
+                else if (chosenYear == 2025)
+                    YearPicker.SelectedIndex = 5;
+                else if (chosenYear == 2026)
+                    YearPicker.SelectedIndex = 6;
+                else if (chosenYear == 2027)
+                    YearPicker.SelectedIndex = 7;
+                else if (chosenYear == 2028)
+                    YearPicker.SelectedIndex = 8;
+                else if (chosenYear == 2029)
+                    YearPicker.SelectedIndex = 9;
+                else if (chosenYear == 2030)
+                    YearPicker.SelectedIndex = 10;
+                else if (chosenYear == 2031)
+                    YearPicker.SelectedIndex = 11;
+                else if (chosenYear == 2032)
+                    YearPicker.SelectedIndex = 12;
+                else if (chosenYear == 2033)
+                    YearPicker.SelectedIndex = 13;
+                else if (chosenYear == 2034)
+                    YearPicker.SelectedIndex = 14;
+                else if (chosenYear == 2035)
+                    YearPicker.SelectedIndex = 15;
+                else if (chosenYear == 2036)
+                    YearPicker.SelectedIndex = 16;
+                else if (chosenYear == 2037)
+                    YearPicker.SelectedIndex = 17;
+                else if (chosenYear == 2038)
+                    YearPicker.SelectedIndex = 18;
+                else if (chosenYear == 2039)
+                    YearPicker.SelectedIndex = 19;
+                else if (chosenYear == 2040)
+                    YearPicker.SelectedIndex = 20;
+                else if (chosenYear == 2041)
+                    YearPicker.SelectedIndex = 21;
+                else if (chosenYear == 2042)
+                    YearPicker.SelectedIndex = 22;
+                else YearPicker.SelectedIndex = 23;
+            }
+        }
+
         public DeliveryBilling()
         {
             InitializeComponent();
@@ -92,23 +251,76 @@ namespace MTYD.ViewModel
             {
                 orangeBox.CornerRadius = 35;
                 pfp.CornerRadius = 20;
+
                 firstName.CornerRadius = 22;
+                firstName.HeightRequest = 35;
                 lastName.CornerRadius = 22;
+                lastName.HeightRequest = 35;
+
                 emailAdd.CornerRadius = 22;
+                emailAdd.HeightRequest = 35;
+
                 street.CornerRadius = 22;
+                street.HeightRequest = 35;
+
                 unit.CornerRadius = 22;
+                unit.HeightRequest = 35;
                 city.CornerRadius = 22;
+                city.HeightRequest = 35;
                 state.CornerRadius = 22;
+                state.HeightRequest = 35;
+
                 zipCode.CornerRadius = 22;
+                zipCode.HeightRequest = 35;
                 phoneNum.CornerRadius = 22;
+                phoneNum.HeightRequest = 35;
+
                 deliveryInstr.CornerRadius = 22;
+
                 creditCard.CornerRadius = 22;
+                creditCard.HeightRequest = 35;
+
                 cvv.CornerRadius = 22;
+                cvv.HeightRequest = 35;
                 zipCode2.CornerRadius = 22;
+                zipCode2.HeightRequest = 35;
+
                 month.CornerRadius = 22;
                 year.CornerRadius = 22;
                 SignUpButton.CornerRadius = 25;
             }
+            else //android
+            {
+                orangeBox.CornerRadius = 35;
+                pfp.CornerRadius = 20;
+
+                firstName.CornerRadius = 24;
+                lastName.CornerRadius = 24;
+
+                emailAdd.CornerRadius = 24;
+
+                street.CornerRadius = 24;
+
+                unit.CornerRadius = 24;
+                city.CornerRadius = 24;
+                state.CornerRadius = 24;
+
+                zipCode.CornerRadius = 24;
+                phoneNum.CornerRadius = 24;
+
+                deliveryInstr.CornerRadius = 24;
+
+                creditCard.CornerRadius = 24;
+
+                cvv.CornerRadius = 24;
+                zipCode2.CornerRadius = 24;
+
+                month.CornerRadius = 24;
+                year.CornerRadius = 24;
+                SignUpButton.CornerRadius = 25;
+            }
+
+            fillEntries();
         }
 
         /*

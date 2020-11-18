@@ -190,6 +190,8 @@ namespace MTYD.ViewModel
                 Console.WriteLine("END OF GET PLANS FUNCTION");
             }
         }
+
+
         public SubscriptionPage()
         {
             InitializeComponent();

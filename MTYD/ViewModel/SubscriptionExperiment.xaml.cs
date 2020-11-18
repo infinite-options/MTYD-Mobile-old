@@ -17,7 +17,7 @@ namespace MTYD.ViewModel
 {
     public partial class SubscriptionExperiment : ContentPage
     {
-        /*public ObservableCollection<Plans> NewPlan = new ObservableCollection<Plans>();
+        public ObservableCollection<Plans> NewPlan = new ObservableCollection<Plans>();
 
         double m1price_f1 = 0.0; double m1price_f2 = 0.0; double m1price_f3 = 0.0; double m2price_f1 = 0.0; double m2price_f2 = 0.0; double m2price_f3 = 0.0;
         double m3price_f1 = 0.0; double m3price_f2 = 0.0; double m3price_f3 = 0.0; double m4price_f1 = 0.0; double m4price_f2 = 0.0; double m4price_f3 = 0.0;
@@ -92,10 +92,10 @@ namespace MTYD.ViewModel
 
                 if (payOp1.Text == "1")
                     payOp1.Text = "WEEKLY";
-                else payOp1.Text = "FOR " + payFreqArray[0].ToString() + " WEEKS";
+                else payOp1.Text = payFreqArray[0].ToString() + " WEEKS";
 
-                payOp2.Text = "FOR " + payFreqArray[1].ToString() + " WEEKS";
-                payOp3.Text = "FOR " + payFreqArray[2].ToString() + " WEEKS";
+                payOp2.Text = payFreqArray[1].ToString() + " WEEKS";
+                payOp3.Text = payFreqArray[2].ToString() + " WEEKS";
                 //cat1.Text = catArray[0];
                 //VenueCatListView.ItemsSource = VenueCat;
                 int m1 = numItemsArray[0];
@@ -187,9 +187,9 @@ namespace MTYD.ViewModel
                 }
                 Console.WriteLine("END OF GET PLANS FUNCTION");
             }
-        }*/
+        }
 
-        //jonathantly.01@gmail.com
+
         void checkPlatform(double height, double width)
         {
             if (Device.RuntimePlatform == Device.iOS)
@@ -265,7 +265,77 @@ namespace MTYD.ViewModel
             }
             else //android
             {
+                orangeBox.HeightRequest = height / 2;
+                orangeBox.Margin = new Thickness(0, -height / 2.2, 0, 0);
+                orangeBox.CornerRadius = height / 40;
+                heading.FontSize = width / 45;
+                heading.Margin = new Thickness(0, 0, 0, 40);
+                //heading.VerticalOptions = LayoutOptions.Center;
+                pfp.HeightRequest = width / 25;
+                pfp.WidthRequest = width / 25;
+                pfp.CornerRadius = (int)(width / 50);
+                pfp.Margin = new Thickness(0, 0, 23, 35);
+                menu.HeightRequest = width / 30;
+                menu.WidthRequest = width / 30;
+                menu.Margin = new Thickness(25, 0, 0, 40);
 
+                takeoutGrid.Margin = new Thickness(20, 10, 20, 10);
+                takeout.HeightRequest = width / 22;
+                takeout.WidthRequest = width / 22;
+                deliveryDays.FontSize = width / 47;
+                deliveryDays2.FontSize = width / 47;
+                numMeals.FontSize = width / 48;
+                numMeals.Margin = new Thickness(25, 10, 0, 10);
+
+                meals1.HeightRequest = height / 33;
+                meals1.WidthRequest = width / 4;
+                meals1.CornerRadius = (int)(height / 60);
+                meals1.FontSize = width / 49;
+                meals1.Margin = new Thickness(30, 0, 15, 0);
+                meals2.HeightRequest = height / 33;
+                meals2.WidthRequest = width / 4;
+                meals2.CornerRadius = (int)(height / 60);
+                meals2.FontSize = width / 49;
+                meals2.Margin = new Thickness(30, 0, 15, 0);
+
+                meals3.HeightRequest = height / 33;
+                meals3.WidthRequest = width / 4;
+                meals3.CornerRadius = (int)(height / 60);
+                meals3.FontSize = width / 49;
+                meals3.Margin = new Thickness(15, 0, 30, 0);
+                meals4.HeightRequest = height / 33;
+                meals4.WidthRequest = width / 4;
+                meals4.CornerRadius = (int)(height / 60);
+                meals4.FontSize = width / 49;
+                meals4.Margin = new Thickness(15, 0, 30, 0);
+
+                prepay.Margin = new Thickness(30, 0, 0, 0);
+                prepay.FontSize = width / 48;
+
+                payFrame.HeightRequest = height / 12;
+                payFrame.CornerRadius = 105;
+                payOp1.FontSize = width / 55;
+                payOp2.FontSize = width / 55;
+                payOp3.FontSize = width / 55;
+                payButton1.HeightRequest = width / 13;
+                payButton1.WidthRequest = width / 13;
+                payButton1.CornerRadius = (int)(width / 26);
+                payButton2.HeightRequest = width / 13;
+                payButton2.WidthRequest = width / 13;
+                payButton2.CornerRadius = (int)(width / 26);
+                payButton3.HeightRequest = width / 13;
+                payButton3.WidthRequest = width / 13;
+                payButton3.CornerRadius = (int)(width / 26);
+
+                spacer4.HeightRequest = 10;
+                PriceFrame.HeightRequest = height / 33;
+                PriceFrame.WidthRequest = width / 8;
+                PriceFrame.CornerRadius = 33;
+                TotalPrice.FontSize = width / 50;
+                SignUpButton.HeightRequest = height / 33;
+                SignUpButton.WidthRequest = width / 8;
+                SignUpButton.CornerRadius = (int)(height / 66);
+                SignUpButton.FontSize = width / 50;
             }
 
             //common adjustments regardless of platform
@@ -279,11 +349,11 @@ namespace MTYD.ViewModel
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
             checkPlatform(height, width);
-            //GetPlans();
+            GetPlans();
             Preferences.Set("freqSelected", "");
         }
 
-        /*
+        
         private void clickedMeals1(object sender, EventArgs e)
         {
             meals1.BackgroundColor = Color.FromHex("#FFBA00");
@@ -562,7 +632,7 @@ namespace MTYD.ViewModel
         {
             await Navigation.PushAsync(new UserProfile());
             //Application.Current.MainPage = new UserProfile();
-        }*/
+        }
 
         async void clickedBack(System.Object sender, System.EventArgs e)
         {
