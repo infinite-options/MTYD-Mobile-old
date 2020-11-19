@@ -43,6 +43,8 @@ namespace MTYD.ViewModel
         ArrayList itemsArray = new ArrayList();
         ArrayList purchIdArray = new ArrayList();
         string firstIndex = "";
+        public int totalMealsCount = 0;
+        public bool isAlreadySelected;
 
         WebClient client = new WebClient();
         public Select()
@@ -52,6 +54,7 @@ namespace MTYD.ViewModel
             GetMealPlans();
             setDates();
             getUserMeals();
+            //GetRecentSelection();
             setMenu();
 
             //SubscriptionPicker.SelectedIndex = 0;
@@ -206,7 +209,7 @@ namespace MTYD.ViewModel
             mealsSaved.Clear();   //New Addition SV
         }
 
-        private void planChange(object sender, EventArgs e)
+        private async void planChange(object sender, EventArgs e)
         {
             if (SubscriptionPicker.SelectedItem.ToString().Substring(0, 2).Equals("5 "))
             {
@@ -216,12 +219,18 @@ namespace MTYD.ViewModel
             {
                 mealsAllowed = 10;
             }
-            if (SubscriptionPicker.SelectedItem.ToString().Substring(0, 2).Equals("15"))
+            else if (SubscriptionPicker.SelectedItem.ToString().Substring(0, 2).Equals("15"))
             {
                 mealsAllowed = 15;
             }
+            else if (SubscriptionPicker.SelectedItem.ToString().Substring(0, 2).Equals("20"))
+            {
+                mealsAllowed = 20;
+            }
             Console.WriteLine("meals allowed " + mealsAllowed);
 
+            /* 
+             * SV COMMENT 11/17 Testing TotalCount.Text
             int indexOfMealPlanSelected = (int)SubscriptionPicker.SelectedIndex;
             Preferences.Set("purchId", purchIdArray[indexOfMealPlanSelected].ToString());
             Console.WriteLine("Purch Id: " + Preferences.Get("purchId", ""));
@@ -229,14 +238,57 @@ namespace MTYD.ViewModel
             string s = SubscriptionPicker.SelectedItem.ToString();
             s = s.Substring(0, 2);
             Preferences.Set("total", int.Parse(s));
-            totalCount.Text = Preferences.Get("total", 0).ToString();
-            Preferences.Set("origMax", int.Parse(s));
+            //totalCount.Text = Preferences.Get("total", 0).ToString();
+          //  Preferences.Set("origMax", int.Parse(s));
+            */
+            int indexOfMealPlanSelected = (int)SubscriptionPicker.SelectedIndex;
+            Preferences.Set("purchId", purchIdArray[indexOfMealPlanSelected].ToString());
+            Console.WriteLine("Purch Id: " + Preferences.Get("purchId", ""));
+
             // Button b = (Button)sender;
             // MealInfo ms = b.BindingContext as MealInfo;
             // ms.MealQuantity = 0;
             mealsSaved.Clear(); //New Addition SV
             resetAll(); //New Addition SV
-            //GetRecentSelection();
+
+            await GetRecentSelection();
+            GetRecentSelection2();
+
+            Console.WriteLine("isAlreadySeleced in planchange" + isAlreadySelected);
+
+            //bool isAlreadySelected = Preferences.Get("isAlreadySelected", true);
+            if (isAlreadySelected == true)
+            {
+                totalCount.Text = "0";
+                Preferences.Set("total", 0);
+                //DisplayAlert("Alert", "Select reset button to change your meal selections", "OK");
+            }
+            else if (isAlreadySelected == false)
+            {
+                string s = SubscriptionPicker.SelectedItem.ToString();
+                s = s.Substring(0, 2);
+                Preferences.Set("total", int.Parse(s));
+                totalCount.Text = Preferences.Get("total", 0).ToString();
+                Preferences.Set("origMax", int.Parse(s));
+            }
+            //GetRecentSelection(); //11/17 10pm comment SV
+
+            //calcTotal();
+            /* //Testing 11/12 Total meals count
+            int totalMealsCount = 110;
+            for (int i = 0; i < Meals1.Count; i++)
+            {
+                if (Meals1[i].MealQuantity > 0)
+                {
+                    totalMealsCount += Int32.Parse(Meals1[i].MealQuantity.ToString());
+                }
+            } */
+            Console.WriteLine("Meals1 Count: " + totalMealsCount);
+            //11/12
+            //Preferences.Set("total", Meals1.Count);
+            //totalCount.Text = Preferences.Get("total", 0).ToString();
+            //Preferences.Set("origMax", int.Parse(s));
+
             //
             //GetMealPlans();
             //setDates();
@@ -380,6 +432,7 @@ namespace MTYD.ViewModel
             var request = new HttpRequestMessage();
             string userID = (string)Application.Current.Properties["user_id"];
             request.RequestUri = new Uri("https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/customer_lplp?customer_uid=" + userID);
+            Console.WriteLine("GET MEALS PLAN ENDPOINT TRYING TO BE REACHED: " + "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/customer_lplp?customer_uid=" + userID);
             request.Method = HttpMethod.Get;
             var client = new HttpClient();
             HttpResponseMessage response = await client.SendAsync(request);
@@ -408,8 +461,11 @@ namespace MTYD.ViewModel
                 {
                     JArray newobj = Newtonsoft.Json.JsonConvert.DeserializeObject<JArray>(itemsArray[i].ToString());
 
+                    Console.WriteLine("Inside forloop before foreach in GetmealsPlan func");
+
                     foreach (JObject config in newobj)
                     {
+                        Console.WriteLine("Inside foreach loop in GetmealsPlan func");
                         //string qty = (string)config["qty"];
                         string name = (string)config["name"];
                         //string price = (string)config["price"];
@@ -418,10 +474,10 @@ namespace MTYD.ViewModel
                         namesArray.Add(name);
                     }
                 }
-
+                Console.WriteLine("Outside foreach in GetmealsPlan func");
                 //Find unique number of meals
-                firstIndex = namesArray[0].ToString();
-                Console.WriteLine("namesArray contents:" + namesArray[0] + " " + namesArray[1] + " " + namesArray[2] + " ");
+                //firstIndex = namesArray[0].ToString();
+                //Console.WriteLine("namesArray contents:" + namesArray[0].ToString() + " " + namesArray[1].ToString() + " " + namesArray[2].ToString() + " ");
                 SubscriptionPicker.ItemsSource = namesArray;
                 //SubscriptionPicker.Title = namesArray[0];
 
@@ -476,25 +532,84 @@ namespace MTYD.ViewModel
 
         private async void saveUserMeals(object sender, EventArgs e)
         {
-            for (int i = 0; i < Meals1.Count; i++)
+            int count = Preferences.Get("total", 0);
+            if (totalCount.Text == "0" || count == 0)
             {
-                if (Meals1[i].MealQuantity > 0)
+                for (int i = 0; i < Meals1.Count; i++)
                 {
-                    mealsSaved.Add(new MealInformation
+                    if (Meals1[i].MealQuantity > 0)
                     {
-                        Qty = Meals1[i].MealQuantity.ToString(),
-                        Name = Meals1[i].MealName,
-                        Price = Meals1[i].MealPrice.ToString(),
-                        ItemUid = Meals1[i].ItemUid,
+                        mealsSaved.Add(new MealInformation
+                        {
+                            Qty = Meals1[i].MealQuantity.ToString(),
+                            Name = Meals1[i].MealName,
+                            Price = Meals1[i].MealPrice.ToString(),
+                            ItemUid = Meals1[i].ItemUid,
+                        }
+                        );
                     }
-                    );
                 }
 
+                jsonMeals = JsonConvert.SerializeObject(mealsSaved);
+                Console.WriteLine("line 302 " + jsonMeals);
+                postData();
             }
+            else
+            {
+                DisplayAlert("Incomplete Selection", "Please select all the meals before saving.", "OK");
+            }
+        }
+
+        private async void skipMealSelection(object sender, EventArgs e)
+        {
+            resetAll();
+            int count = Preferences.Get("total", 0);
+            totalCount.Text = "SKIPPED";
+            //for (int i = 0; i < Meals1.Count; i++)
+            //{
+            //if (Meals1[i].MealQuantity > 0)
+            //{
+            mealsSaved.Add(new MealInformation
+            {
+                Qty = "",
+                Name = "SKIP",
+                Price = "",
+                ItemUid = "",
+            }
+            );
+            // }
+            //}
 
             jsonMeals = JsonConvert.SerializeObject(mealsSaved);
             Console.WriteLine("line 302 " + jsonMeals);
             postData();
+            DisplayAlert("Meal Skipped", "You have chosen to skip the meal selection for this week. If you want to select meals again for this meal plan then click the RESET button!", "OK");
+        }
+
+        private async void surpriseMealSelection(object sender, EventArgs e)
+        {
+            resetAll();
+            int count = Preferences.Get("total", 0);
+            totalCount.Text = "SURPRISE";
+            //for (int i = 0; i < Meals1.Count; i++)
+            //{
+            //if (Meals1[i].MealQuantity > 0)
+            //{
+            mealsSaved.Add(new MealInformation
+            {
+                Qty = "",
+                Name = "SURPRISE",
+                Price = "",
+                ItemUid = "",
+            }
+            );
+            // }
+            //}
+
+            jsonMeals = JsonConvert.SerializeObject(mealsSaved);
+            Console.WriteLine("line 302 " + jsonMeals);
+            postData();
+            DisplayAlert("SUPRISE", "You will be surprised with a randomized meal selection. If you want to select meals again for this meal plan then click the RESET button!", "OK");
         }
 
         public async void postData()
@@ -530,12 +645,26 @@ namespace MTYD.ViewModel
             }   // Clicked Save function
         }
 
+        /*private bool isAlreadySelected()
+        {
+            for (int i = 0; i < Meals1.Count; i++)
+            {
+                if (Meals1[i].MealQuantity > 0)
+                {
+                    return true;
+                }
+
+            }
+            return false;
+        }*/
+
         private void resetAll()
         {
             for (int i = 0; i < Meals1.Count; i++)
             {
                 if (Meals1[i].MealQuantity > 0)
                 {
+                    //totalMealsCount += Meals1[i].MealQuantity;
                     Meals1[i].MealQuantity = 0;
                     /*
                     mealsSaved.Add(new MealInformation
@@ -551,8 +680,22 @@ namespace MTYD.ViewModel
             }
         }
 
+        private void calcTotal()
+        {
+            totalMealsCount = 0;
+            for (int i = 0; i < Meals1.Count; i++)
+            {
+                if (Meals1[i].MealQuantity > 0)
+                {
+                    totalMealsCount += Meals1[i].MealQuantity;
+                }
+
+            }
+        }
+
         protected async Task GetRecentSelection()
         {
+            Console.WriteLine("INSIDE GetRecentSelection #1");
             var request = new HttpRequestMessage();
             string purchaseID = Preferences.Get("purchId", "");
             string date = Preferences.Get("dateSelected", "");
@@ -589,9 +732,117 @@ namespace MTYD.ViewModel
                     combinedArray.Add((m["combined_selection"].ToString()));
                 }
 
+                if (combinedArray.Count == 0)
+                {
+                    //Preferences.Set("isAlreadySelected", false);
+                    isAlreadySelected = false;
+                }
+                else
+                {
+                    //Preferences.Set("isAlreadySelected", true);
+                    isAlreadySelected = true;
+                }
+                //isAlreadySelected = Preferences.Get("isAlreadySelected", true);
+                Console.WriteLine("isAlreadySelected" + isAlreadySelected);
+
                 Console.WriteLine("Trying to enter for loop in Get Recent Selection");
                 for (int i = 0; i < combinedArray.Count; i++)
                 {
+
+                    JArray newobj = Newtonsoft.Json.JsonConvert.DeserializeObject<JArray>(combinedArray[i].ToString());
+
+                    foreach (JObject config in newobj)
+                    {
+                        string qty = (string)config["qty"];
+                        string name = (string)config["name"];
+                        //string price = (string)config["price"];
+                        //string mealid = (string)config["item_uid"];
+
+                        namesArray.Add(name);
+                        qtyList.Add(qty);
+                    }
+                }
+                return;
+                Console.WriteLine("Trying to enter second for loop in Get Recent Selection");
+                totalMealsCount = 0;
+                //resetAll();
+                for (int i = 0; i < Meals1.Count; i++)
+                {
+                    Console.WriteLine("Inside second for loop in Get Recent Selection");
+
+                    Meals1[i].MealQuantity = Int32.Parse(qtyList[i].ToString());
+                    //totalMealsCount += Int32.Parse(qtyList[i].ToString());
+
+                }
+                Console.WriteLine("Before set menu call in Get Recent Seleciton");
+
+                for (int i = 0; i < qtyList.Count; i++)
+                {
+                    Console.WriteLine("Inside third for loop in Get Recent Selection");
+                    totalMealsCount += Int32.Parse(qtyList[i].ToString());
+                }
+                setMenu();
+                Console.WriteLine("END OF GET RECENT SELECTION");
+
+            }
+        }
+
+        protected async Task GetRecentSelection2()
+        {
+            Console.WriteLine("INSIDE GetRecentSelection #2");
+            var request = new HttpRequestMessage();
+            string purchaseID = Preferences.Get("purchId", "");
+            string date = Preferences.Get("dateSelected", "");
+            string userID = (string)Application.Current.Properties["user_id"];
+            string halfUrl = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected_specific?customer_uid=" + userID;
+            string urlSent = halfUrl + "&purchase_id=" + purchaseID + "&menu_date=" + date;
+            Console.WriteLine("URL ENDPOINT TRYING TO BE REACHED:" + urlSent);
+            request.RequestUri = new Uri(halfUrl + "&purchase_id=" + purchaseID + "&menu_date=" + date);
+            request.Method = HttpMethod.Get;
+            var client = new HttpClient();
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            Console.WriteLine("Trying to enter if statement in Get Recent Selection");
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                HttpContent content = response.Content;
+                var userString = await content.ReadAsStringAsync();
+                JObject recentMeals = JObject.Parse(userString);
+                this.NewPlan.Clear();
+
+                ArrayList qtyList = new ArrayList();
+                //ArrayList nameList = new ArrayList();
+                //ArrayList itemUidList = new ArrayList();
+                ArrayList namesArray = new ArrayList();
+                ArrayList combinedArray = new ArrayList();
+
+                Console.WriteLine("Trying to enter foreach loop in Get Recent Meals");
+
+                foreach (var m in recentMeals["result"])
+                {
+                    //Console.WriteLine("PARSING DATA FROM DB: ITEM_UID: " + m["item_uid"].ToString());
+                    //qtyList.Add(double.Parse(m["qty"].ToString()));
+                    //nameList.Add(int.Parse(m["name"].ToString()));
+                    combinedArray.Add((m["combined_selection"].ToString()));
+                }
+
+                if (combinedArray.Count == 0)
+                {
+                    //Preferences.Set("isAlreadySelected", false);
+                    isAlreadySelected = false;
+                }
+                else
+                {
+                    //Preferences.Set("isAlreadySelected", true);
+                    isAlreadySelected = true;
+                }
+                //isAlreadySelected = Preferences.Get("isAlreadySelected", true);
+                Console.WriteLine("isAlreadySelected" + isAlreadySelected);
+
+                Console.WriteLine("Trying to enter for loop in Get Recent Selection");
+                for (int i = 0; i < combinedArray.Count; i++)
+                {
+
                     JArray newobj = Newtonsoft.Json.JsonConvert.DeserializeObject<JArray>(combinedArray[i].ToString());
 
                     foreach (JObject config in newobj)
@@ -607,18 +858,50 @@ namespace MTYD.ViewModel
                 }
 
                 Console.WriteLine("Trying to enter second for loop in Get Recent Selection");
-
+                totalMealsCount = 0;
+                //resetAll();
                 for (int i = 0; i < Meals1.Count; i++)
                 {
+                    Console.WriteLine("Inside second for loop in Get Recent Selection");
 
-                    Meals1[i].MealQuantity = (int)qtyList[i];
+                    Meals1[i].MealQuantity = Int32.Parse(qtyList[i].ToString());
+                    //totalMealsCount += Int32.Parse(qtyList[i].ToString());
 
                 }
                 Console.WriteLine("Before set menu call in Get Recent Seleciton");
+
+                for (int i = 0; i < qtyList.Count; i++)
+                {
+                    Console.WriteLine("Inside third for loop in Get Recent Selection");
+                    totalMealsCount += Int32.Parse(qtyList[i].ToString());
+                }
                 setMenu();
                 Console.WriteLine("END OF GET RECENT SELECTION");
+
             }
         }
 
+        private void resetBttn_Clicked(object sender, EventArgs e)
+        {
+
+            for (int i = 0; i < Meals1.Count; i++)
+            {
+                if (Meals1[i].MealQuantity > 0)
+                {
+                    Meals1[i].MealQuantity = 0;
+                }
+
+            }
+
+            int indexOfMealPlanSelected = (int)SubscriptionPicker.SelectedIndex;
+            Preferences.Set("purchId", purchIdArray[indexOfMealPlanSelected].ToString());
+            Console.WriteLine("Purch Id: " + Preferences.Get("purchId", ""));
+
+            string s = SubscriptionPicker.SelectedItem.ToString();
+            s = s.Substring(0, 2);
+            Preferences.Set("total", int.Parse(s));
+            totalCount.Text = Preferences.Get("total", 0).ToString();
+            Preferences.Set("origMax", int.Parse(s));
+        }
     }
 }

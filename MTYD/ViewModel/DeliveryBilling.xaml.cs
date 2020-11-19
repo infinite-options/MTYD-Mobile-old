@@ -86,6 +86,7 @@ namespace MTYD.ViewModel
             Console.WriteLine("SetPaymentInfo Func ENDED!");
         }
 
+        //auto-populate the delivery info if the user has already previously entered it
         public async void fillEntries()
         {
             Console.WriteLine("fillEntries entered");

@@ -30,14 +30,18 @@
                         <Button ClassId="save1" Text = "Save" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="0" Grid.Column="3" Clicked="saveUserMeals" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black" FontAttributes="Bold"/>
                     </Frame>
                     <Frame OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Row="0" Grid.Column="2" CornerRadius="20">
-                        <Button x:Name="surpriseBttn"  ClassId="surpriseButton" Text = "Surprise" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="0" Grid.Column="3" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black"  FontAttributes="Bold"/>
+                        <Button x:Name="surpriseBttn"  ClassId="surpriseButton" Text = "Surprise" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="0" Grid.Column="3" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black"  FontAttributes="Bold" Clicked="surpriseMealSelection"/>
                     </Frame>
                     <Frame OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Row = "1" Grid.Column="2" CornerRadius="20">
-                        <Button x:Name="skipBttn"  ClassId="skipButton" Text = "Skip" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="2" Grid.Column="3" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black"  FontAttributes="Bold"/>
+                        <Button x:Name="skipBttn"  ClassId="skipButton" Text = "Skip" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="2" Grid.Column="3" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black"  FontAttributes="Bold" Clicked="skipMealSelection"/>
                     </Frame>
 
-                    <Frame OutlineColor="DarkRed" Padding="0" BackgroundColor="Transparent" Grid.Row = "1"  Grid.Column="3">
-                        <Label Text = "Count" x:Name="totalCount" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Medium" Grid.Row="1" Grid.Column="3" BackgroundColor="Transparent" TextColor="Black" FontAttributes="Bold"/>
+                    <Frame OutlineColor="DarkRed" Padding="0" BackgroundColor="Transparent" Grid.Row = "1"  Grid.Column="1">
+                        <Label Text = "Count" x:Name="totalCount" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Medium" Grid.Row="1" Grid.Column="1" BackgroundColor="Transparent" TextColor="Black" FontAttributes="Bold"/>
+                    </Frame>
+
+                    <Frame OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Row = "1" Grid.Column="3" CornerRadius="20">
+                        <Button x:Name="resetBttn"  ClassId="resetButton" Text = "Reset" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="1" Grid.Column="3" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black"  FontAttributes="Bold" Clicked="resetBttn_Clicked"/>
                     </Frame>
 
                     <!-- Segmented Progress Bar Grid -->
