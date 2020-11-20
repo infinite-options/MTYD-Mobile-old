@@ -45,6 +45,8 @@ namespace MTYD.ViewModel
         string firstIndex = "";
         public int totalMealsCount = 0;
         public bool isAlreadySelected;
+        public bool isSurprise = false;
+        public bool isSkip = false;
 
         WebClient client = new WebClient();
         public Select()
@@ -229,6 +231,9 @@ namespace MTYD.ViewModel
             }
             Console.WriteLine("meals allowed " + mealsAllowed);
 
+            isSkip = false;
+            isSurprise = false;
+
             /* 
              * SV COMMENT 11/17 Testing TotalCount.Text
             int indexOfMealPlanSelected = (int)SubscriptionPicker.SelectedIndex;
@@ -270,6 +275,59 @@ namespace MTYD.ViewModel
                 Preferences.Set("total", int.Parse(s));
                 totalCount.Text = Preferences.Get("total", 0).ToString();
                 Preferences.Set("origMax", int.Parse(s));
+            }
+
+            
+            if (isSkip)
+            {
+                skipBttn.BackgroundColor = Color.Black;
+                skipFrame.BackgroundColor = Color.Black;
+                skipBttn.TextColor = Color.White;
+                surpriseBttn.BackgroundColor = Color.Transparent;
+                surpriseFrame.BackgroundColor = Color.Transparent;
+                surpriseBttn.TextColor = Color.Black;
+
+                indexOfMealPlanSelected = (int)SubscriptionPicker.SelectedIndex;
+                Preferences.Set("purchId", purchIdArray[indexOfMealPlanSelected].ToString());
+                Console.WriteLine("Purch Id: " + Preferences.Get("purchId", ""));
+
+                string s = SubscriptionPicker.SelectedItem.ToString();
+                s = s.Substring(0, 2);
+                Preferences.Set("total", int.Parse(s));
+                totalCount.Text = Preferences.Get("total", 0).ToString();
+                Preferences.Set("origMax", int.Parse(s));
+            }
+            else if (isSurprise)
+            {
+                surpriseBttn.BackgroundColor = Color.Black;
+                surpriseFrame.BackgroundColor = Color.Black;
+                surpriseBttn.TextColor = Color.White;
+                skipBttn.BackgroundColor = Color.Transparent;
+                skipFrame.BackgroundColor = Color.Transparent;
+                skipBttn.TextColor = Color.Black;
+
+                indexOfMealPlanSelected = (int)SubscriptionPicker.SelectedIndex;
+                Preferences.Set("purchId", purchIdArray[indexOfMealPlanSelected].ToString());
+                Console.WriteLine("Purch Id: " + Preferences.Get("purchId", ""));
+
+                string s = SubscriptionPicker.SelectedItem.ToString();
+                s = s.Substring(0, 2);
+                Preferences.Set("total", int.Parse(s));
+                totalCount.Text = Preferences.Get("total", 0).ToString();
+                Preferences.Set("origMax", int.Parse(s));
+            }
+            else
+            {
+                //If neither skip or surprise (new plan), then initialize to surprise
+                skipBttn.BackgroundColor = Color.Transparent;
+                skipFrame.BackgroundColor = Color.Transparent;
+                skipBttn.TextColor = Color.Black;
+                surpriseBttn.BackgroundColor = Color.Transparent;
+                surpriseFrame.BackgroundColor = Color.Transparent;
+                surpriseBttn.TextColor = Color.Black;
+                if (isAlreadySelected == false)
+                    surprise();
+
             }
             //GetRecentSelection(); //11/17 10pm comment SV
 
@@ -532,6 +590,15 @@ namespace MTYD.ViewModel
 
         private async void saveUserMeals(object sender, EventArgs e)
         {
+            surpriseBttn.BackgroundColor = Color.Transparent;
+            surpriseFrame.BackgroundColor = Color.Transparent;
+            surpriseBttn.TextColor = Color.Black;
+            skipBttn.BackgroundColor = Color.Transparent;
+            skipFrame.BackgroundColor = Color.Transparent;
+            skipBttn.TextColor = Color.Black;
+            saveBttn.BackgroundColor = Color.Black;
+            saveBttn.TextColor = Color.White;
+
             int count = Preferences.Get("total", 0);
             if (totalCount.Text == "0" || count == 0)
             {
@@ -553,6 +620,8 @@ namespace MTYD.ViewModel
                 jsonMeals = JsonConvert.SerializeObject(mealsSaved);
                 Console.WriteLine("line 302 " + jsonMeals);
                 postData();
+                saveBttn.BackgroundColor = Color.Transparent;
+                saveBttn.TextColor = Color.Black;
             }
             else
             {
@@ -562,7 +631,14 @@ namespace MTYD.ViewModel
 
         private async void skipMealSelection(object sender, EventArgs e)
         {
+            skipBttn.BackgroundColor = Color.Black;
+            skipFrame.BackgroundColor = Color.Black;
+            skipBttn.TextColor = Color.White;
+            surpriseBttn.BackgroundColor = Color.Transparent;
+            surpriseFrame.BackgroundColor = Color.Transparent;
+            surpriseBttn.TextColor = Color.Black;
             resetAll();
+            mealsSaved.Clear();
             int count = Preferences.Get("total", 0);
             totalCount.Text = "SKIPPED";
             //for (int i = 0; i < Meals1.Count; i++)
@@ -584,11 +660,28 @@ namespace MTYD.ViewModel
             Console.WriteLine("line 302 " + jsonMeals);
             postData();
             DisplayAlert("Meal Skipped", "You have chosen to skip the meal selection for this week. If you want to select meals again for this meal plan then click the RESET button!", "OK");
+            mealsSaved.Clear();
+            int indexOfMealPlanSelected = (int)SubscriptionPicker.SelectedIndex;
+            Preferences.Set("purchId", purchIdArray[indexOfMealPlanSelected].ToString());
+            Console.WriteLine("Purch Id: " + Preferences.Get("purchId", ""));
+
+            string s = SubscriptionPicker.SelectedItem.ToString();
+            s = s.Substring(0, 2);
+            Preferences.Set("total", int.Parse(s));
+            totalCount.Text = Preferences.Get("total", 0).ToString();
+            Preferences.Set("origMax", int.Parse(s));
         }
 
-        private async void surpriseMealSelection(object sender, EventArgs e)
+        private void surprise()
         {
+            surpriseBttn.BackgroundColor = Color.Black;
+            surpriseFrame.BackgroundColor = Color.Black;
+            surpriseBttn.TextColor = Color.White;
+            skipBttn.BackgroundColor = Color.Transparent;
+            skipFrame.BackgroundColor = Color.Transparent;
+            skipBttn.TextColor = Color.Black;
             resetAll();
+            mealsSaved.Clear();
             int count = Preferences.Get("total", 0);
             totalCount.Text = "SURPRISE";
             //for (int i = 0; i < Meals1.Count; i++)
@@ -610,6 +703,58 @@ namespace MTYD.ViewModel
             Console.WriteLine("line 302 " + jsonMeals);
             postData();
             DisplayAlert("SUPRISE", "You will be surprised with a randomized meal selection. If you want to select meals again for this meal plan then click the RESET button!", "OK");
+            mealsSaved.Clear();
+            int indexOfMealPlanSelected = (int)SubscriptionPicker.SelectedIndex;
+            Preferences.Set("purchId", purchIdArray[indexOfMealPlanSelected].ToString());
+            Console.WriteLine("Purch Id: " + Preferences.Get("purchId", ""));
+
+            string s = SubscriptionPicker.SelectedItem.ToString();
+            s = s.Substring(0, 2);
+            Preferences.Set("total", int.Parse(s));
+            totalCount.Text = Preferences.Get("total", 0).ToString();
+            Preferences.Set("origMax", int.Parse(s));
+        }
+        private async void surpriseMealSelection(object sender, EventArgs e)
+        {
+            surpriseBttn.BackgroundColor = Color.Black;
+            surpriseFrame.BackgroundColor = Color.Black;
+            surpriseBttn.TextColor = Color.White;
+            skipBttn.BackgroundColor = Color.Transparent;
+            skipFrame.BackgroundColor = Color.Transparent;
+            skipBttn.TextColor = Color.Black;
+            resetAll();
+            mealsSaved.Clear();
+            int count = Preferences.Get("total", 0);
+            totalCount.Text = "SURPRISE";
+            //for (int i = 0; i < Meals1.Count; i++)
+            //{
+            //if (Meals1[i].MealQuantity > 0)
+            //{
+            mealsSaved.Add(new MealInformation
+            {
+                Qty = "",
+                Name = "SURPRISE",
+                Price = "",
+                ItemUid = "",
+            }
+            );
+            // }
+            //}
+
+            jsonMeals = JsonConvert.SerializeObject(mealsSaved);
+            Console.WriteLine("line 302 " + jsonMeals);
+            postData();
+            DisplayAlert("SUPRISE", "You will be surprised with a randomized meal selection. If you want to select meals again for this meal plan then click the RESET button!", "OK");
+            mealsSaved.Clear();
+            int indexOfMealPlanSelected = (int)SubscriptionPicker.SelectedIndex;
+            Preferences.Set("purchId", purchIdArray[indexOfMealPlanSelected].ToString());
+            Console.WriteLine("Purch Id: " + Preferences.Get("purchId", ""));
+
+            string s = SubscriptionPicker.SelectedItem.ToString();
+            s = s.Substring(0, 2);
+            Preferences.Set("total", int.Parse(s));
+            totalCount.Text = Preferences.Get("total", 0).ToString();
+            Preferences.Set("origMax", int.Parse(s));
         }
 
         public async void postData()
@@ -757,11 +902,29 @@ namespace MTYD.ViewModel
                         string name = (string)config["name"];
                         //string price = (string)config["price"];
                         //string mealid = (string)config["item_uid"];
-
                         namesArray.Add(name);
                         qtyList.Add(qty);
                     }
                 }
+                for (int i = 0; i < namesArray.Count; i++)
+                {
+                    if (namesArray[i].ToString() == "SURPRISE")
+                    {
+                        isSurprise = true;
+                        break;
+                    }
+                    else if (namesArray[i].ToString() == "SKIP")
+                    {
+                        isSkip = true;
+                        break;
+                    }
+                    else
+                    {
+                        isSkip = false;
+                        isSurprise = false;
+                    }
+                }
+                Console.WriteLine("isSurprise value: " + isSurprise + " isSkip value: " + isSkip);
                 return;
                 Console.WriteLine("Trying to enter second for loop in Get Recent Selection");
                 totalMealsCount = 0;

@@ -39,5 +39,10 @@ namespace MTYD.ViewModel
             Application.Current.Properties.Remove("platform");
             Application.Current.MainPage = new MainPage();
         }
+
+        async void UserProfTestClick(System.Object sender, System.EventArgs e)
+        {
+            await Navigation.PushAsync(new UserProfileExperiment());
+        }
     }
 }

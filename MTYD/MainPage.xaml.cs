@@ -721,11 +721,11 @@ namespace MTYD
             else loginPassword.IsPassword = true;
         }
 
-        void Button_Clicked(System.Object sender, System.EventArgs e)
-        {
-            Application.Current.MainPage = new MainPageExperiment();
-            //Navigation.PushAsync(new MainPageExperiment());
-        }
+        //void Button_Clicked(System.Object sender, System.EventArgs e)
+        //{
+        //    Application.Current.MainPage = new MainPageExperiment();
+        //    //Navigation.PushAsync(new MainPageExperiment());
+        //}
 
     }
 }

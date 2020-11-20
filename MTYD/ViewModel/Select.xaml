@@ -26,13 +26,13 @@
                     <Button x:Name="save1" Text = "Save" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="0" Grid.Column="3" Clicked="saveUserMeals"/>
                 </Frame>-->
                     <Picker x:Name="datePicker" Grid.ColumnSpan="2" Margin="15,0,0,0" SelectedIndexChanged="dateChange"/>
-                    <Frame OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Column="3" CornerRadius="20">
-                        <Button ClassId="save1" Text = "Save" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="0" Grid.Column="3" Clicked="saveUserMeals" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black" FontAttributes="Bold"/>
+                    <Frame  OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Column="3" CornerRadius="20">
+                        <Button x:Name="saveBttn" ClassId="save1" Text = "Save" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="0" Grid.Column="3" Clicked="saveUserMeals" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black" FontAttributes="Bold"/>
                     </Frame>
-                    <Frame OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Row="0" Grid.Column="2" CornerRadius="20">
+                    <Frame x:Name="surpriseFrame" OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Row="0" Grid.Column="2" CornerRadius="20">
                         <Button x:Name="surpriseBttn"  ClassId="surpriseButton" Text = "Surprise" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="0" Grid.Column="3" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black"  FontAttributes="Bold" Clicked="surpriseMealSelection"/>
                     </Frame>
-                    <Frame OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Row = "1" Grid.Column="2" CornerRadius="20">
+                    <Frame x:Name="skipFrame" OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Row = "1" Grid.Column="2" CornerRadius="20">
                         <Button x:Name="skipBttn"  ClassId="skipButton" Text = "Skip" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="2" Grid.Column="3" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black"  FontAttributes="Bold" Clicked="skipMealSelection"/>
                     </Frame>
 
