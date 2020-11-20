@@ -1,10 +1,12 @@
 ﻿<Properties StartupConfiguration="{FAB6B3BB-6B8C-41F3-9565-69D18FC959BC}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/ViewModel/Select.xaml.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/ViewModel/DeliveryBilling.xaml.cs">
     <Files>
       <File FileName="MTYD/ViewModel/UserProfileExperiment.xaml" Line="45" Column="86" />
-      <File FileName="MTYD/ViewModel/UserProfileExperiment.xaml.cs" />
-      <File FileName="MTYD/ViewModel/Select.xaml" Line="1" Column="1" />
-      <File FileName="MTYD/ViewModel/Select.xaml.cs" Line="1053" Column="1" />
+      <File FileName="MTYD/ViewModel/UserProfileExperiment.xaml.cs" Line="30" Column="27" />
+      <File FileName="MTYD/ViewModel/Select.xaml" />
+      <File FileName="MTYD/ViewModel/Select.xaml.cs" Line="211" Column="52" />
+      <File FileName="MTYD/ViewModel/DeliveryBilling.xaml.cs" Line="119" Column="69" />
+      <File FileName="MTYD.iOS/Main.cs" Line="17" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -17,9 +19,11 @@
                 </Node>
               </Node>
               <Node name="ViewModel" expanded="True">
-                <Node name="Select.xaml" expanded="True">
-                  <Node name="Select.xaml.cs" selected="True" />
+                <Node name="DeliveryBilling.xaml" expanded="True">
+                  <Node name="DeliveryBilling.xaml.cs" selected="True" />
                 </Node>
+                <Node name="Select.xaml" expanded="True" />
+                <Node name="UserProfileExperiment.xaml" expanded="True" />
               </Node>
             </Node>
             <Node name="MTYD.Android" expanded="True">

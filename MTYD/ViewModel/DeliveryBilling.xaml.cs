@@ -92,8 +92,8 @@ namespace MTYD.ViewModel
             Console.WriteLine("fillEntries entered");
             var request = new HttpRequestMessage();
             Console.WriteLine("user_id: " + (string)Application.Current.Properties["user_id"]);
-            //string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + (string)Application.Current.Properties["user_id"];
-            string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + "100-000256";
+            string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + (string)Application.Current.Properties["user_id"];
+            //string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + "100-000256";
             request.RequestUri = new Uri(url);
             //request.RequestUri = new Uri("https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/get_delivery_info/400-000453");
             request.Method = HttpMethod.Get;
@@ -102,9 +102,11 @@ namespace MTYD.ViewModel
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
+
                 HttpContent content = response.Content;
                 Console.WriteLine("content: " + content);
                 var userString = await content.ReadAsStringAsync();
+                //Console.WriteLine(userString);
                 JObject info_obj = JObject.Parse(userString);
                 this.NewDeliveryInfo.Clear();
 
@@ -112,6 +114,30 @@ namespace MTYD.ViewModel
                 //ArrayList num_items = new ArrayList();
                 //ArrayList payment_frequency = new ArrayList();
                 //ArrayList groupArray = new ArrayList();
+
+                //Console.WriteLine("string: " + (info_obj["result"]).ToString());
+                //check if the user hasn't entered any info before, if so put in the placeholders
+                if ((info_obj["result"]).ToString() == "[]")
+                {
+                    Console.WriteLine("no info");
+
+                    FNameEntry.Placeholder = "First Name*";
+                    LNameEntry.Placeholder = "Last Name*";
+                    emailEntry.Placeholder = "Email*";
+                    AddressEntry.Placeholder = "Street*";
+                    AptEntry.Placeholder = "Unit";
+                    CityEntry.Placeholder = "City*";
+                    StateEntry.Placeholder = "State*";
+                    ZipEntry.Placeholder = "Zip*";
+                    PhoneEntry.Placeholder = "Phone Number*";
+                    DeliveryEntry.Placeholder = "Delivery Instructions";
+                    CCEntry.Placeholder = "Credit Card Number*";
+                    CVVEntry.Placeholder = "CVC/CVV*";
+                    ZipCCEntry.Placeholder = "Zip*";
+
+                    return;
+                }
+                
 
                 //Console.WriteLine("delivery first name: " + (info_obj["result"])[0]["selection_uid"]);
                 FNameEntry.Text = (info_obj["result"])[0]["delivery_first_name"].ToString();
