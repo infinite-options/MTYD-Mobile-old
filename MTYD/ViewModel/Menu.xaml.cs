@@ -39,7 +39,7 @@ namespace MTYD.ViewModel
         async void clickedDelivery(System.Object sender, System.EventArgs e)
         {
             Navigation.PushAsync(new DeliveryBilling(), false);
-            Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 1]);
+            Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 2]);
         }
 
         async void clickedMealSelect(System.Object sender, System.EventArgs e)

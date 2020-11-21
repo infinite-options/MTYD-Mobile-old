@@ -204,6 +204,7 @@
     <BundleResource Include="Resources\landing1.jpg" />
     <BundleResource Include="Resources\landing2.jpg" />
     <BundleResource Include="Resources\lunch.png" />
+    <BundleResource Include="Resources\Calendar.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AppleSignIn\" />

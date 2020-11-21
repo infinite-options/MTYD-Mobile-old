@@ -113,6 +113,23 @@ namespace MTYD.ViewModel
                 //ArrayList payment_frequency = new ArrayList();
                 //ArrayList groupArray = new ArrayList();
 
+                if ((info_obj["result"]).ToString() == "[]")
+                {
+                    Console.WriteLine("no info");
+
+                    FNameEntry.Placeholder = "First Name*";
+                    LNameEntry.Placeholder = "Last Name*";
+                    emailEntry.Placeholder = "Email*";
+                    AddressEntry.Placeholder = "Street*";
+                    AptEntry.Placeholder = "Unit";
+                    CityEntry.Placeholder = "City*";
+                    StateEntry.Placeholder = "State*";
+                    ZipEntry.Placeholder = "Zip*";
+                    PhoneEntry.Placeholder = "Phone Number*";
+
+                    return;
+                }
+
                 //Console.WriteLine("delivery first name: " + (info_obj["result"])[0]["selection_uid"]);
                 FNameEntry.Text = (info_obj["result"])[0]["delivery_first_name"].ToString();
                 if (FNameEntry.Text == "")
