@@ -52,17 +52,19 @@ namespace MTYD.ViewModel
         WebClient client = new WebClient();
         public Select()
         {
-            var width = DeviceDisplay.MainDisplayInfo.Width;
-            var height = DeviceDisplay.MainDisplayInfo.Height;
             InitializeComponent();
-            NavigationPage.SetHasBackButton(this, false);
-            NavigationPage.SetHasNavigationBar(this, false);
-            checkPlatform(height, width);
             Preferences.Set("origMax", 0);
             GetMealPlans();
             setDates();
             getUserMeals();
             setMenu();
+
+            var width = DeviceDisplay.MainDisplayInfo.Width;
+            var height = DeviceDisplay.MainDisplayInfo.Height;
+            NavigationPage.SetHasBackButton(this, false);
+            NavigationPage.SetHasNavigationBar(this, false);
+            checkPlatform(height, width);
+
             //mealsSaved.Clear();
             //resetAll();
             //GetRecentSelection();
@@ -272,6 +274,8 @@ namespace MTYD.ViewModel
             Preferences.Set("dateSelected", text1.Substring(0, 11));
             Console.WriteLine("dateSelected: " + Preferences.Get("dateSelected", ""));
             mealsSaved.Clear();   //New Addition SV
+            //reset the buttons
+            //default to surprise if null
         }
 
         private async void planChange(object sender, EventArgs e)
@@ -424,6 +428,7 @@ namespace MTYD.ViewModel
             //setMenu();
         }
 
+        /*
         // Navigation Bar
         private async void onNavClick(object sender, EventArgs e)
         {
@@ -461,6 +466,7 @@ namespace MTYD.ViewModel
             }
 
         }
+        */
 
         // Favorite BUtton
         private async void clickedFavorite(object sender, EventArgs e)
@@ -825,8 +831,8 @@ namespace MTYD.ViewModel
 
             jsonMeals = JsonConvert.SerializeObject(mealsSaved);
             Console.WriteLine("line 302 " + jsonMeals);
-            postData();
-            DisplayAlert("SUPRISE", "You will be surprised with a randomized meal selection. If you want to select meals again for this meal plan then click the RESET button!", "OK");
+            //postData();
+            //DisplayAlert("SUPRISE", "You will be surprised with a randomized meal selection. If you want to select meals again for this meal plan then click the RESET button!", "OK");
             mealsSaved.Clear();
             int indexOfMealPlanSelected = (int)SubscriptionPicker.SelectedIndex;
             Preferences.Set("purchId", purchIdArray[indexOfMealPlanSelected].ToString());

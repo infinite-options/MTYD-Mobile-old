@@ -19,6 +19,7 @@ namespace MTYD.ViewModel
     public partial class DeliveryBilling : ContentPage
     {
         public ObservableCollection<Plans> NewDeliveryInfo = new ObservableCollection<Plans>();
+        public string salt;
 
         protected async Task setPaymentInfo()
         {
@@ -388,8 +389,19 @@ namespace MTYD.ViewModel
 
         private async void clickedDone(object sender, EventArgs e)
         {
-            setPaymentInfo();
-            Navigation.PushAsync(new Select());
+            string platform = Application.Current.Properties["platform"].ToString();
+            //string passwordSalt = Preferences.Get("password_salt", "");
+            // Console.WriteLine("Clicked done: The Salt is: " + passwordSalt);
+            //setPaymentInfo();
+            //if (string.IsNullOrEmpty(passwordSalt)){  //If social login (salt is NULL)
+            if (platform != "DIRECT")
+            {
+                Navigation.PushAsync(new VerifyInfo(AptEntry.Text, FNameEntry.Text, LNameEntry.Text, emailEntry.Text, PhoneEntry.Text, AddressEntry.Text, CityEntry.Text, StateEntry.Text, ZipEntry.Text, DeliveryEntry.Text, CCEntry.Text, CVVEntry.Text, ZipCCEntry.Text, salt));
+            }
+            else //If direct login (salt != NULL)
+            {
+                Navigation.PushAsync(new VerifyInfoDirectLogin(AptEntry.Text, FNameEntry.Text, LNameEntry.Text, emailEntry.Text, PhoneEntry.Text, AddressEntry.Text, CityEntry.Text, StateEntry.Text, ZipEntry.Text, DeliveryEntry.Text, CCEntry.Text, CVVEntry.Text, ZipCCEntry.Text, salt));
+            }
             //MainPage = PaymentPage();
         }
 

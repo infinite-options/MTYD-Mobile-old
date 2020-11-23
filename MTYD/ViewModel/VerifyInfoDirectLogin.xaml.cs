@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -15,13 +16,13 @@ using Xamarin.Forms.Xaml;
 
 namespace MTYD.ViewModel
 {
-    public partial class VerifyInfo : ContentPage
+    public partial class VerifyInfoDirectLogin : ContentPage
     {
         public ObservableCollection<Plans> NewDeliveryInfo = new ObservableCollection<Plans>();
         public string AptEntry, FNameEntry, LNameEntry, emailEntry, PhoneEntry, AddressEntry, CityEntry, StateEntry, ZipEntry, DeliveryEntry, CCEntry, CVVEntry, ZipCCEntry;
         public bool isSocialLogin;
-
-        public VerifyInfo(string AptEntry1, string FNameEntry1, string LNameEntry1, string emailEntry1, string PhoneEntry1, string AddressEntry1, string CityEntry1, string StateEntry1, string ZipEntry1, string DeliveryEntry1, string CCEntry1, string CVVEntry1, string ZipCCEntry1, string salt1)
+        public string passwordSalt, passwordAlgo, hashedPassword;
+        public VerifyInfoDirectLogin(string AptEntry1, string FNameEntry1, string LNameEntry1, string emailEntry1, string PhoneEntry1, string AddressEntry1, string CityEntry1, string StateEntry1, string ZipEntry1, string DeliveryEntry1, string CCEntry1, string CVVEntry1, string ZipCCEntry1, string salt1)
         {
             InitializeComponent();
             if (salt1 == "")
@@ -33,6 +34,13 @@ namespace MTYD.ViewModel
                 isSocialLogin = false;
             }
 
+
+            System.Diagnostics.Debug.WriteLine("password algo stored: " + Preferences.Get("password_algorithm", ""));
+            passwordAlgo = Preferences.Get("password_algorithm", "");
+            System.Diagnostics.Debug.WriteLine("password salt stored: " + Preferences.Get("password_salt", ""));
+            passwordSalt = Preferences.Get("password_salt", "");
+
+
             AptEntry = AptEntry1; FNameEntry = FNameEntry1; LNameEntry = LNameEntry1; emailEntry = emailEntry1; PhoneEntry = PhoneEntry1; AddressEntry = AddressEntry1; CityEntry = CityEntry1; StateEntry = StateEntry1; ZipEntry = ZipEntry1; DeliveryEntry = DeliveryEntry1; CCEntry = CCEntry1; CVVEntry = CVVEntry1; ZipCCEntry = ZipCCEntry1;
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
@@ -41,7 +49,7 @@ namespace MTYD.ViewModel
             {
                 orangeBox.CornerRadius = 35;
                 pfp.CornerRadius = 20;
-                //password.CornerRadius = 22;
+                password.CornerRadius = 22;
                 checkoutButton.CornerRadius = 24;
             }
         }
@@ -60,6 +68,12 @@ namespace MTYD.ViewModel
             List<Item> itemsList = new List<Item> { item1 };
             Preferences.Set("unitNum", AptEntry);
 
+            Console.WriteLine("In set payment info: Hashing Password!");
+            SHA512 sHA512 = new SHA512Managed();
+            byte[] data = sHA512.ComputeHash(Encoding.UTF8.GetBytes(passwordEntry.Text + passwordSalt));
+            hashedPassword = BitConverter.ToString(data).Replace("-", string.Empty).ToLower();
+            Console.WriteLine("In set payment info:  Password Hashed!");
+
             string userID = (string)Application.Current.Properties["user_id"];
             Console.WriteLine("YOUR userID is " + userID);
             newPayment.customer_uid = userID;
@@ -69,7 +83,8 @@ namespace MTYD.ViewModel
             //newPayment.salt = "64a7f1fb0df93d8f5b9df14077948afa1b75b4c5028d58326fb801d825c9cd24412f88c8b121c50ad5c62073c75d69f14557255da1a21e24b9183bc584efef71";
             //newPayment.salt = "cec35d4fc0c5e83527f462aeff579b0c6f098e45b01c8b82e311f87dc6361d752c30293e27027653adbb251dff5d03242c8bec68a3af1abd4e91c5adb799a01b";
             //newPayment.salt = "2020-09-22 21:55:17";
-            newPayment.salt = "";
+            //newPayment.salt = "";
+            newPayment.salt = hashedPassword;
             newPayment.delivery_first_name = FNameEntry;
             newPayment.delivery_last_name = LNameEntry;
             newPayment.delivery_email = emailEntry;

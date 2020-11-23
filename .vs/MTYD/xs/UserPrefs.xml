@@ -1,17 +1,14 @@
 ﻿<Properties StartupConfiguration="{FAB6B3BB-6B8C-41F3-9565-69D18FC959BC}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/ViewModel/UserProfileExperiment.xaml.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/ViewModel/VerifyInfoDirectLogin.xaml.cs">
     <Files>
-      <File FileName="MTYD/ViewModel/UserProfileExperiment.xaml.cs" Line="130" Column="28" />
-      <File FileName="MTYD/ViewModel/UserProfileExperiment.xaml" Line="13" Column="21" />
-      <File FileName="MTYD/ViewModel/Select.xaml" Line="62" Column="1" />
-      <File FileName="MTYD/ViewModel/Select.xaml.cs" Line="31" Column="56" />
-      <File FileName="MTYD/ViewModel/DeliveryBilling.xaml" Line="285" Column="48" />
+      <File FileName="MTYD/ViewModel/VerifyInfoDirectLogin.xaml" Line="141" Column="1" />
+      <File FileName="MTYD/ViewModel/VerifyInfoDirectLogin.xaml.cs" Line="36" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="MTYD" expanded="True">
-            <Node name="MTYD" expanded="True" selected="True">
+            <Node name="MTYD" expanded="True">
               <Node name="Model" expanded="True">
                 <Node name="Login" expanded="True">
                   <Node name="Constants" expanded="True" />
@@ -21,7 +18,13 @@
                 <Node name="DeliveryBilling.xaml" expanded="True" />
                 <Node name="Menu.xaml" expanded="True" />
                 <Node name="Select.xaml" expanded="True" />
+                <Node name="SubscriptionPage.xaml" expanded="True" />
+                <Node name="UserProfile.xaml" expanded="True" />
                 <Node name="UserProfileExperiment.xaml" expanded="True" />
+                <Node name="VerifyInfo.xaml" expanded="True" />
+                <Node name="VerifyInfoDirectLogin.xaml" expanded="True">
+                  <Node name="VerifyInfoDirectLogin.xaml.cs" selected="True" />
+                </Node>
               </Node>
             </Node>
             <Node name="MTYD.Android" expanded="True">

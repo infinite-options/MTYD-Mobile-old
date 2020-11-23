@@ -1,37 +1,38 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="MTYD.ViewModel.VerifyInfo">
-
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MTYD.ViewModel.VerifyInfoDirectLogin">
     <ScrollView>
-    <StackLayout x:Name="StackL" BackgroundColor="White">
+            <StackLayout x:Name="StackL" BackgroundColor="White">
 
-            <AbsoluteLayout>
+                <AbsoluteLayout>
 
-                <BoxView x:Name="orangeBox" BackgroundColor="#FF9E19" 
+                    <BoxView x:Name="orangeBox" BackgroundColor="#FF9E19" 
                        Margin="0, -100, 0, 0"
                        AbsoluteLayout.LayoutBounds="0.5, 0, 1, 70"
                        AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional"/>
 
-                <Label Text="VERIFY INFO" FontSize="25" FontAttributes="Bold"
+                    <Label Text="VERIFY INFO" FontSize="25" FontAttributes="Bold"
                        AbsoluteLayout.LayoutBounds="0.5, 0.23"
                        AbsoluteLayout.LayoutFlags="PositionProportional"/>
 
-                <ImageButton x:Name="pfp" BackgroundColor="LightGray" HeightRequest="40" WidthRequest="40"
+                    <ImageButton x:Name="pfp" BackgroundColor="LightGray" HeightRequest="40" WidthRequest="40"
                              AbsoluteLayout.LayoutBounds="0.93, 0.15" Clicked="clickedPfp"
                              AbsoluteLayout.LayoutFlags="PositionProportional"/>
 
-                <ImageButton x:Name="menu" Source="menu.png" HeightRequest="40" WidthRequest="40"
+                    <ImageButton x:Name="menu" Source="menu.png" HeightRequest="40" WidthRequest="40"
                              AbsoluteLayout.LayoutBounds="0.07, 0.15" Scale="0.8"
                              AbsoluteLayout.LayoutFlags="PositionProportional" Clicked="clickedMenu"/>
-            </AbsoluteLayout>
+                </AbsoluteLayout>
 
-            <Label x:Name="spacer" HeightRequest="5"/>
+                <Label x:Name="spacer" HeightRequest="5"/>
 
-        <Label Text="PAYMENT METHOD" HorizontalOptions="Start" FontSize="22"
+                <Label Text="PAYMENT METHOD" HorizontalOptions="Start" FontSize="22"
                        Margin="25,0,0,0" FontAttributes="Bold"/>
 
-        <Label x:Name="spacer1" HeightRequest="5"/>
+                <Label x:Name="spacer1" HeightRequest="5"/>
 
-        <Grid x:Name="cards" HorizontalOptions="Center" VerticalOptions="Center"
+                <Grid x:Name="cards" HorizontalOptions="Center" VerticalOptions="Center"
               Margin="20,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="18*"/>
@@ -42,18 +43,18 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="60*"/>
                     </Grid.RowDefinitions>
-                    
-            <Frame HeightRequest="40" BackgroundColor="Transparent" HasShadow="False" Grid.Column="0"
+
+                    <Frame HeightRequest="40" BackgroundColor="Transparent" HasShadow="False" Grid.Column="0"
                    Grid.Row="0" Padding="0,10" Margin="4,4" Scale="1.5">
 
-                <Image Source="card.png" Aspect="AspectFit"/>
+                        <Image Source="card.png" Aspect="AspectFit"/>
 
-            </Frame>
+                    </Frame>
 
-         </Grid>
+                </Grid>
 
 
-        <Grid x:Name="numbers" HorizontalOptions="Center" VerticalOptions="Center"
+                <Grid x:Name="numbers" HorizontalOptions="Center" VerticalOptions="Center"
               Margin="21,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="18*"/>
@@ -64,40 +65,57 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="15*"/>
                     </Grid.RowDefinitions>
-                    
-             <StackLayout Orientation="Horizontal" Padding="0" Grid.Column="0" Grid.Row="0"
+
+                    <StackLayout Orientation="Horizontal" Padding="0" Grid.Column="0" Grid.Row="0"
                          Spacing="0" Margin="5,-6,0,0">
 
-                <Label FontSize="9" Text="**************" FontAttributes="Bold"/>
-                <Label FontSize="14" Text="88" FontAttributes="Bold"/>
+                        <Label FontSize="9" Text="**************" FontAttributes="Bold"/>
+                        <Label FontSize="14" Text="88" FontAttributes="Bold"/>
 
-            </StackLayout>
+                    </StackLayout>
 
-         </Grid>
+                </Grid>
 
 
-         <Label x:Name="spacer2" HeightRequest="15"/>
+                <Label x:Name="spacer2" HeightRequest="15"/>
 
-        <Label Text="DELIVERY ADDRESS" HorizontalOptions="Start" FontSize="22"
+                <Label Text="DELIVERY ADDRESS" HorizontalOptions="Start" FontSize="22"
                        Margin="20,0,0,0" FontAttributes="Bold"/>
 
-        <Label x:Name="spacer3" HeightRequest="5"/>
+                <Label x:Name="spacer3" HeightRequest="5"/>
 
-        <Label Text="First Name Last Name" HorizontalOptions="Start" FontSize="20"
+                <Label Text="First Name Last Name" HorizontalOptions="Start" FontSize="20"
                        Margin="20,0,0,0" FontAttributes="Bold"/>
 
-        <Label Text="1234 Apple St. &#10; San Jose, CA &#10; 95133" HorizontalOptions="Start" FontSize="17"
+                <Label Text="1234 Apple St. &#10; San Jose, CA &#10; 95133" HorizontalOptions="Start" FontSize="17"
                        Margin="20,0,0,0" TextColor="#585858"/>
 
 
-        <Label x:Name="spacer4" HeightRequest="15"/>
+                <Label x:Name="spacer4" HeightRequest="15"/>
 
-        
-        <!--<Button x:Name= "checkoutButton" BackgroundColor="#FF9E19" Margin="20,0,0,0" HorizontalOptions="Start"
+                <Label x:Name="passLabel" Text="ENTER PASSWORD TO CONFIRM*" HorizontalOptions="Start" FontSize="22"
+                       Margin="20,0,0,0" FontAttributes="Bold"/>
+
+                <Label x:Name="spacer5" HeightRequest="5"/>
+
+                <Frame x:Name="password" Padding="10,5" Margin="20, 0,0, 0" BackgroundColor="#FFE5B4"
+               HorizontalOptions="Start" HasShadow="False">
+
+                    <Editor x:Name="passwordEntry" Keyboard="Text" FontAttributes="Bold"
+                   FontSize="17" Placeholder="Enter Password"
+                   HeightRequest="35" WidthRequest="300"
+                   BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
+
+                </Frame>
+
+                <Label x:Name="spacer6" HeightRequest="25"/>
+
+
+                <!--<Button x:Name= "checkoutButton" BackgroundColor="#FF9E19" Margin="20,0,0,0" HorizontalOptions="Start"
                         Text="CHECKOUT" TextColor="White"  FontAttributes="Bold" FontSize="20"
                         WidthRequest="180" HeightRequest="50" />-->
 
-        <Grid HorizontalOptions="Center" VerticalOptions="Center">
+                <Grid HorizontalOptions="Center" VerticalOptions="Center">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40*"/>
                     </Grid.RowDefinitions>
@@ -117,6 +135,6 @@
 
                 </Grid>
 
-        </StackLayout>
-    </ScrollView>
-</ContentPage>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage>

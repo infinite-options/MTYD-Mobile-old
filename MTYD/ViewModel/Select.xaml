@@ -21,7 +21,7 @@
                     <Frame BorderColor="White" BackgroundColor="Transparent" Padding="0" HasShadow="False">
                     <Grid>
 
-                      <Picker x:Name="SubscriptionPicker" SelectedIndexChanged="dateChange" Title="SELECT MEAL PLAN" Margin="0"
+                      <Picker x:Name="SubscriptionPicker" SelectedIndexChanged="planChange" Title="SELECT MEAL PLAN" Margin="0"
                               HorizontalOptions="Fill" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="Black" TitleColor="Black"></Picker>
                       <Image x:Name="lunchPic" Source="lunch.png" HorizontalOptions="Start" VerticalOptions="Center"/>
 
@@ -76,9 +76,9 @@
                         <Button x:Name="skipBttn"  ClassId="skipButton" Text = "Skip" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="2" Grid.Column="3" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black"  FontAttributes="Bold" Clicked="skipMealSelection"/>
                     </Frame>
 
-                    <Frame OutlineColor="DarkRed" Padding="0" BackgroundColor="Transparent" Grid.Row = "1"  Grid.Column="1">
+                    <!--<Frame OutlineColor="DarkRed" Padding="0" BackgroundColor="Transparent" Grid.Row = "1"  Grid.Column="1">
                         <Label Text = "Count" x:Name="totalCount" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Medium" Grid.Row="1" Grid.Column="1" BackgroundColor="Transparent" TextColor="Black" FontAttributes="Bold"/>
-                    </Frame>
+                    </Frame>-->
 
                     <Frame OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Row = "1" Grid.Column="3" CornerRadius="20">
                         <Button x:Name="resetBttn"  ClassId="resetButton" Text = "Reset" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="1" Grid.Column="3" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black"  FontAttributes="Bold" Clicked="resetBttn_Clicked"/>
@@ -103,6 +103,24 @@
 
                     <!-- End Progress Bar Grid 1-->
                 </Grid>
+
+                <Grid Margin="15,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text = "Meal Selections Left:        " VerticalOptions="Center" HorizontalOptions="Center" FontSize="Medium" BackgroundColor="Transparent" TextColor="Black" FontAttributes="Bold" HeightRequest="60" Grid.Column="0" Grid.Row="0"/>
+                        <Frame OutlineColor="DarkRed" Padding="0" BackgroundColor="Transparent" Grid.Column="1" Grid.Row="0" CornerRadius="20" Margin="20,0,20,0">
+                            <Label Text = "Count" x:Name="totalCount" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Medium" BackgroundColor="Transparent" TextColor="Black" FontAttributes="Bold" HeightRequest="60" Grid.Column="1" Grid.Row="0"/>
+                        </Frame>
+                    </Grid>
+
+
                 <ProgressBar Progress="0" x:Name="weekOneProgress" Margin="10,10,10,10" BackgroundColor="Transparent" HeightRequest="35" ></ProgressBar>
 
                 <CollectionView x:Name="weekOneMenu" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Margin="0,0,0,30" BackgroundColor="#f3f2dc">
@@ -179,8 +197,8 @@
 
 
                 <!--</Grid>-->
-
-                <StackLayout x:Name="mainSubStack"  Orientation="Horizontal" VerticalOptions="EndAndExpand">
+                <!--Bottom Menu-->
+                    <!--<StackLayout x:Name="mainSubStack"  Orientation="Horizontal" VerticalOptions="EndAndExpand">
                     <RelativeLayout>
                         <Frame x:Name="NavBar" HasShadow="True" CornerRadius="0" Padding="0,-5,0,10" HeightRequest="65" VerticalOptions="End"  RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=1,Constant=0}">
                             <Grid Grid.Row="1" Grid.Column="4">
@@ -217,7 +235,7 @@
                             </Grid>
                         </Frame>
                     </RelativeLayout>
-                </StackLayout>
+                </StackLayout>-->
             </StackLayout>
         </StackLayout>
     </ScrollView>
