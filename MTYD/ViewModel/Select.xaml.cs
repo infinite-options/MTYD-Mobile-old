@@ -465,8 +465,7 @@ namespace MTYD.ViewModel
                 await Navigation.PushAsync(new Select());
             }
 
-        }
-        */
+        }*/
 
         // Favorite BUtton
         private async void clickedFavorite(object sender, EventArgs e)

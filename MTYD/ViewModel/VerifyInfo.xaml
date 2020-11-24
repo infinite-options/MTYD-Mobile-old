@@ -92,8 +92,7 @@
 
         <Label x:Name="spacer4" HeightRequest="15"/>
 
-        
-        <!--<Button x:Name= "checkoutButton" BackgroundColor="#FF9E19" Margin="20,0,0,0" HorizontalOptions="Start"
+            <!--<Button x:Name= "checkoutButton" BackgroundColor="#FF9E19" Margin="20,0,0,0" HorizontalOptions="Start"
                         Text="CHECKOUT" TextColor="White"  FontAttributes="Bold" FontSize="20"
                         WidthRequest="180" HeightRequest="50" />-->
 
