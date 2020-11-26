@@ -1,9 +1,12 @@
 ﻿<Properties StartupConfiguration="{FAB6B3BB-6B8C-41F3-9565-69D18FC959BC}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/ViewModel/VerifyInfo.xaml.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/MainPage.xaml.cs">
     <Files>
-      <File FileName="MTYD/ViewModel/DeliveryBilling.xaml.cs" Line="1" Column="1" />
-      <File FileName="MTYD/ViewModel/DeliveryBilling.xaml" Line="6" Column="5" />
-      <File FileName="MTYD/ViewModel/VerifyInfo.xaml.cs" Line="132" Column="20" />
+      <File FileName="MTYD/ViewModel/UserProfileExperiment.xaml.cs" Line="179" Column="51" IsPinned="True" />
+      <File FileName="MTYD/MainPage.xaml" Line="1" Column="1" />
+      <File FileName="MTYD/MainPage.xaml.cs" Line="260" Column="153" />
+      <File FileName="MTYD/ViewModel/Select.xaml.cs" Line="131" Column="73" />
+      <File FileName="MTYD/ViewModel/Menu.xaml" Line="1" Column="1" />
+      <File FileName="MTYD/ViewModel/Menu.xaml.cs" Line="61" Column="38" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -17,11 +20,19 @@
               </Node>
               <Node name="ViewModel" expanded="True">
                 <Node name="DeliveryBilling.xaml" expanded="True" />
+                <Node name="Menu.xaml" expanded="True" />
+                <Node name="MenuExperiment.xaml" expanded="True" />
                 <Node name="PaymentPage.xaml" expanded="True" />
                 <Node name="Select.xaml" expanded="True" />
-                <Node name="VerifyInfo.xaml" expanded="True">
-                  <Node name="VerifyInfo.xaml.cs" selected="True" />
-                </Node>
+                <Node name="SubscriptionExperiment.xaml" expanded="True" />
+                <Node name="SubscriptionPage.xaml" expanded="True" />
+                <Node name="UserProfile.xaml" expanded="True" />
+                <Node name="UserProfileExperiment.xaml" expanded="True" />
+                <Node name="VerifyInfo.xaml" expanded="True" />
+                <Node name="VerifyInfoDirectLogin.xaml" expanded="True" />
+              </Node>
+              <Node name="MainPage.xaml" expanded="True">
+                <Node name="MainPage.xaml.cs" selected="True" />
               </Node>
             </Node>
             <Node name="MTYD.Android" expanded="True">

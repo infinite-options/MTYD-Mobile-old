@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MTYD.ViewModel.Menu">
+             x:Class="MTYD.ViewModel.MenuExperiment">
     <ContentPage.Content>
 
         <ScrollView>
@@ -8,7 +8,7 @@
 
             <Grid x:Name="mainGrid" BackgroundColor="#FF9E19" HeightRequest="650" HorizontalOptions="Fill" VerticalOptions="Start">
                 <StackLayout>
-                <ImageButton x:Name="menu" Source="menu2.png" Rotation="90" HeightRequest="40" WidthRequest="40" HorizontalOptions="Start" Clicked="clickedMenu"/>
+                <ImageButton x:Name="menu" Source="menu2.png" Rotation="90" HeightRequest="40" WidthRequest="40" HorizontalOptions="Start"/>
 
                 <Grid x:Name="profileInfo" ColumnSpacing="15">
                     <Grid.RowDefinitions>
@@ -127,6 +127,7 @@
                 </StackLayout>
             </Grid>
 
+            <Button Clicked="Button_Clicked_1" Text="return"/>
 
             <!--<AbsoluteLayout>
 

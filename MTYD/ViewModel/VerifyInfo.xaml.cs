@@ -111,7 +111,7 @@ namespace MTYD.ViewModel
             Console.WriteLine("CHECKOUT JSON OBJECT BEING SENT: " + newPaymentJSONString);
             Console.WriteLine("SetPaymentInfo Func ENDED!");
         }
-
+        
         async void clickedPfp(System.Object sender, System.EventArgs e)
         {
             await Navigation.PushAsync(new UserProfile());
@@ -124,13 +124,13 @@ namespace MTYD.ViewModel
 
         async void clickedMenu(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new Menu());
+            await Navigation.PushAsync(new Menu("", ""));
         }
 
         private void checkoutButton_Clicked(object sender, EventArgs e)
         {
             setPaymentInfo();
-            Navigation.PushAsync(new Select());
+            Navigation.PushAsync(new Select("", "", ""));
         }
     }
 }

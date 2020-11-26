@@ -20,6 +20,7 @@ namespace MTYD.ViewModel
     {
         public ObservableCollection<Plans> NewDeliveryInfo = new ObservableCollection<Plans>();
         public string salt;
+        string fullName; string emailAddress;
 
         protected async Task setPaymentInfo()
         {
@@ -412,7 +413,7 @@ namespace MTYD.ViewModel
 
         async void clickedMenu(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new Menu());
+            await Navigation.PushAsync(new Menu("", ""));
         }
 
         void clickedNotDone(object sender, EventArgs e)

@@ -29,6 +29,9 @@ using MTYD.Model.Login.LoginClasses.Apple;
 using MTYD.Model.Login.LoginClasses;
 using MTYD.Model.Login.Constants;
 using MTYD.LogInClasses;
+using Newtonsoft.Json.Linq;
+using MTYD.Model;
+using System.Collections.ObjectModel;
 
 //testing
 namespace MTYD
@@ -38,6 +41,7 @@ namespace MTYD
         public HttpClient client = new HttpClient();
         public event EventHandler SignIn;
         public bool createAccount = false;
+        public ObservableCollection<Plans> NewMainPage = new ObservableCollection<Plans>();
 
         Account account;
         [Obsolete]
@@ -219,7 +223,42 @@ namespace MTYD
 
                         // Application.Current.MainPage = new CarlosHomePage();
                         // This statement initializes the stack to Subscription Page
-                        Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+                        //check to see if user has already selected a meal plan before
+                        var request2 = new HttpRequestMessage();
+                        Console.WriteLine("user_id: " + (string)Application.Current.Properties["user_id"]);
+                        string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/customer_lplp?customer_uid=" + (string)Application.Current.Properties["user_id"];
+                        //string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + (string)Application.Current.Properties["user_id"];
+                        //string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + "100-000256";
+                        request2.RequestUri = new Uri(url);
+                        //request.RequestUri = new Uri("https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/get_delivery_info/400-000453");
+                        request2.Method = HttpMethod.Get;
+                        var client2 = new HttpClient();
+                        HttpResponseMessage response = await client.SendAsync(request2);
+
+                        if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+
+                            HttpContent content = response.Content;
+                            Console.WriteLine("content: " + content);
+                            var userString = await content.ReadAsStringAsync();
+                            //Console.WriteLine(userString);
+                            JObject info_obj = JObject.Parse(userString);
+                            this.NewMainPage.Clear();
+
+                            //ArrayList item_price = new ArrayList();
+                            //ArrayList num_items = new ArrayList();
+                            //ArrayList payment_frequency = new ArrayList();
+                            //ArrayList groupArray = new ArrayList();
+
+                            //Console.WriteLine("string: " + (info_obj["result"]).ToString());
+                            //check if the user hasn't entered any info before, if so put in the placeholders
+                            if ((info_obj["result"]).ToString() == "[]")
+                            {
+                                Console.WriteLine("go to SubscriptionPage");
+                                Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+                            }
+                            else Application.Current.MainPage = new NavigationPage(new Select((info_obj["result"])[0]["delivery_first_name"].ToString(), (info_obj["result"])[0]["delivery_last_name"].ToString(),(info_obj["result"])[0]["delivery_email"].ToString()));
+                        }
                     }
                     else
                     {
@@ -465,7 +504,44 @@ namespace MTYD
                             Application.Current.Properties["time_stamp"] = expDate;
                             Application.Current.Properties["platform"] = "FACEBOOK";
                             // Application.Current.MainPage = new SubscriptionPage();
-                            Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+
+
+                            //check to see if user has already selected a meal plan before
+                            var request2 = new HttpRequestMessage();
+                            Console.WriteLine("user_id: " + (string)Application.Current.Properties["user_id"]);
+                            string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/customer_lplp?customer_uid=" + (string)Application.Current.Properties["user_id"]; 
+                            //string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + (string)Application.Current.Properties["user_id"];
+                            //string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + "100-000256";
+                            request2.RequestUri = new Uri(url);
+                            //request.RequestUri = new Uri("https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/get_delivery_info/400-000453");
+                            request2.Method = HttpMethod.Get;
+                            var client2 = new HttpClient();
+                            HttpResponseMessage response = await client.SendAsync(request2);
+
+                            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                            {
+
+                                HttpContent content = response.Content;
+                                Console.WriteLine("content: " + content);
+                                var userString = await content.ReadAsStringAsync();
+                                //Console.WriteLine(userString);
+                                JObject info_obj = JObject.Parse(userString);
+                                this.NewMainPage.Clear();
+
+                                //ArrayList item_price = new ArrayList();
+                                //ArrayList num_items = new ArrayList();
+                                //ArrayList payment_frequency = new ArrayList();
+                                //ArrayList groupArray = new ArrayList();
+
+                                //Console.WriteLine("string: " + (info_obj["result"]).ToString());
+                                //check if the user hasn't entered any info before, if so put in the placeholders
+                                if ((info_obj["result"]).ToString() == "[]")
+                                {
+                                    Console.WriteLine("go to SubscriptionPage");
+                                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+                                }
+                                else Application.Current.MainPage = new NavigationPage(new Select((info_obj["result"])[0]["delivery_first_name"].ToString(), (info_obj["result"])[0]["delivery_last_name"].ToString(), (info_obj["result"])[0]["delivery_email"].ToString()));
+                            }
 
                             // THIS IS HOW YOU CAN ACCESS YOUR USER ID FROM THE APP
                             //string userID = (string)Application.Current.Properties["user_id"];
@@ -654,11 +730,53 @@ namespace MTYD
                             Application.Current.Properties["platform"] = "GOOGLE";
                             // Application.Current.MainPage = new SubscriptionPage();
 
-                            Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
 
-                            // THIS IS HOW YOU CAN ACCESS YOUR USER ID FROM THE APP
-                            // string userID = (string)Application.Current.Properties["user_id"];
-                        }
+                            //check to see if user has already selected a meal plan before
+                            var request2 = new HttpRequestMessage();
+                            Console.WriteLine("user_id: " + (string)Application.Current.Properties["user_id"]);
+                            string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/customer_lplp?customer_uid=" + (string)Application.Current.Properties["user_id"];
+                            //string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + (string)Application.Current.Properties["user_id"];
+                            //string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + "100-000256";
+                            request2.RequestUri = new Uri(url);
+                            //request.RequestUri = new Uri("https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/get_delivery_info/400-000453");
+                            request2.Method = HttpMethod.Get;
+                            var client2 = new HttpClient();
+                            HttpResponseMessage response = await client.SendAsync(request2);
+
+                            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                            {
+
+                                HttpContent content = response.Content;
+                                Console.WriteLine("content: " + content);
+                                var userString = await content.ReadAsStringAsync();
+                                //Console.WriteLine(userString);
+                                JObject info_obj = JObject.Parse(userString);
+                                this.NewMainPage.Clear();
+
+                                //ArrayList item_price = new ArrayList();
+                                //ArrayList num_items = new ArrayList();
+                                //ArrayList payment_frequency = new ArrayList();
+                                //ArrayList groupArray = new ArrayList();
+
+                                //Console.WriteLine("string: " + (info_obj["result"]).ToString());
+                                //check if the user hasn't entered any info before, if so put in the placeholders
+                                if ((info_obj["result"]).ToString() == "[]")
+                                {
+                                    Console.WriteLine("go to SubscriptionPage");
+                                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+                                }
+                                else
+                                {
+                                    Console.WriteLine("delivery first name: " + (info_obj["result"])[0]["delivery_first_name"].ToString());
+                                    Application.Current.MainPage = new NavigationPage(new Select((info_obj["result"])[0]["delivery_first_name"].ToString(), (info_obj["result"])[0]["delivery_last_name"].ToString(), (info_obj["result"])[0]["delivery_email"].ToString()));
+
+                                }
+
+                            }
+
+                                // THIS IS HOW YOU CAN ACCESS YOUR USER ID FROM THE APP
+                                // string userID = (string)Application.Current.Properties["user_id"];
+                            }
                         else
                         {
                             await DisplayAlert("Oops", "We are facing some problems with our internal system. We weren't able to update your credentials", "OK");

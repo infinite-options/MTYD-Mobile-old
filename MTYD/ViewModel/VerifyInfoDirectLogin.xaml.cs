@@ -139,13 +139,13 @@ namespace MTYD.ViewModel
 
         async void clickedMenu(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new Menu());
+            await Navigation.PushAsync(new Menu("", ""));
         }
 
         private void checkoutButton_Clicked(object sender, EventArgs e)
         {
             setPaymentInfo();
-            Navigation.PushAsync(new Select());
+            Navigation.PushAsync(new Select("", "", ""));
         }
     }
 }

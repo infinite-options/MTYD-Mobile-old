@@ -48,9 +48,10 @@ namespace MTYD.ViewModel
         public bool isSurprise = false;
         public bool isSkip = false;
         public int firstTotalCount;
+        string first; string last; string email;
 
         WebClient client = new WebClient();
-        public Select()
+        public Select(string firstName, string lastName, string userEmail)
         {
             InitializeComponent();
             Preferences.Set("origMax", 0);
@@ -64,6 +65,9 @@ namespace MTYD.ViewModel
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
             checkPlatform(height, width);
+            first = firstName;
+            last = lastName;
+            email = userEmail;
 
             //mealsSaved.Clear();
             //resetAll();
@@ -126,7 +130,7 @@ namespace MTYD.ViewModel
 
         async void clickedMenu(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new Menu());
+            await Navigation.PushAsync(new Menu(first + " " + last, email));
         }
         /*
         protected async Task SetMealSelect()

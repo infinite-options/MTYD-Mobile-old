@@ -1,54 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Net.Http;
-using MTYD.Model;
-using Newtonsoft.Json.Linq;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace MTYD.ViewModel
 {
-    public partial class Menu : ContentPage
+    public partial class MenuExperiment : ContentPage
     {
-        public ObservableCollection<Plans> NewMenu = new ObservableCollection<Plans>();
-        string fullName; string email;
 
-        async void fillEntries()
-        {
-            Console.WriteLine("fillEntries in Menu entered");
-            var request2 = new HttpRequestMessage();
-            Console.WriteLine("user_id: " + (string)Application.Current.Properties["user_id"]);
-            string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
-            //string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + (string)Application.Current.Properties["user_id"];
-            //string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + "100-000256";
-            request2.RequestUri = new Uri(url);
-            //request.RequestUri = new Uri("https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/get_delivery_info/400-000453");
-            request2.Method = HttpMethod.Get;
-            var client2 = new HttpClient();
-            HttpResponseMessage response = await client2.SendAsync(request2);
-
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-
-                HttpContent content = response.Content;
-                Console.WriteLine("content: " + content);
-                var userString = await content.ReadAsStringAsync();
-                //Console.WriteLine(userString);
-                JObject info_obj = JObject.Parse(userString);
-                this.NewMenu.Clear();
-
-                fullName = (info_obj["result"])[0]["customer_first_name"].ToString() + " " + (info_obj["result"])[0]["customer_last_name"].ToString();
-                email = (info_obj["result"])[0]["customer_email"].ToString();
-
-                userName.Text = fullName;
-                userEmail.Text = email;
-
-            }
-        }
-
-
-        public Menu(string name, string emailAdd)
+        public MenuExperiment()
         {
             InitializeComponent();
             NavigationPage.SetHasBackButton(this, false);
@@ -56,17 +16,7 @@ namespace MTYD.ViewModel
             var width = DeviceDisplay.MainDisplayInfo.Width;
             var height = DeviceDisplay.MainDisplayInfo.Height;
 
-            if (name != "" && name != null)
-            {
-                userName.Text = name;
-                userEmail.Text = emailAdd;
-                fullName = name;
-                email = emailAdd;
-            }
-            else
-            {
-                fillEntries();
-            }
+            
 
             if (Device.RuntimePlatform == Device.iOS)
             {
@@ -93,7 +43,7 @@ namespace MTYD.ViewModel
 
                 divider2.Margin = new Thickness(24, 10);
 
-                //mealPlan.Margin = new Thickness(0, -5);
+               //mealPlan.Margin = new Thickness(0, -5);
                 mealPlanButton.Margin = new Thickness(0, -5);
                 mealPic.HeightRequest = width / 15;
                 mealPic.WidthRequest = width / 15;
@@ -158,6 +108,11 @@ namespace MTYD.ViewModel
         {
             Navigation.PushAsync(new SubscriptionExperiment(), false);
             Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 2]);
+        }
+
+        void Button_Clicked(System.Object sender, System.EventArgs e)
+        {
+            Navigation.PushAsync(new MenuExperiment(), false);
         }
 
         void Button_Clicked_1(System.Object sender, System.EventArgs e)
