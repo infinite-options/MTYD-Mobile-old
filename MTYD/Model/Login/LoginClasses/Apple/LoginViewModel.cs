@@ -8,11 +8,19 @@ using MTYD.ViewModel;
 using Newtonsoft.Json;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+//using ServingFresh.Config;
+using MTYD.Model.Login;
+using MTYD.Model.SignUp;
+using MTYD.Model.User;
+using Newtonsoft.Json.Linq;
+using System.Collections.ObjectModel;
+//using ServingFresh.Views;
 
 namespace MTYD.Model.Login.LoginClasses.Apple
 {
     public class LoginViewModel
     {
+        public ObservableCollection<Plans> NewLogin = new ObservableCollection<Plans>();
         public static string apple_token = null;
         public static string apple_email = null;
 
@@ -25,12 +33,18 @@ namespace MTYD.Model.Login.LoginClasses.Apple
         IAppleSignInService appleSignInService = null;
         public LoginViewModel()
         {
+            Console.WriteLine("in LoginViewModel, entered LoginViewModel()");
+
             appleSignInService = DependencyService.Get<IAppleSignInService>();
+            Console.WriteLine("after appleSignInService reached");
             SignInWithAppleCommand = new Command(OnAppleSignInRequest);
+            Console.WriteLine("after SignInWithAppleCommand reached");
         }
 
         public async void OnAppleSignInRequest()
         {
+            Console.WriteLine("in LoginViewModel, entered OnAppleSignInRequest");
+
             var account = await appleSignInService.SignInAsync();
             if (account != null)
             {
@@ -108,9 +122,13 @@ namespace MTYD.Model.Login.LoginClasses.Apple
                         updateTokesPost.mobile_refresh_token = appleToken;
 
                         var updateTokesPostSerializedObject = JsonConvert.SerializeObject(updateTokesPost);
+                        Console.WriteLine("updateTokesPostSerializedObject: " + updateTokesPostSerializedObject.ToString());
                         var updateTokesContent = new StringContent(updateTokesPostSerializedObject, Encoding.UTF8, "application/json");
+                        Console.WriteLine("updateTokesContent: " + updateTokesContent.ToString());
                         var updateTokesResponse = await client.PostAsync(Constant.UpdateTokensUrl, updateTokesContent);
+                        Console.WriteLine("updateTokesResponse: " + updateTokesResponse.ToString());
                         var updateTokenResponseContent = await updateTokesResponse.Content.ReadAsStringAsync();
+                        Console.WriteLine("updateTokenResponseContent: " + updateTokenResponseContent.ToString());
                         System.Diagnostics.Debug.WriteLine(updateTokenResponseContent);
 
                         if (updateTokesResponse.IsSuccessStatusCode)
@@ -120,8 +138,61 @@ namespace MTYD.Model.Login.LoginClasses.Apple
 
                             Application.Current.Properties["time_stamp"] = expDate;
                             Application.Current.Properties["platform"] = "APPLE";
+
+                            var request = new HttpRequestMessage();
+                            Console.WriteLine("user_id: " + (string)Application.Current.Properties["user_id"]);
+                            string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/customer_lplp?customer_uid=" + (string)Application.Current.Properties["user_id"];
+                            //string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + (string)Application.Current.Properties["user_id"];
+                            //string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + "100-000256";
+                            Console.WriteLine("url: " + url);
+                            request.RequestUri = new Uri(url);
+                            //request.RequestUri = new Uri("https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/get_delivery_info/400-000453");
+                            request.Method = HttpMethod.Get;
+                            var client2 = new HttpClient();
+                            HttpResponseMessage response = await client2.SendAsync(request);
+
+                            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                            {
+
+                                HttpContent content = response.Content;
+                                Console.WriteLine("content: " + content);
+                                var userString = await content.ReadAsStringAsync();
+                                Console.WriteLine(userString);
+
+                                if (userString.ToString()[0] != '{')
+                                {
+                                    Console.WriteLine("go to SubscriptionPage");
+                                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+                                    return;
+                                }
+
+                                JObject info_obj2 = JObject.Parse(userString);
+                                this.NewLogin.Clear();
+
+                                //ArrayList item_price = new ArrayList();
+                                //ArrayList num_items = new ArrayList();
+                                //ArrayList payment_frequency = new ArrayList();
+                                //ArrayList groupArray = new ArrayList();
+
+                                //int counter = 0;
+                                //while (((info_obj2["result"])[0]).ToString() != "{}")
+                                //{
+                                //    Console.WriteLine("worked" + counter);
+                                //    counter++;
+                                //}
+
+                                Console.WriteLine("string: " + (info_obj2["result"]).ToString());
+                                //check if the user hasn't entered any info before, if so put in the placeholders
+                                if ((info_obj2["result"]).ToString() == "[]" || (info_obj2["result"]).ToString() == "204")
+                                {
+                                    Console.WriteLine("go to SubscriptionPage");
+                                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+                                }
+                                else Application.Current.MainPage = new NavigationPage(new Select((info_obj2["result"])[0]["delivery_first_name"].ToString(), (info_obj2["result"])[0]["delivery_last_name"].ToString(), (info_obj2["result"])[0]["delivery_email"].ToString()));
+                            }
+
                             // Application.Current.MainPage = new SubscriptionPage();
-                            Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+                            //Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
 
                             // THIS IS HOW YOU CAN ACCESS YOUR USER ID FROM THE APP
                             // string userID = (string)Application.Current.Properties["user_id"];

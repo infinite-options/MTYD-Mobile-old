@@ -125,7 +125,7 @@ namespace MTYD.ViewModel
 
         async void clickedPfp(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PopAsync(false);
+            await Navigation.PushAsync(new UserProfile(), false);
         }
 
         async void clickedMenu(System.Object sender, System.EventArgs e)

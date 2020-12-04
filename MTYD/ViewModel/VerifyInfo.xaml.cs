@@ -37,6 +37,22 @@ namespace MTYD.ViewModel
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
 
+            cardNum.Text = "**************" + CCEntry1.Substring(CCEntry1.Length - 2);
+            name.Text = FNameEntry1 + " " + LNameEntry1;
+            if (AptEntry1 == "NULL" || AptEntry1 == "")
+            {
+                apt.IsVisible = false;
+                street.Text = AddressEntry1;
+                cityStateZip.Text = CityEntry1 + ", " + StateEntry1 + " " + ZipEntry1;
+            }
+            else
+            {
+                apt.Text = "Apt #" + AptEntry1;
+                street.Text = AddressEntry1;
+                cityStateZip.Text = CityEntry1 + ", " + StateEntry1 + " " + ZipEntry1;
+            }
+
+
             if (Device.RuntimePlatform == Device.iOS)
             {
                 orangeBox.CornerRadius = 35;

@@ -15,7 +15,7 @@ using Xamarin.Forms.Xaml;
 
 namespace MTYD.ViewModel
 {
-    public partial class SubscriptionPage : ContentPage
+    public partial class SubscriptionModal : ContentPage
     {
         public ObservableCollection<Plans> NewPlan = new ObservableCollection<Plans>();
 
@@ -23,6 +23,10 @@ namespace MTYD.ViewModel
         double m3price_f1 = 0.0; double m3price_f2 = 0.0; double m3price_f3 = 0.0; double m4price_f1 = 0.0; double m4price_f2 = 0.0; double m4price_f3 = 0.0;
         string m1f1name = "", m1f2name = "", m1f3name = "", m2f1name = "", m2f2name = "", m2f3name = "", m3f1name = "", m3f2name = "", m3f3name = "", m4f1name = "", m4f2name = "", m4f3name = "";
         string m1f1uid = "", m1f2uid = "", m1f3uid = "", m2f1uid = "", m2f2uid = "", m2f3uid = "", m3f1uid = "", m3f2uid = "", m3f3uid = "", m4f1uid = "", m4f2uid = "", m4f3uid = "";
+
+        string password; string refresh_token; string cc_num; string cc_exp_year; string cc_exp_month; string cc_cvv; string purchase_id;
+        string new_item_id; string customer_id; string itm_business_uid; string cc_zip;
+
         protected async Task GetPlans()
         {
             var request = new HttpRequestMessage();
@@ -114,18 +118,48 @@ namespace MTYD.ViewModel
                         m1price_f1 = (double)groupArray[i + 2];
                         m1f1name = (string)groupArray[i + 3];
                         m1f1uid = (string)groupArray[i + 4];
+
+                        if (new_item_id == m1f1uid)
+                        {
+                            Preferences.Set("freqSelected", "1");
+                            Preferences.Set("mealSelected", "1");
+                            TotalPrice.Text = "$" + m1price_f1.ToString();
+                            meals1.BackgroundColor = Color.FromHex("#FFBA00");
+                            payButton2.Opacity = 0.3;
+                            payButton3.Opacity = 0.3;
+                        }
                     }
                     else if ((int)groupArray[i] == m1 && (int)groupArray[i + 1] == p2)
                     {
                         m1price_f2 = (double)groupArray[i + 2];
                         m1f2name = (string)groupArray[i + 3];
                         m1f2uid = (string)groupArray[i + 4];
+
+                        if (new_item_id == m1f2uid)
+                        {
+                            Preferences.Set("freqSelected", "2");
+                            Preferences.Set("mealSelected", "1");
+                            TotalPrice.Text = "$" + m1price_f2.ToString();
+                            meals1.BackgroundColor = Color.FromHex("#FFBA00");
+                            payButton1.Opacity = 0.3;
+                            payButton3.Opacity = 0.3;
+                        }
                     }
                     else if ((int)groupArray[i] == m1 && (int)groupArray[i + 1] == p3)
                     {
                         m1price_f3 = (double)groupArray[i + 2];
                         m1f3name = (string)groupArray[i + 3];
                         m1f3uid = (string)groupArray[i + 4];
+
+                        if (new_item_id == m1f3uid)
+                        {
+                            Preferences.Set("freqSelected", "3");
+                            Preferences.Set("mealSelected", "1");
+                            TotalPrice.Text = "$" + m1price_f3.ToString();
+                            meals1.BackgroundColor = Color.FromHex("#FFBA00");
+                            payButton1.Opacity = 0.3;
+                            payButton2.Opacity = 0.3;
+                        }
                     }
                     //
                     else if ((int)groupArray[i] == m2 && (int)groupArray[i + 1] == p1)
@@ -133,18 +167,48 @@ namespace MTYD.ViewModel
                         m2price_f1 = (double)groupArray[i + 2];
                         m2f1name = (string)groupArray[i + 3];
                         m2f1uid = (string)groupArray[i + 4];
+
+                        if (new_item_id == m2f1uid)
+                        {
+                            Preferences.Set("freqSelected", "1");
+                            Preferences.Set("mealSelected", "2");
+                            TotalPrice.Text = "$" + m2price_f1.ToString();
+                            meals2.BackgroundColor = Color.FromHex("#FFBA00");
+                            payButton2.Opacity = 0.3;
+                            payButton3.Opacity = 0.3;
+                        }
                     }
                     else if ((int)groupArray[i] == m2 && (int)groupArray[i + 1] == p2)
                     {
                         m2price_f2 = (double)groupArray[i + 2];
                         m2f2name = (string)groupArray[i + 3];
                         m2f2uid = (string)groupArray[i + 4];
+
+                        if (new_item_id == m2f2uid)
+                        {
+                            Preferences.Set("freqSelected", "2");
+                            Preferences.Set("mealSelected", "2");
+                            TotalPrice.Text = "$" + m2price_f2.ToString();
+                            meals2.BackgroundColor = Color.FromHex("#FFBA00");
+                            payButton1.Opacity = 0.3;
+                            payButton3.Opacity = 0.3;
+                        }
                     }
                     else if ((int)groupArray[i] == m2 && (int)groupArray[i + 1] == p3)
                     {
                         m2price_f3 = (double)groupArray[i + 2];
                         m2f3name = (string)groupArray[i + 3];
                         m2f3uid = (string)groupArray[i + 4];
+
+                        if (new_item_id == m2f3uid)
+                        {
+                            Preferences.Set("freqSelected", "3");
+                            Preferences.Set("mealSelected", "2");
+                            TotalPrice.Text = "$" + m2price_f3.ToString();
+                            meals2.BackgroundColor = Color.FromHex("#FFBA00");
+                            payButton1.Opacity = 0.3;
+                            payButton2.Opacity = 0.3;
+                        }
                     }
                     //
                     else if ((int)groupArray[i] == m3 && (int)groupArray[i + 1] == p1)
@@ -152,18 +216,48 @@ namespace MTYD.ViewModel
                         m3price_f1 = (double)groupArray[i + 2];
                         m3f1name = (string)groupArray[i + 3];
                         m3f1uid = (string)groupArray[i + 4];
+
+                        if (new_item_id == m3f1uid)
+                        {
+                            Preferences.Set("freqSelected", "1");
+                            Preferences.Set("mealSelected", "3");
+                            TotalPrice.Text = "$" + m3price_f1.ToString();
+                            meals3.BackgroundColor = Color.FromHex("#FFBA00");
+                            payButton2.Opacity = 0.3;
+                            payButton3.Opacity = 0.3;
+                        }
                     }
                     else if ((int)groupArray[i] == m3 && (int)groupArray[i + 1] == p2)
                     {
                         m3price_f2 = (double)groupArray[i + 2];
                         m3f2name = (string)groupArray[i + 3];
                         m3f2uid = (string)groupArray[i + 4];
+
+                        if (new_item_id == m3f2uid)
+                        {
+                            Preferences.Set("freqSelected", "2");
+                            Preferences.Set("mealSelected", "3");
+                            TotalPrice.Text = "$" + m3price_f2.ToString();
+                            meals3.BackgroundColor = Color.FromHex("#FFBA00");
+                            payButton1.Opacity = 0.3;
+                            payButton3.Opacity = 0.3;
+                        }
                     }
                     else if ((int)groupArray[i] == m3 && (int)groupArray[i + 1] == p3)
                     {
                         m3price_f3 = (double)groupArray[i + 2];
                         m3f3name = (string)groupArray[i + 3];
                         m3f3uid = (string)groupArray[i + 4];
+
+                        if (new_item_id == m3f3uid)
+                        {
+                            Preferences.Set("freqSelected", "3");
+                            Preferences.Set("mealSelected", "3");
+                            TotalPrice.Text = "$" + m3price_f3.ToString();
+                            meals3.BackgroundColor = Color.FromHex("#FFBA00");
+                            payButton2.Opacity = 0.3;
+                            payButton1.Opacity = 0.3;
+                        }
                     }
                     //
                     else if ((int)groupArray[i] == m4 && (int)groupArray[i + 1] == p1)
@@ -171,18 +265,48 @@ namespace MTYD.ViewModel
                         m4price_f1 = (double)groupArray[i + 2];
                         m4f1name = (string)groupArray[i + 3];
                         m4f1uid = (string)groupArray[i + 4];
+
+                        if (new_item_id == m4f1uid)
+                        {
+                            Preferences.Set("freqSelected", "1");
+                            Preferences.Set("mealSelected", "4");
+                            TotalPrice.Text = "$" + m4price_f1.ToString();
+                            meals4.BackgroundColor = Color.FromHex("#FFBA00");
+                            payButton2.Opacity = 0.3;
+                            payButton3.Opacity = 0.3;
+                        }
                     }
                     else if ((int)groupArray[i] == m4 && (int)groupArray[i + 1] == p2)
                     {
                         m4price_f2 = (double)groupArray[i + 2];
                         m4f2name = (string)groupArray[i + 3];
                         m4f2uid = (string)groupArray[i + 4];
+
+                        if (new_item_id == m4f2uid)
+                        {
+                            Preferences.Set("freqSelected", "2");
+                            Preferences.Set("mealSelected", "4");
+                            TotalPrice.Text = "$" + m4price_f2.ToString();
+                            meals4.BackgroundColor = Color.FromHex("#FFBA00");
+                            payButton1.Opacity = 0.3;
+                            payButton3.Opacity = 0.3;
+                        }
                     }
                     else if ((int)groupArray[i] == m4 && (int)groupArray[i + 1] == p3)
                     {
                         m4price_f3 = (double)groupArray[i + 2];
                         m4f3name = (string)groupArray[i + 3];
                         m4f3uid = (string)groupArray[i + 4];
+
+                        if (new_item_id == m4f3uid)
+                        {
+                            Preferences.Set("freqSelected", "3");
+                            Preferences.Set("mealSelected", "4");
+                            TotalPrice.Text = "$" + m4price_f3.ToString();
+                            meals4.BackgroundColor = Color.FromHex("#FFBA00");
+                            payButton2.Opacity = 0.3;
+                            payButton1.Opacity = 0.3;
+                        }
                     }
                 }
                 Console.WriteLine("END OF GET PLANS FUNCTION");
@@ -341,10 +465,17 @@ namespace MTYD.ViewModel
             //common adjustments regardless of platform
         }
 
-        public SubscriptionPage()
+        public SubscriptionModal(string pass, string token, string num, string year, string month, string cvv, string zip, string purchaseID, string businessID, string itemID, string customerID)
         {
+            Console.WriteLine("SubscriptionModal entered");
             var width = DeviceDisplay.MainDisplayInfo.Width;
             var height = DeviceDisplay.MainDisplayInfo.Height;
+
+            Console.WriteLine("next entered");
+            password = pass; refresh_token = token; cc_num = num; cc_exp_year = year; cc_exp_month = month; cc_cvv = cvv; purchase_id = purchaseID;
+            new_item_id = itemID; customer_id = customerID; cc_zip = zip; itm_business_uid = businessID;
+            Console.WriteLine("next2 entered");
+
             InitializeComponent();
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
@@ -368,18 +499,21 @@ namespace MTYD.ViewModel
                 TotalPrice.Text = "$" + m1price_f1.ToString();
                 Preferences.Set("item_name", m1f1name);
                 Preferences.Set("item_uid", m1f1uid);
+                new_item_id = m1f1uid;
             }
             else if (freq_select == "2")
             {
                 TotalPrice.Text = "$" + m1price_f2.ToString();
                 Preferences.Set("item_name", m1f2name);
                 Preferences.Set("item_uid", m1f2uid);
+                new_item_id = m1f2uid;
             }
             else if (freq_select == "3")
             {
                 TotalPrice.Text = "$" + m1price_f3.ToString();
                 Preferences.Set("item_name", m1f3name);
                 Preferences.Set("item_uid", m1f3uid);
+                new_item_id = m1f3uid;
             }
             else
             {
@@ -401,18 +535,21 @@ namespace MTYD.ViewModel
                 TotalPrice.Text = "$" + m2price_f1.ToString();
                 Preferences.Set("item_name", m2f1name);
                 Preferences.Set("item_uid", m2f1uid);
+                new_item_id = m2f1uid;
             }
             else if (freq_select == "2")
             {
                 TotalPrice.Text = "$" + m2price_f2.ToString();
                 Preferences.Set("item_name", m2f2name);
                 Preferences.Set("item_uid", m2f2uid);
+                new_item_id = m2f2uid;
             }
             else if (freq_select == "3")
             {
                 TotalPrice.Text = "$" + m2price_f3.ToString();
                 Preferences.Set("item_name", m2f3name);
                 Preferences.Set("item_uid", m2f3uid);
+                new_item_id = m2f3uid;
             }
             else
             {
@@ -434,18 +571,21 @@ namespace MTYD.ViewModel
                 TotalPrice.Text = "$" + m3price_f1.ToString();
                 Preferences.Set("item_name", m3f1name);
                 Preferences.Set("item_uid", m3f1uid);
+                new_item_id = m3f1uid;
             }
             else if (freq_select == "2")
             {
                 TotalPrice.Text = "$" + m3price_f2.ToString();
                 Preferences.Set("item_name", m3f2name);
                 Preferences.Set("item_uid", m3f2uid);
+                new_item_id = m3f2uid;
             }
             else if (freq_select == "3")
             {
                 TotalPrice.Text = "$" + m3price_f3.ToString();
                 Preferences.Set("item_name", m3f3name);
                 Preferences.Set("item_uid", m3f3uid);
+                new_item_id = m3f3uid;
             }
             else
             {
@@ -467,18 +607,21 @@ namespace MTYD.ViewModel
                 TotalPrice.Text = "$" + m4price_f1.ToString();
                 Preferences.Set("item_name", m4f1name);
                 Preferences.Set("item_uid", m4f1uid);
+                new_item_id = m4f1uid;
             }
             else if (freq_select == "2")
             {
                 TotalPrice.Text = "$" + m4price_f2.ToString();
                 Preferences.Set("item_name", m4f2name);
                 Preferences.Set("item_uid", m4f2uid);
+                new_item_id = m4f2uid;
             }
             else if (freq_select == "3")
             {
                 TotalPrice.Text = "$" + m4price_f3.ToString();
                 Preferences.Set("item_name", m4f3name);
                 Preferences.Set("item_uid", m4f3uid);
+                new_item_id = m4f3uid;
             }
             else
             {
@@ -504,24 +647,28 @@ namespace MTYD.ViewModel
                 TotalPrice.Text = "$" + m1price_f1.ToString();
                 Preferences.Set("item_name", m1f1name);
                 Preferences.Set("item_uid", m1f1uid);
+                new_item_id = Preferences.Get("item_uid", "");
             }
             else if (meal_select == "2")
             {
                 TotalPrice.Text = "$" + m2price_f1.ToString();
                 Preferences.Set("item_name", m2f1name);
                 Preferences.Set("item_uid", m2f1uid);
+                new_item_id = Preferences.Get("item_uid", "");
             }
             else if (meal_select == "3")
             {
                 TotalPrice.Text = "$" + m3price_f1.ToString();
                 Preferences.Set("item_name", m3f1name);
                 Preferences.Set("item_uid", m3f1uid);
+                new_item_id = Preferences.Get("item_uid", "");
             }
             else if (meal_select == "4")
             {
                 TotalPrice.Text = "$" + m4price_f1.ToString();
                 Preferences.Set("item_name", m4f1name);
                 Preferences.Set("item_uid", m4f1uid);
+                new_item_id = Preferences.Get("item_uid", "");
             }
             else
             {
@@ -546,24 +693,28 @@ namespace MTYD.ViewModel
                 TotalPrice.Text = "$" + m1price_f2.ToString();
                 Preferences.Set("item_name", m1f2name);
                 Preferences.Set("item_uid", m1f2uid);
+                new_item_id = Preferences.Get("item_uid", "");
             }
             else if (meal_select == "2")
             {
                 TotalPrice.Text = "$" + m2price_f2.ToString();
                 Preferences.Set("item_name", m2f2name);
                 Preferences.Set("item_uid", m2f2uid);
+                new_item_id = Preferences.Get("item_uid", "");
             }
             else if (meal_select == "3")
             {
                 TotalPrice.Text = "$" + m3price_f2.ToString();
                 Preferences.Set("item_name", m3f2name);
                 Preferences.Set("item_uid", m3f2uid);
+                new_item_id = Preferences.Get("item_uid", "");
             }
             else if (meal_select == "4")
             {
                 TotalPrice.Text = "$" + m4price_f2.ToString();
                 Preferences.Set("item_name", m4f2name);
                 Preferences.Set("item_uid", m4f2uid);
+                new_item_id = Preferences.Get("item_uid", "");
             }
             else
             {
@@ -589,24 +740,28 @@ namespace MTYD.ViewModel
                 TotalPrice.Text = "$" + m1price_f3.ToString();
                 Preferences.Set("item_name", m1f3name);
                 Preferences.Set("item_uid", m1f3uid);
+                new_item_id = Preferences.Get("item_uid", "");
             }
             else if (meal_select == "2")
             {
                 TotalPrice.Text = "$" + m2price_f3.ToString();
                 Preferences.Set("item_name", m2f3name);
                 Preferences.Set("item_uid", m2f3uid);
+                new_item_id = Preferences.Get("item_uid", "");
             }
             else if (meal_select == "3")
             {
                 TotalPrice.Text = "$" + m3price_f3.ToString();
                 Preferences.Set("item_name", m3f3name);
                 Preferences.Set("item_uid", m3f3uid);
+                new_item_id = Preferences.Get("item_uid", "");
             }
             else if (meal_select == "4")
             {
                 TotalPrice.Text = "$" + m4price_f3.ToString();
                 Preferences.Set("item_name", m4f3name);
                 Preferences.Set("item_uid", m4f3uid);
+                new_item_id = Preferences.Get("item_uid", "");
             }
         }
 
@@ -623,7 +778,64 @@ namespace MTYD.ViewModel
             Preferences.Set("price", price);
 
             Console.WriteLine("Price selected: " + price);
-            await Navigation.PushAsync(new DeliveryBilling());
+
+            PurchaseInfo updated = new PurchaseInfo();
+            updated.password = password;
+            updated.refresh_token = refresh_token;
+            //updated.cc_num = cc_num;
+            //testing
+            updated.cc_num = "4242424242424242";
+            updated.cc_exp_year = cc_exp_year;
+            updated.cc_exp_month = cc_exp_month;
+            updated.cc_cvv = cc_cvv;
+            updated.purchase_id = purchase_id;
+            //updated.purchase_id = "400-000019";
+            updated.new_item_id = new_item_id;
+            updated.customer_id = customer_id;
+            updated.cc_zip = cc_zip;
+
+            List<Item2> list1 = new List<Item2>();
+            Item2 item1 = new Item2();
+            item1.qty = "1";
+            if (Preferences.Get("mealSelected", "") == "1")
+            {
+                item1.name = "5 Meal Plan";
+            }
+            else if (Preferences.Get("mealSelected","") == "2")
+            {
+                item1.name = "10 Meal Plan";
+            }
+            else if (Preferences.Get("mealSelected", "") == "3")
+            {
+                item1.name = "15 Meal Plan";
+            }
+            else
+            {
+                item1.name = "20 Meal Plan";
+            }
+            item1.price = Preferences.Get("price", "");
+            item1.item_uid = updated.new_item_id;
+            item1.itm_business_uid = itm_business_uid;
+            list1.Add(item1);
+            updated.items = list1;
+
+            var newPaymentJSONString = JsonConvert.SerializeObject(updated);
+            // Console.WriteLine("newPaymentJSONString" + newPaymentJSONString);
+            var content = new StringContent(newPaymentJSONString, Encoding.UTF8, "application/json");
+            Console.WriteLine("Content: " + content);
+            /*var request = new HttpRequestMessage();
+            request.RequestUri = new Uri("https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/checkout");
+            request.Method = HttpMethod.Post;
+            request.Content = content;*/
+            var client = new HttpClient();
+            var response = client.PostAsync("https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/change_purchase_id", content);
+            // HttpResponseMessage response = await client.SendAsync(request);
+            Console.WriteLine("RESPONSE TO CHECKOUT   " + response.Result);
+            Console.WriteLine("CHECKOUT JSON OBJECT BEING SENT: " + newPaymentJSONString);
+            Console.WriteLine("clickedDone Func ENDED!");
+
+
+            await Navigation.PushAsync(new UserProfile());
             //Application.Current.MainPage = new DeliveryBilling();
             //await NavigationPage.PushAsync(DeliveryBilling());
         }

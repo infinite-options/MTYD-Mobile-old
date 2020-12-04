@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="MTYD.ViewModel.UserProfileExperiment">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="MTYD.ViewModel.MealPlans">
 
 
     <ContentPage.Content>
@@ -12,7 +12,7 @@
                     </Grid.RowDefinitions>
                     
                     <BoxView x:Name="orangeBox" BackgroundColor="#FF9E19" HorizontalOptions="Fill"/>
-                    <Label x:Name="heading" Text="USER PROFILE" FontAttributes="Bold" VerticalOptions="End" HorizontalTextAlignment="Center" TextColor="Black"/>
+                    <Label x:Name="heading" Text="MEAL PLANS" FontAttributes="Bold" VerticalOptions="End" HorizontalTextAlignment="Center" TextColor="Black"/>
                     <ImageButton x:Name="pfp" BackgroundColor="LightGray" VerticalOptions="End" HorizontalOptions="End" Clicked="clickedPfp"/>
                     <ImageButton x:Name="menu" Source="menu2.png" VerticalOptions="End" HorizontalOptions="Start" BackgroundColor="Transparent" Clicked="clickedMenu"/>
 
@@ -42,7 +42,7 @@
                         </Frame>
 
                         <Button x:Name="changeMealPlan" BorderColor="#FF6505" Text="Change Meal Plan" TextColor="Black"
-                                BorderWidth="1" FontAttributes="Bold"/>
+                                BorderWidth="1" FontAttributes="Bold" Clicked="clickedSub"/>
 
                     </StackLayout>
 
@@ -54,7 +54,21 @@
 
                     <StackLayout x:Name="innerStack" Spacing="12">
 
-                        <Label x:Name="delivery" Text="DELIVERY ADDRESS" FontAttributes="Bold" HorizontalOptions="Start"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Label x:Name="delivery" Text="DELIVERY ADDRESS" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
+
+                            <Button Grid.Column="1" x:Name="saveInfo" Text="  SAVE  " BackgroundColor="#F59A28" FontAttributes="Bold" TextColor="White" VerticalOptions="Start" Clicked="clickedSave" />
+
+                        </Grid>
+
 
                         <Grid x:Name="FirstandLast" HorizontalOptions="Center" VerticalOptions="Center">
                             <Grid.ColumnDefinitions>
@@ -65,19 +79,18 @@
                           <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                   <Frame x:Name="firstName" Padding="15,10" Margin="0,0.5,0,0.5" BackgroundColor="#FFE5B4" HasShadow="False">
-
+                    <Frame x:Name="FName" Padding="15,10" Margin="0,0.5,0,0.5" BackgroundColor="#FFE5B4" HasShadow="False">
                         <Entry x:Name="FNameEntry" Keyboard="Text" FontAttributes="Bold" TextColor="Black"
                    BackgroundColor="#FFE5B4" />
+                    </Frame>
+                       <!--<Button x:Name="FNameButton" FontAttributes="Bold" TextColor="Black" BackgroundColor="#FFE5B4" Clicked="clickedInfo"/>-->
 
-                   </Frame>
-
-                   <Frame x:Name="lastName" Padding="15,10" Margin="2,0.5,0,0.5" BackgroundColor="#FFE5B4"
-                          Grid.Row="0" Grid.Column="1" HasShadow="False">
+           
+                   <Frame Grid.Column="1" x:Name="LName" Padding="15,10" Margin="2,0.5,0,0.5" BackgroundColor="#FFE5B4" HasShadow="False">
 
                         <Entry x:Name="LNameEntry" Keyboard="Text" FontAttributes="Bold"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
-
+                       <!--<Button x:Name="LNameButton" Grid.Column="1" FontAttributes="Bold" TextColor="Black" BackgroundColor="#FFE5B4" Clicked="clickedInfo"/>-->
                    </Frame>
 
                         </Grid>
@@ -92,10 +105,11 @@
 
                    <Frame x:Name="emailAdd" Padding="15,10" Margin="0,0.5,0,0.5" BackgroundColor="#FFE5B4" HasShadow="False">
 
-                        <Entry x:Name="emailEntry" Keyboard="Text" FontAttributes="Bold" TextColor="Black"
-                   BackgroundColor="#FFE5B4" />
+                        <Entry x:Name="emailEntry" FontAttributes="Bold" TextColor="Black"
+                   BackgroundColor="#FFE5B4" Keyboard="Email" />
 
                    </Frame>
+                       <!--<Button x:Name="emailButton" FontAttributes="Bold" TextColor="Black" BackgroundColor="#FFE5B4" Clicked="clickedInfo"/>-->
 
                         </Grid>
 
@@ -114,7 +128,6 @@
                    BackgroundColor="#FFE5B4" />
 
                    </Frame>
-
                         </Grid>
 
                         <Grid x:Name="UnitCityState" HorizontalOptions="Center" VerticalOptions="Center">
@@ -135,6 +148,8 @@
 
                    </Frame>
 
+                       <!--<Button x:Name="AptButton" FontAttributes="Bold" TextColor="Black" BackgroundColor="#FFE5B4" Clicked="clickedInfo"/>-->
+
                    <Frame x:Name="city" Padding="15,10" Margin="1,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="1" HasShadow="False">
 
@@ -143,6 +158,8 @@
 
                    </Frame>
 
+                       <!--<Button x:Name="CityButton" Grid.Column="1" FontAttributes="Bold" TextColor="Black" BackgroundColor="#FFE5B4" Clicked="clickedInfo"/>-->
+
                    <Frame x:Name="state" Padding="15,10" Margin="1,0.5,0,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="2" HasShadow="False">
 
@@ -150,13 +167,14 @@
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
 
                    </Frame>
+                       <!--<Button x:Name="StateButton" Grid.Column="2" FontAttributes="Bold" TextColor="Black" BackgroundColor="#FFE5B4" Clicked="clickedInfo"/>-->
 
                 </Grid>
 
                         <Grid x:Name="ZipPhone" HorizontalOptions="Center" VerticalOptions="Center">
                             <Grid.ColumnDefinitions>
                              <ColumnDefinition Width="1*"/>
-                             <ColumnDefinition Width="1.5*"/>
+                             <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
                          <Grid.RowDefinitions>
                           <RowDefinition Height="Auto"/>
@@ -164,20 +182,40 @@
 
                    <Frame x:Name="zipCode" Padding="15,10" Margin="0,0.5,0,0.5" BackgroundColor="#FFE5B4" HasShadow="False">
 
-                        <Entry x:Name="ZipEntry" Keyboard="Text" FontAttributes="Bold" TextColor="Black"
+                        <Entry x:Name="ZipEntry" Keyboard="Numeric" FontAttributes="Bold" TextColor="Black"
                    BackgroundColor="#FFE5B4" />
 
                    </Frame>
+                       <!--<Button x:Name="ZipButton" FontAttributes="Bold" TextColor="Black" BackgroundColor="#FFE5B4" Clicked="clickedInfo"/>-->
 
                    <Frame x:Name="phoneNum" Padding="15,10" Margin="2,0.5,0,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="1" HasShadow="False">
 
-                        <Entry x:Name="PhoneEntry" Keyboard="Text" FontAttributes="Bold"
+                        <Entry x:Name="PhoneEntry" Keyboard="Telephone" FontAttributes="Bold"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
 
                    </Frame>
+                       <!--<Button x:Name="PhoneButton" Grid.Column="1" FontAttributes="Bold" TextColor="Black" BackgroundColor="#FFE5B4" Clicked="clickedInfo"/>-->
 
                         </Grid>
+
+                    <!--<Grid x:Name="Instructions" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Grid.ColumnDefinitions>
+                             <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                         <Grid.RowDefinitions>
+                          <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                   <Frame x:Name="instructions" Padding="15,10" Margin="0,0.5,0,0.5" BackgroundColor="#FFE5B4" HasShadow="False" CornerRadius="21">
+
+                        <Editor x:Name="instructionsEntry" Keyboard="Text" FontAttributes="Bold" TextColor="White"
+                   BackgroundColor="#FFE5B4"/>
+
+                   </Frame>
+                       <Button x:Name="emailButton" FontAttributes="Bold" TextColor="Black" BackgroundColor="#FFE5B4" Clicked="clickedInfo"/>
+
+                        </Grid>-->
 
                     <BoxView x:Name="divider" HeightRequest="5" BackgroundColor="Transparent"/>
 
@@ -196,14 +234,14 @@
                         <StackLayout>
                             <Label x:Name="card" Text="CARD" HorizontalTextAlignment="Center" FontAttributes="Bold"/>
                             <BoxView x:Name="divider2" HeightRequest="2" BackgroundColor="Transparent"/> 
-                            <ImageButton x:Name="cardPic" Source="card.png" Aspect="AspectFit" VerticalOptions="End"/>
-                            <Label x:Name="cardNum" Text="**************88" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                            <ImageButton x:Name="cardPic" Source="card.png" Aspect="AspectFit" VerticalOptions="End" Clicked="clickedInfo"/>
+                            <Label x:Name="cardNum" Text="**************##" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
                         </StackLayout>
 
                         <StackLayout Grid.Column="1">
-                            <Label x:Name="freq" Text="WEEKLY" HorizontalTextAlignment="Center" FontAttributes="Bold"/>
+                            <Label x:Name="freq" Text="FREQUENCY" HorizontalTextAlignment="Center" FontAttributes="Bold"/>
                             <BoxView x:Name="divider3" HeightRequest="2" BackgroundColor="Transparent"/> 
-                            <ImageButton x:Name="ticketPic" Source="noDiscount.png" Aspect="AspectFit" VerticalOptions="Start"/>
+                            <ImageButton x:Name="ticketPic" Source="noDiscount.png" Aspect="AspectFit" VerticalOptions="Start" Clicked="clickedSub"/>
                         </StackLayout>
 
                     </Grid>

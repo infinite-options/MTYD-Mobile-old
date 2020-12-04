@@ -15,6 +15,14 @@ namespace MTYD.Model
         public string itm_business_uid { get; set; }
     }
 
+    public class Item2
+    {
+        public string item_uid { get; set; }
+        public string itm_business_uid { get; set; }
+        public string name { get; set; }
+        public string price { get; set; }
+        public string qty { get; set; }
+    }
 
     public class PaymentInfo
     {
@@ -123,5 +131,57 @@ namespace MTYD.Model
         public string user_access_token { get; set; }
         public string user_refresh_token { get; set; }
         */
+    }
+
+    public class DeliveryInfo
+    {
+        public string first_name { get; set; }
+        public string last_name { get; set; }
+        public string purchase_uid { get; set; }
+        public string phone { get; set; }
+        public string email { get; set; }
+        public string address { get; set; }
+        public string unit { get; set; }
+        public string city { get; set; }
+        public string state { get; set; }
+        public string zip { get; set; }
+
+    }
+
+    public class PurchaseInfo
+    {
+        public string password { get; set; }
+        public string refresh_token { get; set; }
+        public string cc_num { get; set; }
+        public string cc_exp_year { get; set; }
+        public string cc_exp_month { get; set; }
+        public string cc_cvv { get; set; }
+        public string cc_zip { get; set; }
+        public string purchase_id { get; set; }
+        public List<Item2> items { get; set; }
+        public string new_item_id { get; set; }
+        public string customer_id { get; set; }
+    }
+
+    public class ProfileInfo
+    {
+        public string uid { get; set; }
+        public string first_name { get; set; }
+        public string last_name { get; set; }
+        public string phone { get; set; }
+        public string email { get; set; }
+        public string address { get; set; }
+        public string unit { get; set; }
+        public string city { get; set; }
+        public string state { get; set; }
+        public string zip { get; set; }
+        public string noti { get; set; }
+    }
+    
+    public class PasswordInfo
+    {
+        public string customer_uid { get; set; }
+        public string old_password { get; set; }
+        public string new_password { get; set; }
     }
 }

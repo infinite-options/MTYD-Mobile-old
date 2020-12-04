@@ -61,7 +61,7 @@ namespace MTYD
             // APPLE
             var vm = new LoginViewModel();
             vm.AppleError += AppleError;
-            vm.PlatformError += PlatformError;
+            //vm.PlatformError += PlatformError;
             BindingContext = vm;
 
             if (Device.RuntimePlatform == Device.Android)
@@ -192,6 +192,7 @@ namespace MTYD
         // DIRECT LOGIN CLICK
         private async void clickedLogin(object sender, EventArgs e)
         {
+
             loginButton.IsEnabled = false;
             if (String.IsNullOrEmpty(loginUsername.Text) || String.IsNullOrEmpty(loginPassword.Text))
             { // check if all fields are filled out
@@ -224,16 +225,17 @@ namespace MTYD
                         // Application.Current.MainPage = new CarlosHomePage();
                         // This statement initializes the stack to Subscription Page
                         //check to see if user has already selected a meal plan before
-                        var request2 = new HttpRequestMessage();
+                        var request = new HttpRequestMessage();
                         Console.WriteLine("user_id: " + (string)Application.Current.Properties["user_id"]);
                         string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/customer_lplp?customer_uid=" + (string)Application.Current.Properties["user_id"];
                         //string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + (string)Application.Current.Properties["user_id"];
                         //string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + "100-000256";
-                        request2.RequestUri = new Uri(url);
+                        Console.WriteLine("url: " + url);
+                        request.RequestUri = new Uri(url);
                         //request.RequestUri = new Uri("https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/get_delivery_info/400-000453");
-                        request2.Method = HttpMethod.Get;
-                        var client2 = new HttpClient();
-                        HttpResponseMessage response = await client.SendAsync(request2);
+                        request.Method = HttpMethod.Get;
+                        var client = new HttpClient();
+                        HttpResponseMessage response = await client.SendAsync(request);
 
                         if (response.StatusCode == System.Net.HttpStatusCode.OK)
                         {
@@ -241,8 +243,16 @@ namespace MTYD
                             HttpContent content = response.Content;
                             Console.WriteLine("content: " + content);
                             var userString = await content.ReadAsStringAsync();
-                            //Console.WriteLine(userString);
-                            JObject info_obj = JObject.Parse(userString);
+                            Console.WriteLine(userString);
+
+                            if (userString.ToString()[0] != '{')
+                            {
+                                Console.WriteLine("go to SubscriptionPage");
+                                Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+                                return;
+                            }
+
+                            JObject info_obj2 = JObject.Parse(userString);
                             this.NewMainPage.Clear();
 
                             //ArrayList item_price = new ArrayList();
@@ -250,14 +260,21 @@ namespace MTYD
                             //ArrayList payment_frequency = new ArrayList();
                             //ArrayList groupArray = new ArrayList();
 
-                            //Console.WriteLine("string: " + (info_obj["result"]).ToString());
+                            //int counter = 0;
+                            //while (((info_obj2["result"])[0]).ToString() != "{}")
+                            //{
+                            //    Console.WriteLine("worked" + counter);
+                            //    counter++;
+                            //}
+
+                            Console.WriteLine("string: " + (info_obj2["result"]).ToString());
                             //check if the user hasn't entered any info before, if so put in the placeholders
-                            if ((info_obj["result"]).ToString() == "[]")
+                            if ((info_obj2["result"]).ToString() == "[]" || (info_obj2["result"]).ToString() == "204")
                             {
                                 Console.WriteLine("go to SubscriptionPage");
                                 Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
                             }
-                            else Application.Current.MainPage = new NavigationPage(new Select((info_obj["result"])[0]["delivery_first_name"].ToString(), (info_obj["result"])[0]["delivery_last_name"].ToString(),(info_obj["result"])[0]["delivery_email"].ToString()));
+                            else Application.Current.MainPage = new NavigationPage(new Select((info_obj2["result"])[0]["delivery_first_name"].ToString(), (info_obj2["result"])[0]["delivery_last_name"].ToString(),(info_obj2["result"])[0]["delivery_email"].ToString()));
                         }
                     }
                     else
@@ -341,6 +358,10 @@ namespace MTYD
                 loginPostContent.password = hashedPassword;
                 loginPostContent.social_id = "";
                 loginPostContent.signup_platform = "";
+                Preferences.Set("hashed_password", hashedPassword);
+                Preferences.Set("user_password", userPassword);
+                Console.WriteLine("accountSalt: " + accountSalt.password_salt);
+                Console.WriteLine("userPassword: " + userPassword);
 
                 string loginPostContentJson = JsonConvert.SerializeObject(loginPostContent); // make orderContent into json
 
@@ -525,6 +546,14 @@ namespace MTYD
                                 Console.WriteLine("content: " + content);
                                 var userString = await content.ReadAsStringAsync();
                                 //Console.WriteLine(userString);
+
+                                if (userString.ToString()[0] != '{')
+                                {
+                                    Console.WriteLine("go to SubscriptionPage");
+                                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+                                    return;
+                                }
+
                                 JObject info_obj = JObject.Parse(userString);
                                 this.NewMainPage.Clear();
 
@@ -749,7 +778,17 @@ namespace MTYD
                                 HttpContent content = response.Content;
                                 Console.WriteLine("content: " + content);
                                 var userString = await content.ReadAsStringAsync();
-                                //Console.WriteLine(userString);
+                                Console.WriteLine(userString.ToString());
+
+                                //testing for if the user only has serving fresh stuff
+                                if (userString.ToString()[0] != '{')
+                                {
+                                    Console.WriteLine("go to SubscriptionPage");
+                                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+                                    return;
+                                }
+                                //testing
+
                                 JObject info_obj = JObject.Parse(userString);
                                 this.NewMainPage.Clear();
 
@@ -758,9 +797,20 @@ namespace MTYD
                                 //ArrayList payment_frequency = new ArrayList();
                                 //ArrayList groupArray = new ArrayList();
 
-                                //Console.WriteLine("string: " + (info_obj["result"]).ToString());
+                                //int counter = 0;
+                                //Console.WriteLine("testing: " + ((info_obj["result"]).Count().ToString()));
+                                //Console.WriteLine("testing: " + ((info_obj["result"]).Last().ToString()));
+                                //while (((info_obj["result"])[counter]) != null)
+                                //{
+                                //    Console.WriteLine("worked" + counter);
+                                //    counter++;
+                                //}
+
                                 //check if the user hasn't entered any info before, if so put in the placeholders
-                                if ((info_obj["result"]).ToString() == "[]")
+
+                                Console.WriteLine("string: " + (info_obj["result"]).ToString());
+                                //check if the user hasn't entered any info before, if so put in the placeholders
+                                if ((info_obj["result"]).ToString() == "[]" || (info_obj["result"]).ToString() == "204")
                                 {
                                     Console.WriteLine("go to SubscriptionPage");
                                     Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
@@ -814,9 +864,16 @@ namespace MTYD
         // APPLE LOGIN CLICK
         public async void appleLoginButtonClicked(object sender, EventArgs e)
         {
+            Console.WriteLine("appleLogin clicked");
+
             SignIn?.Invoke(sender, e);
             var c = (ImageButton)sender;
+            Console.WriteLine("appleLogin c: " + c.ToString());
             c.Command?.Execute(c.CommandParameter);
+
+            //testing
+            var testingVar = new LoginViewModel();
+            testingVar.OnAppleSignInRequest();
         }
 
         public void InvokeSignInEvent(object sender, EventArgs e)

@@ -66,7 +66,7 @@
                     <!--<Button x:Name="mealPlanButton" Grid.ColumnSpan="2" HorizontalOptions="Fill" Clicked="clickedDelivery"/>-->
 
 
-                    <Label Grid.Column="1" x:Name="mealPlan" Text="MEAL PLAN" HorizontalOptions="StartAndExpand" VerticalOptions="Center" FontAttributes="Bold" FontSize="25" TextColor="White"/>
+                    <Label Grid.Column="1" x:Name="mealPlan" Text="MEAL PLANS" HorizontalOptions="StartAndExpand" VerticalOptions="Center" FontAttributes="Bold" FontSize="25" TextColor="White"/>
                     
                     <Image x:Name="mealPic" VerticalOptions="Center" HorizontalOptions="Start" Source="whiteLunch.png"/>
 
@@ -119,6 +119,30 @@
                     <Image x:Name="placeholderPic" VerticalOptions="Center" HorizontalOptions="Start" Source="profile.png"/>
 
                     <Button x:Name="placeholderButton" BackgroundColor="Transparent" Grid.ColumnSpan="2" HorizontalOptions="Fill" Clicked="clickedPfp"/>
+
+
+                </Grid>
+
+                <BoxView x:Name="divider5" HeightRequest="2" HorizontalOptions="Fill" VerticalOptions="Center" BackgroundColor="White"/>
+
+
+                <Grid x:Name="logoutGrid" ColumnSpacing="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!--<Button x:Name="mealsAvailButton" Grid.ColumnSpan="2" HorizontalOptions="Fill" Clicked="clickedMealSelect"/>-->
+
+
+                    <Label Grid.Column="1" x:Name="logout" Text="LOGOUT" HorizontalOptions="StartAndExpand" VerticalOptions="Center" FontAttributes="Bold" FontSize="25" TextColor="White"/>
+                    
+                    <ImageButton x:Name="logoutPic" BackgroundColor="LightGray" VerticalOptions="Center" HorizontalOptions="Start" />
+
+                    <Button x:Name="logoutButton" BackgroundColor="Transparent" Grid.ColumnSpan="2" HorizontalOptions="Fill" Clicked="LogOutClick"/>
 
 
                 </Grid>

@@ -38,7 +38,6 @@ namespace MTYD
             
             // User id and time_stamp are retrieved from local phone memory (written by Login View Model, Signup, Social Signup and MainPage.xaml.cs)
             if (Application.Current.Properties.ContainsKey("user_id"))
-
             {
                 System.Diagnostics.Debug.WriteLine("UserID is:" + (string)Application.Current.Properties["user_id"]);
                 if (Application.Current.Properties.ContainsKey("time_stamp"))

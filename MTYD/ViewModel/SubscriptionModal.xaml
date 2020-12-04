@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="MTYD.ViewModel.SubscriptionPage">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="MTYD.ViewModel.SubscriptionModal">
 
     <ContentPage.Content>
             <ScrollView>
@@ -11,18 +11,17 @@
                     </Grid.RowDefinitions>
                     
                     <BoxView x:Name="orangeBox" BackgroundColor="#FF9E19" HorizontalOptions="Fill"/>
-                    <Label x:Name="heading" Text="CHOOSE MEAL PLAN" FontAttributes="Bold" VerticalOptions="End" HorizontalTextAlignment="Center" TextColor="Black"/>
+                    <Label x:Name="heading" Text="UPDATE MEAL PLAN" FontAttributes="Bold" VerticalOptions="End" HorizontalTextAlignment="Center" TextColor="Black"/>
                     <ImageButton x:Name="pfp" BackgroundColor="LightGray" VerticalOptions="End" HorizontalOptions="End" Clicked="clickedPfp"/>
                     <ImageButton x:Name="menu" Source="menu2.png" VerticalOptions="End" HorizontalOptions="Start" BackgroundColor="Transparent" Clicked="clickedMenu"/>
 
                 </Grid>
 
-                <!--<Button x:Name="backButton" Text="◀  BACK" FontSize="17" FontAttributes="Bold"
+                <Button x:Name="backButton" Text="◀  BACK" FontSize="17" FontAttributes="Bold"
                 BackgroundColor="#F59A28" TextColor= "White" HorizontalOptions="Start" Clicked="clickedBack"
                 HeightRequest="49" WidthRequest="120" CornerRadius="25" Margin="10,0,20,-30"/>
 
-                <BoxView Color="Transparent" HeightRequest="25" HorizontalOptions="Fill"/>-->
-                <BoxView HeightRequest="10"/>
+                <BoxView Color="Transparent" HeightRequest="25" HorizontalOptions="Fill"/>
 
                 <Grid x:Name="takeoutGrid">
                     <Grid.RowDefinitions>
@@ -160,7 +159,7 @@
                     <Label x:Name="TotalPrice" Text="$ TOTAL" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold"  TextColor="Black"/>
                     </Frame>
                     <Button x:Name= "SignUpButton" Grid.Row="0" Grid.Column="1" BackgroundColor="#FF9400" Clicked="clickedDone"
-                            Text="PROCEED" TextColor="White" HorizontalOptions="Center" FontAttributes="Bold" VerticalOptions="Center"/>
+                            Text="UPDATE" TextColor="White" HorizontalOptions="Center" FontAttributes="Bold" VerticalOptions="Center"/>
                 </Grid>
 
                 <Label x:Name="spacer5" HeightRequest="10"/>

@@ -16,11 +16,14 @@ using Xamarin.Forms.Xaml;
 namespace MTYD.ViewModel
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DeliveryBilling : ContentPage
+    public partial class OrderInfoModal : ContentPage
     {
         public ObservableCollection<Plans> NewDeliveryInfo = new ObservableCollection<Plans>();
         public string salt;
         string fullName; string emailAddress;
+
+        string password; string refresh_token; string cc_num; string cc_exp_year; string cc_exp_month; string cc_cvv; string purchase_id;
+        string new_item_id; string customer_id; string zip; string mealSelected; string mealPrice; string itm_business_id;
 
         protected async Task setPaymentInfo()
         {
@@ -32,37 +35,37 @@ namespace MTYD.ViewModel
             item1.price = Preferences.Get("price", "00.00");
             item1.qty = "1";
             item1.item_uid = Preferences.Get("item_uid", "");
-            item1.itm_business_uid = "200-000001"; 
+            item1.itm_business_uid = "200-000001";
             List<Item> itemsList = new List<Item> { item1 };
-            Preferences.Set("unitNum", AptEntry.Text);
+            //Preferences.Set("unitNum", AptEntry.Text);
 
             string userID = (string)Application.Current.Properties["user_id"];
             Console.WriteLine("YOUR userID is " + userID);
             newPayment.customer_uid = userID;
             //newPayment.customer_uid = "100-000082";
             //newPayment.business_uid = "200-000002";
-            newPayment.items = itemsList;
+            //newPayment.items = itemsList;
             //newPayment.salt = "64a7f1fb0df93d8f5b9df14077948afa1b75b4c5028d58326fb801d825c9cd24412f88c8b121c50ad5c62073c75d69f14557255da1a21e24b9183bc584efef71";
             //newPayment.salt = "cec35d4fc0c5e83527f462aeff579b0c6f098e45b01c8b82e311f87dc6361d752c30293e27027653adbb251dff5d03242c8bec68a3af1abd4e91c5adb799a01b";
             //newPayment.salt = "2020-09-22 21:55:17";
-            newPayment.salt = "";
-            newPayment.delivery_first_name = FNameEntry.Text;
-            newPayment.delivery_last_name = LNameEntry.Text;
-            newPayment.delivery_email = emailEntry.Text;
-            newPayment.delivery_phone = PhoneEntry.Text;
-            newPayment.delivery_address = AddressEntry.Text;
-            newPayment.delivery_unit = Preferences.Get("unitNum", "");
-            newPayment.delivery_city = CityEntry.Text;
-            newPayment.delivery_state = StateEntry.Text;
-            newPayment.delivery_zip = ZipEntry.Text;
-            newPayment.delivery_instructions = DeliveryEntry.Text;
-            newPayment.delivery_longitude = "";
-            newPayment.delivery_latitude = "";
-            newPayment.order_instructions = "slow";
-            newPayment.purchase_notes = "new purch";
-            newPayment.amount_due = Preferences.Get("price", "00.00");
-            newPayment.amount_discount = "00.00";
-            newPayment.amount_paid = Preferences.Get("price", "00.00");
+            //newPayment.salt = "";
+            //newPayment.delivery_first_name = FNameEntry.Text;
+            //newPayment.delivery_last_name = LNameEntry.Text;
+            //newPayment.delivery_email = emailEntry.Text;
+            //newPayment.delivery_phone = PhoneEntry.Text;
+            //newPayment.delivery_address = AddressEntry.Text;
+            //newPayment.delivery_unit = Preferences.Get("unitNum", "");
+            //newPayment.delivery_city = CityEntry.Text;
+            //newPayment.delivery_state = StateEntry.Text;
+            //newPayment.delivery_zip = ZipEntry.Text;
+            //newPayment.delivery_instructions = DeliveryEntry.Text;
+            //newPayment.delivery_longitude = "";
+            //newPayment.delivery_latitude = "";
+            //newPayment.order_instructions = "slow";
+            //newPayment.purchase_notes = "new purch";
+            //newPayment.amount_due = Preferences.Get("price", "00.00");
+            //newPayment.amount_discount = "00.00";
+            //newPayment.amount_paid = Preferences.Get("price", "00.00");
             newPayment.cc_num = CCEntry.Text;
             //newPayment.cc_exp_year = YearPicker.Items[YearPicker.SelectedIndex];
             newPayment.cc_exp_year = "2022";
@@ -123,64 +126,64 @@ namespace MTYD.ViewModel
                 {
                     Console.WriteLine("no info");
 
-                    FNameEntry.Placeholder = "First Name*";
-                    LNameEntry.Placeholder = "Last Name*";
-                    emailEntry.Placeholder = "Email*";
-                    AddressEntry.Placeholder = "Street*";
-                    AptEntry.Placeholder = "Unit";
-                    CityEntry.Placeholder = "City*";
-                    StateEntry.Placeholder = "State*";
-                    ZipEntry.Placeholder = "Zip*";
-                    PhoneEntry.Placeholder = "Phone Number*";
-                    DeliveryEntry.Placeholder = "Delivery Instructions";
+                    //FNameEntry.Placeholder = "First Name*";
+                    //LNameEntry.Placeholder = "Last Name*";
+                    //emailEntry.Placeholder = "Email*";
+                    //AddressEntry.Placeholder = "Street*";
+                    //AptEntry.Placeholder = "Unit";
+                    //CityEntry.Placeholder = "City*";
+                    //StateEntry.Placeholder = "State*";
+                    //ZipEntry.Placeholder = "Zip*";
+                    //PhoneEntry.Placeholder = "Phone Number*";
+                    //DeliveryEntry.Placeholder = "Delivery Instructions";
                     CCEntry.Placeholder = "Credit Card Number*";
                     CVVEntry.Placeholder = "CVC/CVV*";
                     ZipCCEntry.Placeholder = "Zip*";
 
                     return;
                 }
-                
+
 
                 //Console.WriteLine("delivery first name: " + (info_obj["result"])[0]["selection_uid"]);
-                FNameEntry.Text = (info_obj["result"])[0]["delivery_first_name"].ToString();
-                if (FNameEntry.Text == "")
-                    FNameEntry.Placeholder = "First Name*";
+                //FNameEntry.Text = (info_obj["result"])[0]["delivery_first_name"].ToString();
+                //if (FNameEntry.Text == "")
+                //    FNameEntry.Placeholder = "First Name*";
 
-                LNameEntry.Text = (info_obj["result"])[0]["delivery_last_name"].ToString();
-                if (LNameEntry.Text == "")
-                    LNameEntry.Placeholder = "Last Name*";
+                //LNameEntry.Text = (info_obj["result"])[0]["delivery_last_name"].ToString();
+                //if (LNameEntry.Text == "")
+                //    LNameEntry.Placeholder = "Last Name*";
 
-                emailEntry.Text = (info_obj["result"])[0]["delivery_email"].ToString();
-                if (emailEntry.Text == "")
-                    emailEntry.Placeholder = "Email*";
+                //emailEntry.Text = (info_obj["result"])[0]["delivery_email"].ToString();
+                //if (emailEntry.Text == "")
+                //    emailEntry.Placeholder = "Email*";
 
-                AddressEntry.Text = (info_obj["result"])[0]["delivery_address"].ToString();
-                if (AddressEntry.Text == "")
-                    AddressEntry.Placeholder = "Street*";
+                //AddressEntry.Text = (info_obj["result"])[0]["delivery_address"].ToString();
+                //if (AddressEntry.Text == "")
+                //    AddressEntry.Placeholder = "Street*";
 
-                if ((info_obj["result"])[0]["delivery_unit"].ToString() == "" || (info_obj["result"])[0]["delivery_unit"].ToString() == "NULL")
-                    AptEntry.Placeholder = "Unit";
-                else AptEntry.Text = (info_obj["result"])[0]["delivery_unit"].ToString();
+                //AptEntry.Text = (info_obj["result"])[0]["delivery_unit"].ToString();
+                //if (AptEntry.Text == "")
+                //    AptEntry.Placeholder = "Unit";
 
-                CityEntry.Text = (info_obj["result"])[0]["delivery_city"].ToString();
-                if (CityEntry.Text == "")
-                    CityEntry.Placeholder = "City*";
+                //CityEntry.Text = (info_obj["result"])[0]["delivery_city"].ToString();
+                //if (CityEntry.Text == "")
+                //    CityEntry.Placeholder = "City*";
 
-                StateEntry.Text = (info_obj["result"])[0]["delivery_state"].ToString();
-                if (StateEntry.Text == "")
-                    StateEntry.Placeholder = "State*";
+                //StateEntry.Text = (info_obj["result"])[0]["delivery_state"].ToString();
+                //if (StateEntry.Text == "")
+                //    StateEntry.Placeholder = "State*";
 
-                ZipEntry.Text = (info_obj["result"])[0]["delivery_zip"].ToString();
-                if (ZipEntry.Text == "")
-                    ZipEntry.Placeholder = "Zip*";
+                //ZipEntry.Text = (info_obj["result"])[0]["delivery_zip"].ToString();
+                //if (ZipEntry.Text == "")
+                //    ZipEntry.Placeholder = "Zip*";
 
-                PhoneEntry.Text = (info_obj["result"])[0]["delivery_phone_num"].ToString();
-                if (PhoneEntry.Text == "")
-                    PhoneEntry.Placeholder = "Phone Number*";
+                //PhoneEntry.Text = (info_obj["result"])[0]["delivery_phone_num"].ToString();
+                //if (PhoneEntry.Text == "")
+                //    PhoneEntry.Placeholder = "Phone Number*";
 
-                if ((info_obj["result"])[0]["delivery_instructions"].ToString() == "" || (info_obj["result"])[0]["delivery_instructions"].ToString() == "NULL")
-                    DeliveryEntry.Placeholder = "Delivery Instructions";
-                else DeliveryEntry.Text = (info_obj["result"])[0]["delivery_instructions"].ToString();
+                //DeliveryEntry.Text = (info_obj["result"])[0]["delivery_instructions"].ToString();
+                //if (DeliveryEntry.Text == "")
+                //    DeliveryEntry.Placeholder = "Delivery Instructions";
 
                 CCEntry.Text = (info_obj["result"])[0]["cc_num"].ToString();
                 if (CCEntry.Text == "")
@@ -270,53 +273,57 @@ namespace MTYD.ViewModel
             }
         }
 
-        public DeliveryBilling()
+        public OrderInfoModal(string pass, string token, string num, string year, string month, string cvv, string zip, string purchaseID, string businessID, string mealPlan, string price, string itemID, string customerID)
         {
             InitializeComponent();
-            Console.WriteLine("hashed password: " + Preferences.Get("hashed_password", ""));
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
+
+            MonthPicker.SelectedIndex = Int32.Parse(month) - 1;
+            YearPicker.SelectedIndex = Int32.Parse(year) - 2020;
+            password = pass; refresh_token = token; CCEntry.Text = num; CVVEntry.Text = cvv; ZipCCEntry.Text = zip; purchase_id = purchaseID;
+            new_item_id = itemID; customer_id = customerID; mealSelected = mealPlan; mealPrice = price; itm_business_id = businessID;
 
             if (Device.RuntimePlatform == Device.iOS)
             {
                 orangeBox.CornerRadius = 35;
                 pfp.CornerRadius = 20;
 
-                firstName.CornerRadius = 22;
-                firstName.HeightRequest = 35;
-                lastName.CornerRadius = 22;
-                lastName.HeightRequest = 35;
+                //firstName.CornerRadius = 22;
+                //firstName.HeightRequest = 35;
+                //lastName.CornerRadius = 22;
+                //lastName.HeightRequest = 35;
 
-                emailAdd.CornerRadius = 22;
-                emailAdd.HeightRequest = 35;
+                //emailAdd.CornerRadius = 22;
+                //emailAdd.HeightRequest = 35;
 
-                street.CornerRadius = 22;
-                street.HeightRequest = 35;
+                //street.CornerRadius = 22;
+                //street.HeightRequest = 35;
 
-                unit.CornerRadius = 22;
-                unit.HeightRequest = 35;
-                city.CornerRadius = 22;
-                city.HeightRequest = 35;
-                state.CornerRadius = 22;
-                state.HeightRequest = 35;
+                //unit.CornerRadius = 22;
+                //unit.HeightRequest = 35;
+                //city.CornerRadius = 22;
+                //city.HeightRequest = 35;
+                //state.CornerRadius = 22;
+                //state.HeightRequest = 35;
 
-                zipCode.CornerRadius = 22;
-                zipCode.HeightRequest = 35;
-                phoneNum.CornerRadius = 22;
-                phoneNum.HeightRequest = 35;
+                //zipCode.CornerRadius = 22;
+                //zipCode.HeightRequest = 35;
+                //phoneNum.CornerRadius = 22;
+                //phoneNum.HeightRequest = 35;
 
-                deliveryInstr.CornerRadius = 22;
+                //deliveryInstr.CornerRadius = 22;
 
                 creditCard.CornerRadius = 22;
                 creditCard.HeightRequest = 35;
 
-                cvv.CornerRadius = 22;
-                cvv.HeightRequest = 35;
+                cvvFrame.CornerRadius = 22;
+                cvvFrame.HeightRequest = 35;
                 zipCode2.CornerRadius = 22;
                 zipCode2.HeightRequest = 35;
 
-                month.CornerRadius = 22;
-                year.CornerRadius = 22;
+                monthFrame.CornerRadius = 22;
+                yearFrame.CornerRadius = 22;
                 SignUpButton.CornerRadius = 25;
             }
             else //android
@@ -324,29 +331,29 @@ namespace MTYD.ViewModel
                 orangeBox.CornerRadius = 35;
                 pfp.CornerRadius = 20;
 
-                firstName.CornerRadius = 24;
-                lastName.CornerRadius = 24;
+                //firstName.CornerRadius = 24;
+                //lastName.CornerRadius = 24;
 
-                emailAdd.CornerRadius = 24;
+                //emailAdd.CornerRadius = 24;
 
-                street.CornerRadius = 24;
+                //street.CornerRadius = 24;
 
-                unit.CornerRadius = 24;
-                city.CornerRadius = 24;
-                state.CornerRadius = 24;
+                //unit.CornerRadius = 24;
+                //city.CornerRadius = 24;
+                //state.CornerRadius = 24;
 
-                zipCode.CornerRadius = 24;
-                phoneNum.CornerRadius = 24;
+                //zipCode.CornerRadius = 24;
+                //phoneNum.CornerRadius = 24;
 
-                deliveryInstr.CornerRadius = 24;
+                //deliveryInstr.CornerRadius = 24;
 
                 creditCard.CornerRadius = 24;
 
-                cvv.CornerRadius = 24;
+                cvvFrame.CornerRadius = 24;
                 zipCode2.CornerRadius = 24;
 
-                month.CornerRadius = 24;
-                year.CornerRadius = 24;
+                monthFrame.CornerRadius = 24;
+                yearFrame.CornerRadius = 24;
                 SignUpButton.CornerRadius = 25;
             }
 
@@ -396,14 +403,54 @@ namespace MTYD.ViewModel
             // Console.WriteLine("Clicked done: The Salt is: " + passwordSalt);
             //setPaymentInfo();
             //if (string.IsNullOrEmpty(passwordSalt)){  //If social login (salt is NULL)
-            if (platform != "DIRECT")
-            {
-                Navigation.PushAsync(new VerifyInfo(AptEntry.Text, FNameEntry.Text, LNameEntry.Text, emailEntry.Text, PhoneEntry.Text, AddressEntry.Text, CityEntry.Text, StateEntry.Text, ZipEntry.Text, DeliveryEntry.Text, CCEntry.Text, CVVEntry.Text, ZipCCEntry.Text, salt));
-            }
-            else //If direct login (salt != NULL)
-            {
-                Navigation.PushAsync(new VerifyInfoDirectLogin(AptEntry.Text, FNameEntry.Text, LNameEntry.Text, emailEntry.Text, PhoneEntry.Text, AddressEntry.Text, CityEntry.Text, StateEntry.Text, ZipEntry.Text, DeliveryEntry.Text, CCEntry.Text, CVVEntry.Text, ZipCCEntry.Text, salt));
-            }
+
+            PurchaseInfo updated = new PurchaseInfo();
+            updated.password = password;
+            updated.refresh_token = refresh_token;
+            updated.cc_num = CCEntry.Text;
+            updated.cc_exp_year = YearPicker.SelectedItem.ToString();
+            //"cc_exp_year":"2022","cc_exp_month":"11-November"
+            updated.cc_exp_month = MonthPicker.SelectedItem.ToString().Substring(0,2);
+            updated.cc_cvv = CVVEntry.Text;
+            updated.purchase_id = purchase_id;
+            updated.new_item_id = new_item_id;
+            updated.customer_id = customer_id;
+            updated.cc_zip = ZipCCEntry.Text;
+
+            List<Item2> list1 = new List<Item2>();
+            Item2 item1 = new Item2();
+            item1.price = mealPrice;
+            item1.name = mealSelected;
+            item1.qty = "1";
+            item1.itm_business_uid = itm_business_id;
+            item1.item_uid = new_item_id;
+            list1.Add(item1);
+            updated.items = list1;
+
+            var newPaymentJSONString = JsonConvert.SerializeObject(updated);
+            // Console.WriteLine("newPaymentJSONString" + newPaymentJSONString);
+            var content = new StringContent(newPaymentJSONString, Encoding.UTF8, "application/json");
+            Console.WriteLine("Content: " + content);
+            /*var request = new HttpRequestMessage();
+            request.RequestUri = new Uri("https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/checkout");
+            request.Method = HttpMethod.Post;
+            request.Content = content;*/
+            var client = new HttpClient();
+            var response = client.PostAsync("https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/change_purchase_id", content);
+            // HttpResponseMessage response = await client.SendAsync(request);
+            Console.WriteLine("RESPONSE TO CHECKOUT   " + response.Result);
+            Console.WriteLine("CHECKOUT JSON OBJECT BEING SENT: " + newPaymentJSONString);
+            Console.WriteLine("clickedDone Func ENDED!");
+
+            Navigation.PushAsync(new UserProfile());
+            //if (platform != "DIRECT")
+            //{
+            //    Navigation.PushAsync(new VerifyInfo(AptEntry.Text, FNameEntry.Text, LNameEntry.Text, emailEntry.Text, PhoneEntry.Text, AddressEntry.Text, CityEntry.Text, StateEntry.Text, ZipEntry.Text, DeliveryEntry.Text, CCEntry.Text, CVVEntry.Text, ZipCCEntry.Text, salt));
+            //}
+            //else //If direct login (salt != NULL)
+            //{
+            //    Navigation.PushAsync(new VerifyInfoDirectLogin(AptEntry.Text, FNameEntry.Text, LNameEntry.Text, emailEntry.Text, PhoneEntry.Text, AddressEntry.Text, CityEntry.Text, StateEntry.Text, ZipEntry.Text, DeliveryEntry.Text, CCEntry.Text, CVVEntry.Text, ZipCCEntry.Text, salt));
+            //}
             //MainPage = PaymentPage();
         }
 
@@ -419,65 +466,65 @@ namespace MTYD.ViewModel
 
         void clickedNotDone(object sender, EventArgs e)
         {
-            if (FNameEntry.Text == null || FNameEntry.Text == "")
-            {
-                DisplayAlert("Warning!", "first name required", "okay");
-                return;
-            }
+            //if (FNameEntry.Text == null || FNameEntry.Text == "")
+            //{
+            //    DisplayAlert("Warning!", "first name required", "okay");
+            //    return;
+            //}
 
-            if (LNameEntry.Text == null || LNameEntry.ToString() == "")
-            {
-                DisplayAlert("Warning!", "last name required", "okay");
-                return;
-            }
+            //if (LNameEntry.Text == null || LNameEntry.ToString() == "")
+            //{
+            //    DisplayAlert("Warning!", "last name required", "okay");
+            //    return;
+            //}
 
-            if (emailEntry.Text == null || emailEntry.Text == "")
-            {
-                DisplayAlert("Warning!", "email required", "okay");
-                return;
-            }
+            //if (emailEntry.Text == null || emailEntry.Text == "")
+            //{
+            //    DisplayAlert("Warning!", "email required", "okay");
+            //    return;
+            //}
 
-            if (AddressEntry.Text == null || AddressEntry.Text == "")
-            {
-                DisplayAlert("Warning!", "address required", "okay");
-                return;
-            }
+            //if (AddressEntry.Text == null || AddressEntry.Text == "")
+            //{
+            //    DisplayAlert("Warning!", "address required", "okay");
+            //    return;
+            //}
 
-            if (CityEntry.Text == null || CityEntry.Text == "")
-            {
-                DisplayAlert("Warning!", "city required", "okay");
-                return;
-            }
+            //if (CityEntry.Text == null || CityEntry.Text == "")
+            //{
+            //    DisplayAlert("Warning!", "city required", "okay");
+            //    return;
+            //}
 
-            if (StateEntry.Text == null || StateEntry.Text == "")
-            {
-                DisplayAlert("Warning!", "state required", "okay");
-                return;
-            }
+            //if (StateEntry.Text == null || StateEntry.Text == "")
+            //{
+            //    DisplayAlert("Warning!", "state required", "okay");
+            //    return;
+            //}
 
-            if (ZipEntry.Text == null || ZipEntry.Text == "")
-            {
-                DisplayAlert("Warning!", "address zip code required", "okay");
-                return;
-            }
+            //if (ZipEntry.Text == null || ZipEntry.Text == "")
+            //{
+            //    DisplayAlert("Warning!", "address zip code required", "okay");
+            //    return;
+            //}
 
-            if (StateEntry.Text == null || StateEntry.Text == "")
-            {
-                DisplayAlert("Warning!", "state required", "okay");
-                return;
-            }
+            //if (StateEntry.Text == null || StateEntry.Text == "")
+            //{
+            //    DisplayAlert("Warning!", "state required", "okay");
+            //    return;
+            //}
 
-            if (ZipEntry.Text == null || ZipEntry.Text == "")
-            {
-                DisplayAlert("Warning!", "address zip code required", "okay");
-                return;
-            }
+            //if (ZipEntry.Text == null || ZipEntry.Text == "")
+            //{
+            //    DisplayAlert("Warning!", "address zip code required", "okay");
+            //    return;
+            //}
 
-            if (PhoneEntry.Text == null || PhoneEntry.Text == "")
-            {
-                DisplayAlert("Warning!", "phone number required", "okay");
-                return;
-            }
+            //if (PhoneEntry.Text == null || PhoneEntry.Text == "")
+            //{
+            //    DisplayAlert("Warning!", "phone number required", "okay");
+            //    return;
+            //}
 
             if (CCEntry.Text == null || CCEntry.Text == "")
             {

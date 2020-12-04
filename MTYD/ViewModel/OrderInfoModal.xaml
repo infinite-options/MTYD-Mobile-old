@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:local="clr-namespace:MTYD;assembly=MTYD"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MTYD.ViewModel.DeliveryBilling">
+             x:Class="MTYD.ViewModel.OrderInfoModal">
     
     <ContentPage.Content>
         <ScrollView>
@@ -15,7 +15,7 @@
                            AbsoluteLayout.LayoutBounds="0.5, 0, 1, 70"
                            AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional"/>
 
-                    <Label Text="DELIVERY INFO" FontSize="25" FontAttributes="Bold"
+                    <Label Text="UPDATE BILLING" FontSize="25" FontAttributes="Bold"
                            AbsoluteLayout.LayoutBounds="0.5, 0.23"
                            AbsoluteLayout.LayoutFlags="PositionProportional"/>
 
@@ -30,7 +30,7 @@
 
                 <Label x:Name="spacer" HeightRequest="5"/>
 
-                <Label Text="DELIVERY ADDRESS" HorizontalOptions="Start" FontSize="22"
+                <!--<Label Text="DELIVERY ADDRESS" HorizontalOptions="Start" FontSize="22"
                        Margin="25,0,0,0" FontAttributes="Bold"/>
 
                 <Label x:Name="spacer1" HeightRequest="3"/>
@@ -197,7 +197,7 @@
                           Grid.Row="0" Grid.Column="0" HasShadow="False" >
 
                         <Editor x:Name="DeliveryEntry" Keyboard="Text" FontAttributes="Bold"
-                   FontSize="17" TextColor="White" PlaceholderColor="#B4B4B4"
+                   FontSize="17" TextColor="White"
                    HeightRequest="100" WidthRequest="24" Margin="0,2,0,0"
                    BackgroundColor="#FFE5B4"  />
 
@@ -206,7 +206,7 @@
                 </Grid>
 
 
-                <Label x:Name="spacer2" HeightRequest="5"/>
+                <Label x:Name="spacer2" HeightRequest="5"/>-->
 
                 <Label Text="BILLING INFORMATION" HorizontalOptions="Start" FontSize="22"
                        Margin="25,0,0,0" FontAttributes="Bold"/>
@@ -244,7 +244,7 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                   <Frame x:Name="cvv" Padding="10,5" Margin="20,0.5,1,0.5" BackgroundColor="#FFE5B4"
+                   <Frame x:Name="cvvFrame" Padding="10,5" Margin="20,0.5,1,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="0" HasShadow="False">
 
                         <Entry x:Name="CVVEntry" Keyboard="Numeric" FontAttributes="Bold"
@@ -276,7 +276,7 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                   <Frame x:Name="month" Padding="10,5" Margin="20,0.5,1,0.5" BackgroundColor="#FFE5B4"
+                   <Frame x:Name="monthFrame" Padding="10,5" Margin="20,0.5,1,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="0" HasShadow="False">
 
                     <Frame HasShadow="False" Padding="0" BorderColor="#FFE5B4">
@@ -304,7 +304,7 @@
 
                    </Frame>
 
-                   <Frame x:Name="year" Padding="10,5" Margin="1,0.5,20,0.5" BackgroundColor="#FFE5B4"
+                   <Frame x:Name="yearFrame" Padding="10,5" Margin="1,0.5,20,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="1" HasShadow="False">
 
                     <Frame HasShadow="False" Padding="0" BorderColor="#FFE5B4">
@@ -534,7 +534,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Button x:Name= "SignUpButton" BackgroundColor="#FF9E19" Margin="20,10,50,10"
-                        Text="SAVE" TextColor="White"  FontAttributes="Bold" FontSize="20"
+                        Text="UPDATE" TextColor="White"  FontAttributes="Bold" FontSize="20"
                         WidthRequest="40" HeightRequest="50" Clicked="clickedNotDone" Grid.Column="1" Grid.Row="0"/>
 
                     <Button x:Name="backButton" Text="◀  BACK" FontSize="20" FontAttributes="Bold"

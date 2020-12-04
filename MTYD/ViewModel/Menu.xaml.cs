@@ -115,6 +115,14 @@ namespace MTYD.ViewModel
                 placeholderPic.WidthRequest = width / 15;
                 placeholderPic.Margin = new Thickness(25, 0, 0, 0);
 
+                divider5.Margin = new Thickness(24, 10);
+
+                logoutButton.Margin = new Thickness(0, -5);
+                logoutPic.HeightRequest = width / 15;
+                logoutPic.WidthRequest = width / 15;
+                logoutPic.Margin = new Thickness(25, 0, 0, 0);
+                logoutPic.CornerRadius = (int)(width / 30);
+
 
             }
         }
@@ -137,7 +145,7 @@ namespace MTYD.ViewModel
 
         async void clickedMealPlan(System.Object sender, System.EventArgs e)
         {
-            Navigation.PushAsync(new UserProfile(), false);
+            Navigation.PushAsync(new MealPlans(), false);
             Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 2]);
         }
 
@@ -163,6 +171,14 @@ namespace MTYD.ViewModel
         void Button_Clicked_1(System.Object sender, System.EventArgs e)
         {
             Navigation.PopAsync();
+        }
+
+        void LogOutClick(System.Object sender, System.EventArgs e)
+        {
+            Application.Current.Properties.Remove("user_id");
+            Application.Current.Properties.Remove("time_stamp");
+            Application.Current.Properties.Remove("platform");
+            Application.Current.MainPage = new MainPage();
         }
     }
 }

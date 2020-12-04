@@ -48,15 +48,12 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40" />
                         <!-- 1 Buttons -->
-                        <RowDefinition Height="40" />
-                        <!-- Bar -->
-                        <RowDefinition Height="*" />
-                        <!-- Collection View -->
-
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
 
 
@@ -66,13 +63,17 @@
                     <Button x:Name="save1" Text = "Save" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="0" Grid.Column="3" Clicked="saveUserMeals"/>
                 </Frame>-->
                     <!--<Picker x:Name="datePicker" Grid.ColumnSpan="2" Margin="15,0,0,0" SelectedIndexChanged="dateChange"/>-->
-                    <Frame  OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Column="3" CornerRadius="20">
+
+
+                    <Frame  OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Column="0" CornerRadius="20">
                         <Button x:Name="saveBttn" ClassId="save1" Text = "Save" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="0" Grid.Column="3" Clicked="saveUserMeals" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black" FontAttributes="Bold"/>
                     </Frame>
-                    <Frame x:Name="surpriseFrame" OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Row="0" Grid.Column="2" CornerRadius="20">
+
+                    <Frame x:Name="surpriseFrame" OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Column="1" CornerRadius="20">
                         <Button x:Name="surpriseBttn"  ClassId="surpriseButton" Text = "Surprise" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="0" Grid.Column="3" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black"  FontAttributes="Bold" Clicked="surpriseMealSelection"/>
                     </Frame>
-                    <Frame x:Name="skipFrame" OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Row = "1" Grid.Column="2" CornerRadius="20">
+
+                    <Frame x:Name="skipFrame" OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Column="2" CornerRadius="20">
                         <Button x:Name="skipBttn"  ClassId="skipButton" Text = "Skip" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="2" Grid.Column="3" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black"  FontAttributes="Bold" Clicked="skipMealSelection"/>
                     </Frame>
 
@@ -80,9 +81,9 @@
                         <Label Text = "Count" x:Name="totalCount" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Medium" Grid.Row="1" Grid.Column="1" BackgroundColor="Transparent" TextColor="Black" FontAttributes="Bold"/>
                     </Frame>-->
 
-                    <Frame OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Row = "1" Grid.Column="3" CornerRadius="20">
+                    <!--<Frame OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Row = "1" Grid.Column="3" CornerRadius="20">
                         <Button x:Name="resetBttn"  ClassId="resetButton" Text = "Reset" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="1" Grid.Column="3" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black"  FontAttributes="Bold" Clicked="resetBttn_Clicked"/>
-                    </Frame>
+                    </Frame>-->
 
                     <!-- Segmented Progress Bar Grid -->
                     <!-- <Grid  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
@@ -104,6 +105,8 @@
                     <!-- End Progress Bar Grid 1-->
                 </Grid>
 
+                <BoxView HeightRequest="5" HorizontalOptions="Fill"/>
+
                     <Grid Margin="15,0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
@@ -115,8 +118,8 @@
                         </Grid.ColumnDefinitions>
 
                         <Label Text = "Meal Selections Left:        " VerticalOptions="Center" HorizontalOptions="Center" FontSize="Medium" BackgroundColor="Transparent" TextColor="Black" FontAttributes="Bold" HeightRequest="60" Grid.Column="0" Grid.Row="0"/>
-                        <Frame OutlineColor="DarkRed" Padding="0" BackgroundColor="Transparent" Grid.Column="1" Grid.Row="0" CornerRadius="20" Margin="20,0,20,0">
-                            <Label Text = "Count" x:Name="totalCount" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Medium" BackgroundColor="Transparent" TextColor="Black" FontAttributes="Bold" HeightRequest="60" Grid.Column="1" Grid.Row="0"/>
+                        <Frame OutlineColor="DarkRed" Padding="0" BackgroundColor="Transparent" Grid.Column="1" Grid.Row="0" CornerRadius="15" Margin="20,0,20,0">
+                            <Label Text = "Count" x:Name="totalCount" VerticalOptions="End" HorizontalOptions="Center" FontSize="Medium" BackgroundColor="Transparent" TextColor="Black" FontAttributes="Bold" HeightRequest="60" Grid.Column="1" Grid.Row="0"/>
                         </Frame>
                     </Grid>
                 

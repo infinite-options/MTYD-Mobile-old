@@ -36,7 +36,7 @@
                 <Frame x:Name="userFrame" BackgroundColor="#FFE5B4" CornerRadius="25">
                     
                    <Entry x:Name="loginUsername" FontAttributes="Bold"
-                   FontSize="16" Placeholder="USERNAME" Keyboard="Default"
+                   FontSize="16" Placeholder="USERNAME" Keyboard="Email"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4">
 
                    </Entry>

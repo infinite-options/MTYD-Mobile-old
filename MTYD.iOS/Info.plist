@@ -26,8 +26,6 @@
 	<string>MTYD</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.infiniteoptions.MTYD</string>
-	<key>CFBundleVersion</key>
-	<string>1.0</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
@@ -47,5 +45,9 @@
 			</array>
 		</dict>
 	</array>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>6</string>
 </dict>
 </plist>

@@ -18,6 +18,10 @@ namespace MTYD.ViewModel
     public partial class UserProfileExperiment : ContentPage
     {
         public ObservableCollection<Plans> userProfileInfo = new ObservableCollection<Plans>();
+        public ObservableCollection<PaymentInfo> NewPlan = new ObservableCollection<PaymentInfo>();
+        ArrayList itemsArray = new ArrayList();
+        ArrayList purchIdArray = new ArrayList();
+        ArrayList namesArray = new ArrayList();
 
         public UserProfileExperiment()
         {
@@ -28,6 +32,7 @@ namespace MTYD.ViewModel
             NavigationPage.SetHasNavigationBar(this, false);
             checkPlatform(height, width);
             fillEntries();
+            GetMealPlans();
         }
 
         public void checkPlatform(double height, double width)
@@ -48,10 +53,12 @@ namespace MTYD.ViewModel
                 menu.Margin = new Thickness(25, 0, 0, 30);
 
                 mealPlanGrid.Margin = new Thickness(width / 40, 10, width / 40, 5);
-                selectMealPlan.Margin = new Thickness(10, 0, 0, 0);
-                selectMealPlan.FontSize = width / 40;
-                selectMealPlan.HeightRequest = height / 45;
-                selectMealPlan.CornerRadius = (int) height / 90;
+                selectPlanFrame.Margin = new Thickness(10,0,0,0);
+                selectPlanFrame.Padding = new Thickness(15, 5);
+                selectPlanFrame.HeightRequest = height / 55;
+                planPicker.FontSize = width / 40;
+                //planPicker.VerticalOptions = LayoutOptions.Fill;
+                planPicker.HorizontalOptions = LayoutOptions.Fill;
                 changeMealPlan.Margin = new Thickness(10, 0, 0, 0);
                 changeMealPlan.FontSize = width / 40;
                 changeMealPlan.HeightRequest = height / 45;
@@ -79,6 +86,15 @@ namespace MTYD.ViewModel
                 CityEntry.FontSize = width / 43;
                 StateEntry.FontSize = width / 43;
 
+                pay.FontSize = width / 38;
+
+                card.FontSize = width / 55;
+                cardPic.WidthRequest = width / 10;
+                cardNum.FontSize = width / 70;
+
+                freq.FontSize = width / 55;
+                ticketPic.WidthRequest = width / 10;
+                ticketPic.HeightRequest = width / 10;
             }
             else //android
             {
@@ -166,6 +182,75 @@ namespace MTYD.ViewModel
                 PhoneEntry.Text = (info_obj["result"])[0]["delivery_phone_num"].ToString();
                 if (PhoneEntry.Text == "")
                     PhoneEntry.Placeholder = "Phone Number*";
+            }
+        }
+
+        private async void planChange(object sender, EventArgs e)
+        {
+            selectPlanFrame.BackgroundColor = Color.FromHex("#FF6505");
+            coverPickerBorder.BorderColor = Color.FromHex("#FF6505");
+            planPicker.TextColor = Color.White;
+            planPicker.BackgroundColor = Color.FromHex("#FF6505");
+        }
+
+        protected async Task GetMealPlans()
+        {
+            Console.WriteLine("ENTER GET MEAL PLANS FUNCTION");
+            var request = new HttpRequestMessage();
+            string userID = (string)Application.Current.Properties["user_id"];
+            Console.WriteLine("Inside GET MEAL PLANS: User ID:  " + userID);
+
+            request.RequestUri = new Uri("https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/customer_lplp?customer_uid=" + userID);
+            Console.WriteLine("GET MEALS PLAN ENDPOINT TRYING TO BE REACHED: " + "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/customer_lplp?customer_uid=" + userID);
+            request.Method = HttpMethod.Get;
+            var client = new HttpClient();
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                HttpContent content = response.Content;
+                var userString = await content.ReadAsStringAsync();
+                JObject mealPlan_obj = JObject.Parse(userString);
+                this.NewPlan.Clear();
+
+                Console.WriteLine("itemsArray contents:");
+
+                foreach (var m in mealPlan_obj["result"])
+                {
+                    Console.WriteLine("In first foreach loop of getmeal plans func:");
+
+                    itemsArray.Add((m["items"].ToString()));
+                    purchIdArray.Add((m["purchase_id"].ToString()));
+                }
+
+                // Console.WriteLine("itemsArray contents:" + itemsArray[0]);
+
+                for (int i = 0; i < itemsArray.Count; i++)
+                {
+                    JArray newobj = Newtonsoft.Json.JsonConvert.DeserializeObject<JArray>(itemsArray[i].ToString());
+
+                    Console.WriteLine("Inside forloop before foreach in GetmealsPlan func");
+
+                    foreach (JObject config in newobj)
+                    {
+                        Console.WriteLine("Inside foreach loop in GetmealsPlan func");
+                        //string qty = (string)config["qty"];
+                        string name = (string)config["name"];
+                        //string price = (string)config["price"];
+                        //string mealid = (string)config["item_uid"];
+
+                        namesArray.Add(name);
+                    }
+                }
+                Console.WriteLine("Outside foreach in GetmealsPlan func");
+                //Find unique number of meals
+                //firstIndex = namesArray[0].ToString();
+                //Console.WriteLine("namesArray contents:" + namesArray[0].ToString() + " " + namesArray[1].ToString() + " " + namesArray[2].ToString() + " ");
+                planPicker.ItemsSource = namesArray;
+                Console.WriteLine("namesArray contents:" + namesArray[0].ToString());
+                //SubscriptionPicker.Title = namesArray[0];
+
+                Console.WriteLine("END OF GET MEAL PLANS FUNCTION");
             }
         }
 

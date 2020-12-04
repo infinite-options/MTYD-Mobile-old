@@ -32,7 +32,7 @@
         <Label x:Name="spacer1" HeightRequest="5"/>
 
         <Grid x:Name="cards" HorizontalOptions="Center" VerticalOptions="Center"
-              Margin="20,0">
+              Margin="25,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="18*"/>
                         <ColumnDefinition Width="18*"/>
@@ -54,24 +54,15 @@
 
 
         <Grid x:Name="numbers" HorizontalOptions="Center" VerticalOptions="Center"
-              Margin="21,0">
+              Margin="25,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="18*"/>
-                        <ColumnDefinition Width="18*"/>
-                        <ColumnDefinition Width="18*"/>
-                        <ColumnDefinition Width="13*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="15*"/>
                     </Grid.RowDefinitions>
                     
-             <StackLayout Orientation="Horizontal" Padding="0" Grid.Column="0" Grid.Row="0"
-                         Spacing="0" Margin="5,-6,0,0">
-
-                <Label FontSize="9" Text="**************" FontAttributes="Bold"/>
-                <Label FontSize="14" Text="88" FontAttributes="Bold"/>
-
-            </StackLayout>
+                <Label x:Name="cardNum" Text="**************##" FontAttributes="Bold" HorizontalTextAlignment="Start"/>
 
          </Grid>
 
@@ -79,15 +70,16 @@
          <Label x:Name="spacer2" HeightRequest="15"/>
 
         <Label Text="DELIVERY ADDRESS" HorizontalOptions="Start" FontSize="22"
-                       Margin="20,0,0,0" FontAttributes="Bold"/>
+                       Margin="25,0,0,0" FontAttributes="Bold"/>
 
         <Label x:Name="spacer3" HeightRequest="5"/>
 
-        <Label Text="First Name Last Name" HorizontalOptions="Start" FontSize="20"
-                       Margin="20,0,0,0" FontAttributes="Bold"/>
+        <Label x:Name="name" Text="First Name Last Name" HorizontalOptions="Start" FontSize="20"
+                       Margin="25,0,0,0" FontAttributes="Bold"/>
 
-        <Label Text="1234 Apple St. &#10; San Jose, CA &#10; 95133" HorizontalOptions="Start" FontSize="17"
-                       Margin="20,0,0,0" TextColor="#585858"/>
+        <Label x:Name="apt" HorizontalOptions="Start" FontSize="17" Margin="25,0,0,0" TextColor="#585858"/>
+        <Label x:Name="street" Margin="25,0,0,0" HorizontalOptions="Start" FontSize="17" TextColor="#585858"/>
+        <Label x:Name="cityStateZip" Margin="25,0,0,0" HorizontalOptions="Start" FontSize="17" TextColor="#585858"/>
 
 
         <Label x:Name="spacer4" HeightRequest="15"/>
