@@ -1,18 +1,24 @@
-﻿<Properties StartupConfiguration="{FAB6B3BB-6B8C-41F3-9565-69D18FC959BC}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/Model/Login/LoginClasses/Apple/LoginViewModel.cs">
+﻿<Properties StartupConfiguration="{FAB6B3BB-6B8C-41F3-9565-69D18FC959BC}|Default" HasHotReloadOverlayBeenDismissed="True">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/ViewModel/VerifyInfo.xaml">
     <Files>
-      <File FileName="MTYD/Model/Login/LoginClasses/Apple/LoginViewModel.cs" Line="162" Column="33" />
-      <File FileName="MTYD/ViewModel/MealPlans.xaml.cs" />
-      <File FileName="MTYD.iOS/Info.plist" />
-      <File FileName="MTYD/ViewModel/UserProfile.xaml.cs" />
+      <File FileName="MTYD/ViewModel/DeliveryBilling.xaml" Line="210" Column="70" />
+      <File FileName="MTYD/ViewModel/DeliveryBilling.xaml.cs" />
+      <File FileName="MTYD.iOS/Main.cs" />
+      <File FileName="MTYD/ViewModel/VerifyInfo.xaml.cs" />
+      <File FileName="MTYD/ViewModel/VerifyInfoDirectLogin.xaml.cs" />
+      <File FileName="MTYD/ViewModel/VerifyInfo.xaml" Line="118" Column="50" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="MTYD" expanded="True">
             <Node name="MTYD" expanded="True">
-              <Node name="Model" expanded="True" />
+              <Node name="ViewModel" expanded="True">
+                <Node name="VerifyInfo.xaml" expanded="True" selected="True" />
+                <Node name="VerifyInfoDirectLogin.xaml" expanded="True" />
+              </Node>
             </Node>
+            <Node name="MTYD.iOS" expanded="True" />
           </Node>
         </State>
       </Pad>

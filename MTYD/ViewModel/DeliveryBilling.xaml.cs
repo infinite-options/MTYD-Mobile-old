@@ -63,13 +63,16 @@ namespace MTYD.ViewModel
             newPayment.amount_due = Preferences.Get("price", "00.00");
             newPayment.amount_discount = "00.00";
             newPayment.amount_paid = Preferences.Get("price", "00.00");
-            newPayment.cc_num = CCEntry.Text;
+            // newPayment.cc_num = CCEntry.Text;
+            newPayment.cc_num = "";
             //newPayment.cc_exp_year = YearPicker.Items[YearPicker.SelectedIndex];
             newPayment.cc_exp_year = "2022";
             //newPayment.cc_exp_month = MonthPicker.Items[MonthPicker.SelectedIndex];
             newPayment.cc_exp_month = "11";
-            newPayment.cc_cvv = CVVEntry.Text;
-            newPayment.cc_zip = ZipCCEntry.Text;
+            // newPayment.cc_cvv = CVVEntry.Text;
+            newPayment.cc_cvv = "";
+            // newPayment.cc_zip = ZipCCEntry.Text;
+            newPayment.cc_zip = "";
 
             //itemsList.Add("1"); //{ "1", "5 Meal Plan", "59.99" };
             var newPaymentJSONString = JsonConvert.SerializeObject(newPayment);
@@ -398,11 +401,13 @@ namespace MTYD.ViewModel
             //if (string.IsNullOrEmpty(passwordSalt)){  //If social login (salt is NULL)
             if (platform != "DIRECT")
             {
-                Navigation.PushAsync(new VerifyInfo(AptEntry.Text, FNameEntry.Text, LNameEntry.Text, emailEntry.Text, PhoneEntry.Text, AddressEntry.Text, CityEntry.Text, StateEntry.Text, ZipEntry.Text, DeliveryEntry.Text, CCEntry.Text, CVVEntry.Text, ZipCCEntry.Text, salt));
+                // Navigation.PushAsync(new VerifyInfo(AptEntry.Text, FNameEntry.Text, LNameEntry.Text, emailEntry.Text, PhoneEntry.Text, AddressEntry.Text, CityEntry.Text, StateEntry.Text, ZipEntry.Text, DeliveryEntry.Text, CCEntry.Text, CVVEntry.Text, ZipCCEntry.Text, salt));
+                Navigation.PushAsync(new VerifyInfo(AptEntry.Text, FNameEntry.Text, LNameEntry.Text, emailEntry.Text, PhoneEntry.Text, AddressEntry.Text, CityEntry.Text, StateEntry.Text, ZipEntry.Text, DeliveryEntry.Text, "", "", "", salt));
             }
             else //If direct login (salt != NULL)
             {
-                Navigation.PushAsync(new VerifyInfoDirectLogin(AptEntry.Text, FNameEntry.Text, LNameEntry.Text, emailEntry.Text, PhoneEntry.Text, AddressEntry.Text, CityEntry.Text, StateEntry.Text, ZipEntry.Text, DeliveryEntry.Text, CCEntry.Text, CVVEntry.Text, ZipCCEntry.Text, salt));
+                // Navigation.PushAsync(new VerifyInfoDirectLogin(AptEntry.Text, FNameEntry.Text, LNameEntry.Text, emailEntry.Text, PhoneEntry.Text, AddressEntry.Text, CityEntry.Text, StateEntry.Text, ZipEntry.Text, DeliveryEntry.Text, CCEntry.Text, CVVEntry.Text, ZipCCEntry.Text, salt));
+                Navigation.PushAsync(new VerifyInfoDirectLogin(AptEntry.Text, FNameEntry.Text, LNameEntry.Text, emailEntry.Text, PhoneEntry.Text, AddressEntry.Text, CityEntry.Text, StateEntry.Text, ZipEntry.Text, DeliveryEntry.Text, "", "", "", salt));
             }
             //MainPage = PaymentPage();
         }
@@ -479,35 +484,35 @@ namespace MTYD.ViewModel
                 return;
             }
 
-            if (CCEntry.Text == null || CCEntry.Text == "")
-            {
-                DisplayAlert("Warning!", "credit card number required", "okay");
-                return;
-            }
+            //if (CCEntry.Text == null || CCEntry.Text == "")
+            //{
+            //    DisplayAlert("Warning!", "credit card number required", "okay");
+            //    return;
+            //}
 
-            if (CVVEntry.Text == null || CVVEntry.Text == "")
-            {
-                DisplayAlert("Warning!", "CVV required", "okay");
-                return;
-            }
+            //if (CVVEntry.Text == null || CVVEntry.Text == "")
+            //{
+            //    DisplayAlert("Warning!", "CVV required", "okay");
+            //    return;
+            //}
 
-            if (ZipCCEntry.Text == null || ZipCCEntry.Text == "")
-            {
-                DisplayAlert("Warning!", "credit card zip code required", "okay");
-                return;
-            }
+            //if (ZipCCEntry.Text == null || ZipCCEntry.Text == "")
+            //{
+            //    DisplayAlert("Warning!", "credit card zip code required", "okay");
+            //    return;
+            //}
 
-            if (MonthPicker.SelectedIndex == -1)
-            {
-                DisplayAlert("Warning!", "select a month", "okay");
-                return;
-            }
+            //if (MonthPicker.SelectedIndex == -1)
+            //{
+            //    DisplayAlert("Warning!", "select a month", "okay");
+            //    return;
+            //}
 
-            if (YearPicker.SelectedIndex == -1)
-            {
-                DisplayAlert("Warning!", "select a year", "okay");
-                return;
-            }
+            //if (YearPicker.SelectedIndex == -1)
+            //{
+            //    DisplayAlert("Warning!", "select a year", "okay");
+            //    return;
+            //}
 
             clickedDone(sender, e);
         }

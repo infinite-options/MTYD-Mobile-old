@@ -175,7 +175,7 @@
                    <Frame x:Name="phoneNum" Padding="10,5" Margin="1,0.5,20,0.5" BackgroundColor="#FFE5B4"
                           Grid.Row="0" Grid.Column="1" HasShadow="False">
 
-                        <Entry x:Name="PhoneEntry" Keyboard="Numeric" FontAttributes="Bold"
+                        <Entry x:Name="PhoneEntry" MaxLength="10" Keyboard="Numeric" FontAttributes="Bold"
                    FontSize="17" 
                     WidthRequest="12"
                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
@@ -197,7 +197,7 @@
                           Grid.Row="0" Grid.Column="0" HasShadow="False" >
 
                         <Editor x:Name="DeliveryEntry" Keyboard="Text" FontAttributes="Bold"
-                   FontSize="17" TextColor="White" PlaceholderColor="#B4B4B4"
+                   FontSize="17" TextColor="Black" PlaceholderColor="#B4B4B4"
                    HeightRequest="100" WidthRequest="24" Margin="0,2,0,0"
                    BackgroundColor="#FFE5B4"  />
 
@@ -207,134 +207,120 @@
 
 
                 <Label x:Name="spacer2" HeightRequest="5"/>
+                <Frame HasShadow="False" Padding="0" HeightRequest="0">
+                    <StackLayout>
+                        <Label Text="BILLING INFORMATION" HorizontalOptions="Start" FontSize="22"
+                               Margin="25,0,0,0" FontAttributes="Bold"/>
+                        <Label x:Name="spacer3" HeightRequest="3"/>
+                        <Grid x:Name="credit" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="16*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-                <Label Text="BILLING INFORMATION" HorizontalOptions="Start" FontSize="22"
-                       Margin="25,0,0,0" FontAttributes="Bold"/>
+                            <Frame x:Name="creditCard" Padding="10,5" Margin="20,0.5" BackgroundColor="#FFE5B4"
+                                    Grid.Row="0" Grid.Column="0" HasShadow="False">
 
-                <Label x:Name="spacer3" HeightRequest="3"/>
+                                <Entry x:Name="CCEntry" Keyboard="Numeric" MaxLength="16" FontAttributes="Bold"
+                            FontSize="17" 
+                            WidthRequest="24"
+                            BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
 
+                            </Frame>
+                        </Grid>
+                        <Grid x:Name="cvvZip" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="16*"/>
+                                <ColumnDefinition Width="18*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-                <Grid x:Name="credit" HorizontalOptions="Center" VerticalOptions="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="16*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+                            <Frame x:Name="cvv" Padding="10,5" Margin="20,0.5,1,0.5" BackgroundColor="#FFE5B4"
+                                    Grid.Row="0" Grid.Column="0" HasShadow="False">
 
-                   <Frame x:Name="creditCard" Padding="10,5" Margin="20,0.5" BackgroundColor="#FFE5B4"
-                          Grid.Row="0" Grid.Column="0" HasShadow="False">
+                                <Entry x:Name="CVVEntry" Keyboard="Numeric" FontAttributes="Bold"
+                                    FontSize="17" 
+                                    WidthRequest="12"
+                                    BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
+                            </Frame>
 
-                        <Entry x:Name="CCEntry" Keyboard="Numeric" FontAttributes="Bold"
-                   FontSize="17" 
-                   WidthRequest="24"
-                   BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
+                            <Frame x:Name="zipCode2" Padding="10,5" Margin="1,0.5,20,0.5" BackgroundColor="#FFE5B4"
+                                    Grid.Row="0" Grid.Column="1" HasShadow="False">
 
-                   </Frame>
+                                <Entry x:Name="ZipCCEntry" Keyboard="Numeric" FontAttributes="Bold"
+                                FontSize="17" 
+                                WidthRequest="12"
+                                BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
+                            </Frame>
+                        </Grid>
+                        <Grid x:Name="monthYear" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="18*"/>
+                                <ColumnDefinition Width="16*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-                </Grid>
+                            <Frame x:Name="month" Padding="10,5" Margin="20,0.5,1,0.5" BackgroundColor="#FFE5B4"
+                                    Grid.Row="0" Grid.Column="0" HasShadow="False">
 
+                                <Frame HasShadow="False" Padding="0" BorderColor="#FFE5B4">
+                                    <Picker x:Name="MonthPicker"  FontSize="17" FontAttributes="Bold" Title="Select Month*"
+                                    BackgroundColor="#FFE5B4" TextColor="Black">
+                                    <Picker.ItemsSource>
+                                        <x:Array Type="{x:Type x:String}">
+                                        <x:String>01-January</x:String>
+                                        <x:String>02-February</x:String>
+                                        <x:String>03-March</x:String>
+                                        <x:String>04-April</x:String>
+                                        <x:String>05-May</x:String>
+                                        <x:String>06-June</x:String>
+                                        <x:String>07-July</x:String>
+                                        <x:String>08-August</x:String>
+                                        <x:String>09-September</x:String>
+                                        <x:String>10-October</x:String>
+                                        <x:String>11-November</x:String>
+                                        <x:String>12-December</x:String>
+                                        </x:Array>
+                                    </Picker.ItemsSource>
 
-                <Grid x:Name="cvvZip" HorizontalOptions="Center" VerticalOptions="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="16*"/>
-                        <ColumnDefinition Width="18*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+                                    </Picker>
+                                </Frame>
+                            </Frame>
 
-                   <Frame x:Name="cvv" Padding="10,5" Margin="20,0.5,1,0.5" BackgroundColor="#FFE5B4"
-                          Grid.Row="0" Grid.Column="0" HasShadow="False">
+                           <Frame x:Name="year" Padding="10,5" Margin="1,0.5,20,0.5" BackgroundColor="#FFE5B4"
+                                  Grid.Row="0" Grid.Column="1" HasShadow="False">
 
-                        <Entry x:Name="CVVEntry" Keyboard="Numeric" FontAttributes="Bold"
-                   FontSize="17" 
-                    WidthRequest="12"
-                   BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
-
-                   </Frame>
-
-                   <Frame x:Name="zipCode2" Padding="10,5" Margin="1,0.5,20,0.5" BackgroundColor="#FFE5B4"
-                          Grid.Row="0" Grid.Column="1" HasShadow="False">
-
-                        <Entry x:Name="ZipCCEntry" Keyboard="Numeric" FontAttributes="Bold"
-                   FontSize="17" 
-                    WidthRequest="12"
-                   BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4"/>
-
-                   </Frame>
-
-                </Grid>
-
-
-                <Grid x:Name="monthYear" HorizontalOptions="Center" VerticalOptions="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="18*"/>
-                        <ColumnDefinition Width="16*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                   <Frame x:Name="month" Padding="10,5" Margin="20,0.5,1,0.5" BackgroundColor="#FFE5B4"
-                          Grid.Row="0" Grid.Column="0" HasShadow="False">
-
-                    <Frame HasShadow="False" Padding="0" BorderColor="#FFE5B4">
-                            <Picker x:Name="MonthPicker"  FontSize="17" FontAttributes="Bold" Title="Select Month*"
-                           BackgroundColor="#FFE5B4" TextColor="White">
-                           <Picker.ItemsSource>
-                                <x:Array Type="{x:Type x:String}">
-                                <x:String>01-January</x:String>
-                                <x:String>02-February</x:String>
-                                <x:String>03-March</x:String>
-                                <x:String>04-April</x:String>
-                                <x:String>05-May</x:String>
-                                <x:String>06-June</x:String>
-                                <x:String>07-July</x:String>
-                                <x:String>08-August</x:String>
-                                <x:String>09-September</x:String>
-                                <x:String>10-October</x:String>
-                                <x:String>11-November</x:String>
-                                <x:String>12-December</x:String>
-                                </x:Array>
-                            </Picker.ItemsSource>
-
-                   </Picker>
-                    </Frame>
-
-                   </Frame>
-
-                   <Frame x:Name="year" Padding="10,5" Margin="1,0.5,20,0.5" BackgroundColor="#FFE5B4"
-                          Grid.Row="0" Grid.Column="1" HasShadow="False">
-
-                    <Frame HasShadow="False" Padding="0" BorderColor="#FFE5B4">
-                   <Picker x:Name="YearPicker" FontSize="17" FontAttributes="Bold" Title="Select Year*"
-                           BackgroundColor="#FFE5B4" TextColor="White"> 
-                           <Picker.ItemsSource>
-                                <x:Array Type="{x:Type x:String}">
-                                <x:String>2020</x:String> <x:String>2021</x:String>
-                                <x:String>2022</x:String> <x:String>2023</x:String>
-                                <x:String>2024</x:String> <x:String>2025</x:String>
-                                <x:String>2026</x:String> <x:String>2027</x:String>
-                                <x:String>2028</x:String> <x:String>2029</x:String>
-                                <x:String>2030</x:String> <x:String>2031</x:String>
-                                <x:String>2032</x:String> <x:String>2033</x:String>
-                                <x:String>2034</x:String> <x:String>2035</x:String>
-                                <x:String>2036</x:String> <x:String>2037</x:String>
-                                <x:String>2038</x:String> <x:String>2039</x:String>
-                                <x:String>2040</x:String> <x:String>2041</x:String>
-                                <x:String>2042</x:String> <x:String>2043</x:String>
-                                </x:Array>
-                            </Picker.ItemsSource>
-
-                   </Picker>
-                    </Frame>
-
-                   </Frame>
-
-                </Grid>
-
-
+                                <Frame HasShadow="False" Padding="0" BorderColor="#FFE5B4">
+                                    <Picker x:Name="YearPicker" FontSize="17" FontAttributes="Bold" Title="Select Year*"
+                                            BackgroundColor="#FFE5B4" TextColor="Black"> 
+                                        <Picker.ItemsSource>
+                                            <x:Array Type="{x:Type x:String}">
+                                            <x:String>2020</x:String> <x:String>2021</x:String>
+                                            <x:String>2022</x:String> <x:String>2023</x:String>
+                                            <x:String>2024</x:String> <x:String>2025</x:String>
+                                            <x:String>2026</x:String> <x:String>2027</x:String>
+                                            <x:String>2028</x:String> <x:String>2029</x:String>
+                                            <x:String>2030</x:String> <x:String>2031</x:String>
+                                            <x:String>2032</x:String> <x:String>2033</x:String>
+                                            <x:String>2034</x:String> <x:String>2035</x:String>
+                                            <x:String>2036</x:String> <x:String>2037</x:String>
+                                            <x:String>2038</x:String> <x:String>2039</x:String>
+                                            <x:String>2040</x:String> <x:String>2041</x:String>
+                                            <x:String>2042</x:String> <x:String>2043</x:String>
+                                            </x:Array>
+                                        </Picker.ItemsSource>
+                                    </Picker>
+                                </Frame>
+                           </Frame>
+                        </Grid>
+                    </StackLayout>
+                </Frame>
 
 
                 <!--<Grid x:Name="ButtonStack1"

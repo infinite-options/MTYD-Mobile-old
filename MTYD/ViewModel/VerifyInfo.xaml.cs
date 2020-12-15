@@ -37,7 +37,7 @@ namespace MTYD.ViewModel
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
 
-            cardNum.Text = "**************" + CCEntry1.Substring(CCEntry1.Length - 2);
+            //cardNum.Text = "**************" + CCEntry1.Substring(CCEntry1.Length - 2);
             name.Text = FNameEntry1 + " " + LNameEntry1;
             if (AptEntry1 == "NULL" || AptEntry1 == "")
             {
