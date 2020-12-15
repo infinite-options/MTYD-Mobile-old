@@ -1,16 +1,19 @@
 ﻿<Properties StartupConfiguration="{FAB6B3BB-6B8C-41F3-9565-69D18FC959BC}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/Constants/Constant.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/Model/Login/LoginClasses/Apple/LoginViewModel.cs">
     <Files>
       <File FileName="MTYD/Model/Login/LoginClasses/Apple/LoginViewModel.cs" Line="162" Column="33" />
       <File FileName="MTYD/ViewModel/MealPlans.xaml.cs" />
       <File FileName="MTYD.iOS/Info.plist" />
-      <File FileName="MTYD/ViewModel/UserProfile.xaml.cs" Line="229" Column="1" />
-      <File FileName="MTYD/Constants/Constant.cs" Line="1" Column="1" />
+      <File FileName="MTYD/ViewModel/UserProfile.xaml.cs" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="MTYD" expanded="True" />
+          <Node name="MTYD" expanded="True">
+            <Node name="MTYD" expanded="True">
+              <Node name="Model" expanded="True" />
+            </Node>
+          </Node>
         </State>
       </Pad>
     </Pads>
