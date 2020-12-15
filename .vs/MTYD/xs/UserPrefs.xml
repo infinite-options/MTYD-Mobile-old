@@ -1,55 +1,25 @@
 ﻿<Properties StartupConfiguration="{FAB6B3BB-6B8C-41F3-9565-69D18FC959BC}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/ViewModel/UserProfile.xaml.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/Constants/Constant.cs">
     <Files>
       <File FileName="MTYD/Model/Login/LoginClasses/Apple/LoginViewModel.cs" Line="162" Column="33" />
-      <File FileName="MTYD/ViewModel/MealPlans.xaml.cs" Line="356" Column="18" />
+      <File FileName="MTYD/ViewModel/MealPlans.xaml.cs" />
       <File FileName="MTYD.iOS/Info.plist" />
-      <File FileName="MTYD/ViewModel/UserProfile.xaml.cs" Line="215" Column="125" />
+      <File FileName="MTYD/ViewModel/UserProfile.xaml.cs" Line="229" Column="1" />
+      <File FileName="MTYD/Constants/Constant.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="MTYD" expanded="True">
-            <Node name="MTYD" expanded="True">
-              <Node name="Model" expanded="True">
-                <Node name="Login" expanded="True">
-                  <Node name="Constants" expanded="True" />
-                  <Node name="LoginClasses" expanded="True">
-                    <Node name="Apple" expanded="True" />
-                  </Node>
-                </Node>
-              </Node>
-              <Node name="ViewModel" expanded="True">
-                <Node name="DeliveryBilling.xaml" expanded="True" />
-                <Node name="MealPlans.xaml" expanded="True" />
-                <Node name="Select.xaml" expanded="True" />
-                <Node name="SubscriptionModal.xaml" expanded="True" />
-                <Node name="SubscriptionPage.xaml" expanded="True" />
-                <Node name="UserProfile.xaml" expanded="True">
-                  <Node name="UserProfile.xaml.cs" selected="True" />
-                </Node>
-                <Node name="VerifyInfo.xaml" expanded="True" />
-              </Node>
-              <Node name="MainPage.xaml" expanded="True" />
-            </Node>
-            <Node name="MTYD.Android" expanded="True">
-              <Node name="Resources" expanded="True">
-                <Node name="drawable" expanded="True" />
-              </Node>
-            </Node>
-            <Node name="MTYD.iOS" expanded="True">
-              <Node name="Resources" expanded="True" />
-            </Node>
-          </Node>
+          <Node name="MTYD" expanded="True" />
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.ItemProperties.MTYD.iOS automaticSigning="True" TriggeredFromHotReload="False" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget">
+  <MonoDevelop.Ide.ItemProperties.MTYD.iOS automaticSigning="True" TriggeredFromHotReload="False" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.019B429B-12F9-4AD7-B1DD-7323300F13F1">
     <MonoDevelop.MacDev.AppleDevelopmentTeam DeveloperId="N87M66JNVY" TeamId="8V66NC2T37" />
   </MonoDevelop.Ide.ItemProperties.MTYD.iOS>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|iPhone" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.ItemProperties.MTYD.Android PreferredExecutionTarget="Android.pixel_3" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
