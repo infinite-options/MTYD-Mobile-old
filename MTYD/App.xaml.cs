@@ -2,7 +2,7 @@
 using Xamarin.Forms;
 using Xamarin.Essentials;
 using MTYD.Model.Login.LoginClasses.Apple;
-using MTYD.Model.Login.Constants;
+using MTYD.Constants;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using Xamarin.Forms.Xaml;

@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Xml.Linq;
-using MTYD.Model.Login.Constants;
+using MTYD.Constants;
 using MTYD.Model.Login.LoginClasses;
 using MTYD.ViewModel;
 using Newtonsoft.Json;

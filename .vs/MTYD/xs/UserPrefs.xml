@@ -1,30 +1,26 @@
 ﻿<Properties StartupConfiguration="{FAB6B3BB-6B8C-41F3-9565-69D18FC959BC}|Default" HasHotReloadOverlayBeenDismissed="True">
   <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/ViewModel/VerifyInfo.xaml">
     <Files>
-      <File FileName="MTYD/ViewModel/DeliveryBilling.xaml" Line="210" Column="70" />
-      <File FileName="MTYD/ViewModel/DeliveryBilling.xaml.cs" />
-      <File FileName="MTYD.iOS/Main.cs" />
-      <File FileName="MTYD/ViewModel/VerifyInfo.xaml.cs" />
-      <File FileName="MTYD/ViewModel/VerifyInfoDirectLogin.xaml.cs" />
-      <File FileName="MTYD/ViewModel/VerifyInfo.xaml" Line="118" Column="50" />
+      <File FileName="MTYD/ViewModel/VerifyInfo.xaml.cs" Line="213" Column="41" />
+      <File FileName="MTYD.iOS/Main.cs" Line="21" Column="1" />
+      <File FileName="MTYD/ViewModel/VerifyInfo.xaml" Line="132" Column="61" />
+      <File FileName="MTYD/ViewModel/DeliveryBilling.xaml.cs" Line="407" Column="1" />
+      <File FileName="MTYD/ViewModel/DeliveryBilling.xaml" Line="48" Column="2" />
+      <File FileName="MTYD/CustomEntry.cs" Line="1" Column="1" />
+      <File FileName="MTYD/CustomEditor.cs" Line="13" Column="1" />
+      <File FileName="MTYD.iOS/CustomEntryRenderer.cs" Line="1" Column="1" />
+      <File FileName="MTYD.iOS/CustomEditorRenderer.cs" Line="1" Column="1" />
+      <File FileName="MTYD.iOS/AppDelegate.cs" Line="30" Column="40" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="MTYD" expanded="True">
-            <Node name="MTYD" expanded="True">
-              <Node name="ViewModel" expanded="True">
-                <Node name="VerifyInfo.xaml" expanded="True" selected="True" />
-                <Node name="VerifyInfoDirectLogin.xaml" expanded="True" />
-              </Node>
-            </Node>
-            <Node name="MTYD.iOS" expanded="True" />
-          </Node>
+          <Node name="MTYD" expanded="True" />
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.ItemProperties.MTYD.iOS automaticSigning="True" TriggeredFromHotReload="False" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.019B429B-12F9-4AD7-B1DD-7323300F13F1">
+  <MonoDevelop.Ide.ItemProperties.MTYD.iOS automaticSigning="True" TriggeredFromHotReload="False" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.3FAE291C-5CE8-428A-A62F-4006A88DC907">
     <MonoDevelop.MacDev.AppleDevelopmentTeam DeveloperId="N87M66JNVY" TeamId="8V66NC2T37" />
   </MonoDevelop.Ide.ItemProperties.MTYD.iOS>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

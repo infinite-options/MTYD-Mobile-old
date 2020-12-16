@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using MTYD.Model.Login.Constants;
+using MTYD.Constants;
 using MTYD.ViewModel;
 using Newtonsoft.Json;
 using Xamarin.Essentials;

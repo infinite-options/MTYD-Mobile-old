@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using MTYD.Model.Login.LoginClasses.Apple;
 using MTYD.Model.Login.LoginClasses;
-using MTYD.Model.Login.Constants;
+using MTYD.Constants;
 using MTYD.LogInClasses;
 using Newtonsoft.Json.Linq;
 using MTYD.Model;

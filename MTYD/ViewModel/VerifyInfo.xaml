@@ -99,18 +99,108 @@
 
                 <Grid Grid.Row="0" Grid.Column="0">
                      <StackLayout>
-                        <Button Text="PayPal" TextColor="Orange" FontSize="50" ></Button>
+                        <Button Text="PayPal" TextColor="Orange" FontSize="50" Clicked="CheckouWithPayPayl"></Button>
                         <Label HorizontalTextAlignment="Center" Text="Checkout with PayPal" FontSize="Small" FontAttributes="Bold"></Label>
                     </StackLayout>
                 </Grid>
                 <Grid Grid.Row="0" Grid.Column="1">
                     <StackLayout>
-                        <Button Text="Stripe" TextColor="Orange" FontSize="50" ></Button>
+                        <Button Text="Stripe" TextColor="Orange" FontSize="50" Clicked="CheckouWithStripe"></Button>
                         <Label HorizontalTextAlignment="Center" Text="Checkout with Stripe" FontSize="Small" FontAttributes="Bold"></Label>
                     </StackLayout>
                 </Grid>
                 
             </Grid>
+            <Frame HasShadow="False" x:Name="PaymentScreen" HeightRequest="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition x:Name="PayPalScreen" Height="0"></RowDefinition>
+                        <RowDefinition x:Name="StripeScreen" Height="0"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackLayout Grid.Row="0">
+                        <!--"#008cdd" -->
+                        <Frame BackgroundColor="Orange" HasShadow="False" >
+                            
+                            <StackLayout VerticalOptions="Center">
+                                 <Label  Text="... stripe ..." HorizontalOptions="Center" FontSize="50" FontAttributes="Italic"/>
+                                 <Label  Text="STRIPE DIRECT PAYMENT" HorizontalOptions="Center" FontSize="22" FontAttributes="Bold"/>
+                            </StackLayout>
+                        </Frame>
+
+                         <!--<Ellipse Stroke="Red"
+                                         StrokeThickness="4"
+                                         WidthRequest="150"
+                                         HeightRequest="150"
+                                         HorizontalOptions="Start"></Ellipse>-->
+                        <BoxView HeightRequest="20"></BoxView>
+                        <Label  Text="BILLING INFORMATION" HorizontalOptions="Start" FontSize="22"
+                                FontAttributes="Bold"/>
+                        <BoxView HeightRequest="20"></BoxView>
+                        <Frame  Padding="10,5" Margin="0,0.5,1,0.5" BackgroundColor="#FFE5B4" HasShadow="False" CornerRadius="24">
+                            <Entry Placeholder="Email Address" x:Name="cardHolderEmail" FontAttributes="Bold" FontSize="17" BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4" HeightRequest="35"></Entry>
+                        </Frame>
+                        <Frame  Padding="10,5" Margin="0,0.5,1,0.5" BackgroundColor="#FFE5B4" HasShadow="False" CornerRadius="24">
+                             <Entry Placeholder="Cardholder Name" x:Name="cardHolderName" FontAttributes="Bold" FontSize="17"  BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4" HeightRequest="35"></Entry>
+                        </Frame>
+
+                        <Frame  Padding="10,5" Margin="0,0.5,1,0.5" BackgroundColor="#FFE5B4" HasShadow="False" CornerRadius="24">
+                             <Entry Placeholder="Card Number" x:Name="cardHolderNumber" MaxLength="16" FontAttributes="Bold" FontSize="17"  BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4" HeightRequest="35"></Entry>
+                        </Frame>
+                        <Grid >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Frame Grid.Row="0" Grid.Column="0" Padding="10,5" Margin="0,0.5,1,0.5" BackgroundColor="#FFE5B4" HasShadow="False" CornerRadius="24">
+                                <Entry Placeholder="Exp MM" x:Name="cardExpMonth" MaxLength="2" FontAttributes="Bold" FontSize="17"  BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4" HeightRequest="35"></Entry>
+                            </Frame>
+                            <Frame Grid.Row="0" Grid.Column="1" Padding="10,5" Margin="0,0.5,1,0.5" BackgroundColor="#FFE5B4" HasShadow="False" CornerRadius="24">
+                                <Entry Placeholder="Exp YY" x:Name="cardExpYear" MaxLength="2" FontAttributes="Bold" FontSize="17"  BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4" HeightRequest="35"></Entry>
+                            </Frame>
+                            <Frame Grid.Row="0" Grid.Column="2" Padding="10,5" Margin="0,0.5,1,0.5" BackgroundColor="#FFE5B4" HasShadow="False" CornerRadius="24">
+                                <Entry Placeholder="CVV" x:Name="cardCVV" MaxLength="3" FontAttributes="Bold" FontSize="17"  BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4" HeightRequest="35"></Entry>
+                            </Frame>
+
+                        </Grid>
+                        <Frame  Padding="10,5" Margin="0,0.5,1,0.5" BackgroundColor="#FFE5B4" HasShadow="False" CornerRadius="24">
+                            <Entry Placeholder="Address" x:Name="cardHolderAddress" FontAttributes="Bold" FontSize="17"  BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4" HeightRequest="35"></Entry>
+                        </Frame>
+                        <Frame  Padding="10,5" Margin="0,0.5,1,0.5" BackgroundColor="#FFE5B4" HasShadow="False" CornerRadius="24">
+                            <Entry Placeholder="Unit" x:Name="cardHolderUnit" FontAttributes="Bold" FontSize="17"  BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4" HeightRequest="35"></Entry>
+                        </Frame>
+                                     
+                        <Grid >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Frame  Grid.Row="0" Grid.Column="0" Padding="10,5" Margin="0,0.5,1,0.5" BackgroundColor="#FFE5B4" HasShadow="False" CornerRadius="24">
+                                <Entry Placeholder="City" x:Name="cardCity" FontAttributes="Bold" FontSize="17"  BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4" HeightRequest="35" ></Entry>
+                            </Frame>
+                            <Frame Grid.Row="0" Grid.Column="1" Padding="10,5" Margin="0,0.5,1,0.5" BackgroundColor="#FFE5B4" HasShadow="False" CornerRadius="24">
+                                <Entry Placeholder="State" x:Name="cardState" FontAttributes="Bold" FontSize="17"  BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4" HeightRequest="35" ></Entry>
+                            </Frame>
+                            <Frame Grid.Row="0" Grid.Column="2" Padding="10,5" Margin="0,0.5,1,0.5" BackgroundColor="#FFE5B4" HasShadow="False" CornerRadius="24">
+                                <Entry Placeholder="Zip" x:Name="cardZip" FontAttributes="Bold" FontSize="17"  BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4" HeightRequest="35" ></Entry>
+                            </Frame>
+                        </Grid>
+                        <Frame Padding="10,5" Margin="0,0.5,1,0.5" BackgroundColor="#FFE5B4" HasShadow="False" CornerRadius="24">
+                            <Entry Placeholder="Purchase Description" x:Name="cardDescription" FontAttributes="Bold" FontSize="17"  BackgroundColor="#FFE5B4" PlaceholderColor="#B4B4B4" HeightRequest="35"></Entry>
+                        </Frame>
+                        
+                        <Button Text="Complete Payment (Stripe)" Clicked="PayViaStripe" BackgroundColor="Orange" ></Button>
+                        <Button Text="Cancel (Stripe)" Clicked="CancelViaStripe"></Button>
+                    </StackLayout>
+
+                    <StackLayout Grid.Row="1">
+                        <WebView x:Name="Browser"></WebView>
+                    </StackLayout>
+
+                </Grid>
+            </Frame>
 
             <Grid HorizontalOptions="Center" VerticalOptions="Center">
 
