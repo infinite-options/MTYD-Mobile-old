@@ -16,35 +16,55 @@
                     <ImageButton x:Name="menu" Source="menu2.png" VerticalOptions="End" HorizontalOptions="Start" BackgroundColor="Transparent" Clicked="clickedMenu"/>
 
                 </Grid>
+                <!--CARLOS UI REARRANGING -->
+                <Grid HeightRequest="60" Margin="5,0,5,0">
 
-                <Frame x:Name="selectPlanFrame" BorderColor="#FF6505" CornerRadius="23" HasShadow="False">
-                    <Frame BorderColor="White" BackgroundColor="Transparent" Padding="0" HasShadow="False">
-                    <Grid>
+                    <Frame Grid.Row="0" Grid.Column="0" x:Name="selectPlanFrame"  BorderColor="#FF6505" CornerRadius="23" HasShadow="False" >
+                        <Frame BorderColor="White" BackgroundColor="Transparent" Padding="0" HasShadow="False">
+                            <Grid ColumnSpacing="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
 
-                      <Picker x:Name="SubscriptionPicker" SelectedIndexChanged="planChange" Title="SELECT MEAL PLAN" Margin="0"
-                              HorizontalOptions="Fill" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="Black" TitleColor="Black"></Picker>
-                      <Image x:Name="lunchPic" Source="lunch.png" HorizontalOptions="Start" VerticalOptions="Center"/>
-
-                    </Grid>
+                                <Image Grid.Row="0" Grid.Column="0" x:Name="lunchPic" Source="lunch.png" HorizontalOptions="Start" VerticalOptions="Center"/>
+                                <Picker Grid.Row="0" Grid.Column="1" x:Name="SubscriptionPicker" SelectedIndexChanged="planChange" Title="SELECT MEAL PLAN" Margin="0" FontSize="Micro"
+                                        HorizontalOptions="Fill" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="Black" TitleColor="Black"></Picker>
+                                <!--<Image x:Name="lunchPic"  HorizontalOptions="Start" VerticalOptions="Center"/>-->
+                                <!--Source="lunch.png"-->
+                            </Grid>
+                        </Frame>
                     </Frame>
-                </Frame>
 
 
-                <Frame x:Name="selectDateFrame" BorderColor="#FF6505" CornerRadius="23" HasShadow="False">
-                    <Frame BorderColor="White" BackgroundColor="Transparent" Padding="0" HasShadow="False">
-                    <Grid>
-
-                      <Picker x:Name="datePicker" SelectedIndexChanged="dateChange" Title="SELECT DATE" Margin="0"
-                              HorizontalOptions="Fill" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="Black" TitleColor="Black"></Picker>
-                      <Image x:Name="calendarPic" Source="Calendar.png" HorizontalOptions="Start" VerticalOptions="Center"/>
-
-                    </Grid>
+                    <Frame Grid.Row="0" Grid.Column="1" x:Name="selectDateFrame"   BorderColor="#FF6505" CornerRadius="23" HasShadow="False" >
+                        <Frame BorderColor="White" BackgroundColor="Transparent" Padding="0" HasShadow="False">
+                            <Grid ColumnSpacing="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                              <Image Grid.Row="0" Grid.Column="0" x:Name="calendarPic" Source="Calendar.png" HorizontalOptions="Start" VerticalOptions="Center"/>
+                              <Picker Grid.Row="0" Grid.Column="1" x:Name="datePicker" SelectedIndexChanged="dateChange" Title="SELECT DATE" Margin="0" FontSize="Micro"
+                                      HorizontalOptions="Fill" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="Black" TitleColor="Black"></Picker>
+                              <!--<Image x:Name="calendarPic" HorizontalOptions="Start" VerticalOptions="Center"/>-->
+                                <!--Source="Calendar.png"-->
+                            </Grid>
+                        </Frame>
                     </Frame>
-                </Frame>
+
+                </Grid>
+                <!--=============================-->
 
 
                 <!--<Picker x:Name="SubscriptionPicker" Margin="30,0,30,0" SelectedIndexChanged="planChange" Title="Choose a Meal Plan"></Picker>-->
-                <Grid Margin="15,0,15,0">
+                <Grid Margin="5,0,5,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40" />
                         <!-- 1 Buttons -->
@@ -65,15 +85,15 @@
                     <!--<Picker x:Name="datePicker" Grid.ColumnSpan="2" Margin="15,0,0,0" SelectedIndexChanged="dateChange"/>-->
 
 
-                    <Frame  OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Column="0" CornerRadius="20">
+                    <Frame  OutlineColor="Orange" Padding="0" BackgroundColor="Transparent" Grid.Column="0" CornerRadius="20">
                         <Button x:Name="saveBttn" ClassId="save1" Text = "Save" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="0" Grid.Column="3" Clicked="saveUserMeals" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black" FontAttributes="Bold"/>
                     </Frame>
 
-                    <Frame x:Name="surpriseFrame" OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Column="1" CornerRadius="20">
+                    <Frame x:Name="surpriseFrame" OutlineColor="Orange" Padding="0" BackgroundColor="Transparent" Grid.Column="1" CornerRadius="20">
                         <Button x:Name="surpriseBttn"  ClassId="surpriseButton" Text = "Surprise" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="0" Grid.Column="3" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black"  FontAttributes="Bold" Clicked="surpriseMealSelection"/>
                     </Frame>
 
-                    <Frame x:Name="skipFrame" OutlineColor="Black" Padding="0" BackgroundColor="Transparent" Grid.Column="2" CornerRadius="20">
+                    <Frame x:Name="skipFrame" OutlineColor="Orange" Padding="0" BackgroundColor="Transparent" Grid.Column="2" CornerRadius="20">
                         <Button x:Name="skipBttn"  ClassId="skipButton" Text = "Skip" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Micro" Grid.Row="2" Grid.Column="3" BackgroundColor="Transparent" BorderColor="Transparent" TextColor="Black"  FontAttributes="Bold" Clicked="skipMealSelection"/>
                     </Frame>
 
@@ -107,7 +127,7 @@
 
                 <BoxView HeightRequest="5" HorizontalOptions="Fill"/>
 
-                    <Grid Margin="15,0">
+                    <Grid Margin="15,0" IsVisible="false">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
@@ -124,7 +144,26 @@
                     </Grid>
                 
                 
-                <ProgressBar Progress="0" x:Name="weekOneProgress" Margin="10,0,10,0" BackgroundColor="Transparent" HeightRequest="35" ></ProgressBar>
+                <ProgressBar IsVisible="false" Progress="0" x:Name="weekOneProgress" Margin="10,0,10,0" BackgroundColor="Transparent" HeightRequest="35" ></ProgressBar>
+
+                <!--CARLOS PROGRESS BAR -->
+                <StackLayout HeightRequest="50" BackgroundColor="White" Padding="10,0,10,0">
+            
+                    <CollectionView x:Name="MyCollectionView" BackgroundColor="White"  HeightRequest="50">
+                        <CollectionView.ItemTemplate >
+                            <DataTemplate>
+                                <StackLayout>
+                                    <Frame Padding="{Binding margin}" HeightRequest="50" BackgroundColor="Orange" CornerRadius="20" HasShadow="False">
+                                        <BoxView  HeightRequest="50" BackgroundColor="White"></BoxView>
+                                    </Frame>
+                                    <Label HorizontalOptions="Center" Text="Meals Left" FontAttributes="Bold" Margin="0,-40,0,0"></Label>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                 
+                </StackLayout>
+                <!--======================-->
 
                 <CollectionView x:Name="weekOneMenu" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Margin="0,0,0,30" BackgroundColor="#f3f2dc">
                     <CollectionView.ItemsLayout>

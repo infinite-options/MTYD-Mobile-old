@@ -16,11 +16,35 @@ using System.Collections.Generic;
 using Xamarin.Forms;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace MTYD.ViewModel
 {
+    //==========================================
+    // CARLOS CLASS FOR PROGRESS BAR
+    public class Origin : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        public Thickness margin { get; set; }
+        public Thickness update
+        {
+            get { return margin; }
+            set
+            {
+                margin = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("margin"));
+            }
+        }
+    }
+    //==========================================
     public partial class Select : ContentPage
     {
+        //==========================================
+        // CARLOS GLOBAL VARIABLES
+        public double factor = 0;
+        public ObservableCollection<Origin> BarParameters = new ObservableCollection<Origin>();
+        //==========================================
         public ObservableCollection<PaymentInfo> NewPlan = new ObservableCollection<PaymentInfo>();
 
         public string text1;
@@ -51,6 +75,7 @@ namespace MTYD.ViewModel
         string first; string last; string email;
 
         WebClient client = new WebClient();
+
         public Select(string firstName, string lastName, string userEmail)
         {
             InitializeComponent();
@@ -69,6 +94,14 @@ namespace MTYD.ViewModel
             last = lastName;
             email = userEmail;
 
+            //==========================================
+            // CARLOS PROGRESS BAR INITIALIZATION
+            var m = new Origin();
+                m.margin = new Thickness(0, 0, 0, 0);
+
+            BarParameters.Add(m);
+            MyCollectionView.ItemsSource = BarParameters;
+            //===========================================
             //mealsSaved.Clear();
             //resetAll();
             //GetRecentSelection();
@@ -96,23 +129,23 @@ namespace MTYD.ViewModel
                 menu.WidthRequest = width / 25;
                 menu.Margin = new Thickness(25, 0, 0, 30);
 
-                selectPlanFrame.Margin = new Thickness(25, 7);
-                selectPlanFrame.Padding = new Thickness(15, 5);
-                selectPlanFrame.HeightRequest = height / 50;
+                //selectPlanFrame.Margin = new Thickness(25, 7);
+                //selectPlanFrame.Padding = new Thickness(15, 5);
+                //selectPlanFrame.HeightRequest = height / 50;
                 lunchPic.HeightRequest = height / 40;
                 lunchPic.WidthRequest = height / 40;
                 lunchPic.Margin = new Thickness(5, 1, 0, 1);
-                SubscriptionPicker.FontSize = height / 95;
+                //SubscriptionPicker.FontSize = height / 95;
                 SubscriptionPicker.VerticalOptions = LayoutOptions.Fill;
                 SubscriptionPicker.HorizontalOptions = LayoutOptions.Fill;
 
-                selectDateFrame.Margin = new Thickness(25, 3, 25, 7);
-                selectDateFrame.Padding = new Thickness(15, 5);
-                selectDateFrame.HeightRequest = height / 50;
+                //selectDateFrame.Margin = new Thickness(25, 3, 25, 7);
+                //selectDateFrame.Padding = new Thickness(15, 5);
+                // selectDateFrame.HeightRequest = height / 50;
                 calendarPic.HeightRequest = height / 40;
                 calendarPic.WidthRequest = height / 40;
                 calendarPic.Margin = new Thickness(5, 1, 0, 1);
-                datePicker.FontSize = height / 95;
+                //datePicker.FontSize = height / 95;
                 datePicker.VerticalOptions = LayoutOptions.Fill;
                 datePicker.HorizontalOptions = LayoutOptions.Fill;
             }
@@ -354,8 +387,8 @@ namespace MTYD.ViewModel
 
             if (isSkip)
             {
-                skipBttn.BackgroundColor = Color.Black;
-                skipFrame.BackgroundColor = Color.Black;
+                skipBttn.BackgroundColor = Color.Orange;
+                skipFrame.BackgroundColor = Color.Orange;
                 skipBttn.TextColor = Color.White;
                 surpriseBttn.BackgroundColor = Color.Transparent;
                 surpriseFrame.BackgroundColor = Color.Transparent;
@@ -374,8 +407,8 @@ namespace MTYD.ViewModel
             }
             else if (isSurprise)
             {
-                surpriseBttn.BackgroundColor = Color.Black;
-                surpriseFrame.BackgroundColor = Color.Black;
+                surpriseBttn.BackgroundColor = Color.Orange;
+                surpriseFrame.BackgroundColor = Color.Orange ;
                 surpriseBttn.TextColor = Color.White;
                 skipBttn.BackgroundColor = Color.Transparent;
                 skipFrame.BackgroundColor = Color.Transparent;
@@ -492,7 +525,28 @@ namespace MTYD.ViewModel
             int permCount = Preferences.Get("origMax", 0);
             if (count != 0)
             {
+                // ======================================
+                // CARLOS PROGRESS BAR INTEGRATION
+                var width = this.Width;
+                var result = this.Width / Preferences.Get("origMax", 0);
+                Debug.WriteLine("DIVISOR INCREMENT FUNCTION: " + Preferences.Get("origMax", 0));
+                factor = result;
 
+                Debug.WriteLine("FACTOR TO INCREASE OR DECREASE PROGRESS BAR: " + factor);
+                Debug.WriteLine("WIDTH                                      : " + width);
+
+                var currentMargin = BarParameters[0].margin;
+                var currentLeft = currentMargin.Left;
+                var newLeft = currentLeft + factor;
+
+                Debug.WriteLine("CURRENT LEFT: " + currentLeft);
+                Debug.WriteLine("NEW LEFT" + newLeft);
+
+                currentMargin.Left = newLeft;
+
+                BarParameters[0].margin = currentMargin;
+                BarParameters[0].update = currentMargin;
+                // ======================================
                 totalCount.Text = (--count).ToString();
                 Preferences.Set("total", count);
 
@@ -553,6 +607,28 @@ namespace MTYD.ViewModel
             int count = Preferences.Get("total", 0);
             if (count != Preferences.Get("origMax", 0))
             {
+                // ======================================
+                // CARLOS PROGRESS BAR INTEGRATION
+                var width = this.Width;
+                var result = this.Width / Preferences.Get("origMax", 0);
+                Debug.WriteLine("DIVISOR DECREMENT FUNCTION: " + Preferences.Get("origMax", 0));
+                factor = result;
+
+                Debug.WriteLine("FACTOR TO INCREASE OR DECREASE PROGRESS BAR: " + factor);
+                Debug.WriteLine("WIDTH                                      : " + width);
+
+                var currentMargin = BarParameters[0].margin;
+                var currentLeft = currentMargin.Left;
+                var newLeft = currentLeft - factor;
+
+                Debug.WriteLine("CURRENT LEFT: " + currentLeft);
+                Debug.WriteLine("NEW LEFT" + newLeft);
+
+                currentMargin.Left = newLeft;
+
+                BarParameters[0].margin = currentMargin;
+                BarParameters[0].update = currentMargin;
+                // ======================================
                 Button b = (Button)sender;
                 MealInfo ms = b.BindingContext as MealInfo;
                 if (ms.MealQuantity != 0)
@@ -728,8 +804,8 @@ namespace MTYD.ViewModel
             skipBttn.BackgroundColor = Color.Transparent;
             skipFrame.BackgroundColor = Color.Transparent;
             skipBttn.TextColor = Color.Black;
-            saveBttn.BackgroundColor = Color.Black;
-            saveBttn.TextColor = Color.White;
+            saveBttn.BackgroundColor = Color.Orange;
+            saveBttn.TextColor = Color.Orange;
 
             int count = Preferences.Get("total", 0);
             if (totalCount.Text == "0" || count == 0)
@@ -763,8 +839,8 @@ namespace MTYD.ViewModel
 
         private async void skipMealSelection(object sender, EventArgs e)
         {
-            skipBttn.BackgroundColor = Color.Black;
-            skipFrame.BackgroundColor = Color.Black;
+            skipBttn.BackgroundColor = Color.Orange;
+            skipFrame.BackgroundColor = Color.Orange;
             skipBttn.TextColor = Color.White;
             surpriseBttn.BackgroundColor = Color.Transparent;
             surpriseFrame.BackgroundColor = Color.Transparent;
@@ -807,8 +883,8 @@ namespace MTYD.ViewModel
         private void surprise()
         {
             weekOneProgress.Progress = 0;
-            surpriseBttn.BackgroundColor = Color.Black;
-            surpriseFrame.BackgroundColor = Color.Black;
+            surpriseBttn.BackgroundColor = Color.Orange;
+            surpriseFrame.BackgroundColor = Color.Orange;
             surpriseBttn.TextColor = Color.White;
             skipBttn.BackgroundColor = Color.Transparent;
             skipFrame.BackgroundColor = Color.Transparent;
@@ -849,8 +925,8 @@ namespace MTYD.ViewModel
         }
         private async void surpriseMealSelection(object sender, EventArgs e)
         {
-            surpriseBttn.BackgroundColor = Color.Black;
-            surpriseFrame.BackgroundColor = Color.Black;
+            surpriseBttn.BackgroundColor = Color.Orange;
+            surpriseFrame.BackgroundColor = Color.Orange;
             surpriseBttn.TextColor = Color.White;
             skipBttn.BackgroundColor = Color.Transparent;
             skipFrame.BackgroundColor = Color.Transparent;

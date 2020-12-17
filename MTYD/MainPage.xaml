@@ -7,17 +7,20 @@
 
             
             <!--heading and subheading-->
-            <Grid x:Name="grid1" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,0,0,0">
+            <Grid x:Name="grid1" VerticalOptions="Center" HorizontalOptions="Center" Margin="0,-100,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="120*" />
                     <RowDefinition Height="40*" />
                 </Grid.RowDefinitions>
 
-                <Label x:Name="Heading" Grid.Row="0" Text="NUTRITION&#10;MADE EASY" FontAttributes="Bold"
+                <!--<Label x:Name="Heading" Grid.Row="0" Text="NUTRITION&#10;MADE EASY" FontAttributes="Bold"
                        LineHeight="1" FontSize="44" HorizontalTextAlignment="Center" VerticalOptions="End"
-                       TextColor="#FFFFFF" CharacterSpacing="3" />
+                       TextColor="#FFFFFF" CharacterSpacing="3" />-->
+                <StackLayout HeightRequest="150">
+                    <Image Source="MealsForMeMainPage.png"></Image>
+                </StackLayout>
 
-                <Label x:Name="subHeading" Grid.Row="1" Text="LOCAL. ORGANIC. RESPONSIBLE."
+                <Label x:Name="subHeading" Grid.Row="1" Text="NUTRITION. MADE. EASY."
                    VerticalOptions="Start" TextColor="#FFB054" FontAttributes="Bold"
                    HorizontalTextAlignment="Center" FontSize="20" CharacterSpacing="1"
                        />

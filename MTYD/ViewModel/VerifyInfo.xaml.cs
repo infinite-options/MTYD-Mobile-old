@@ -41,9 +41,10 @@ namespace MTYD.ViewModel
         }
 
         // PAYPAL CREDENTIALS
-        private static string clientId = "";
-        private static string secret = "";
+        private static string clientId = Constant.TestClientId;
+        private static string secret = Constant.TestSecret;
         private string payPalOrderId = "";
+        public static string mode = "";
 
         public VerifyInfo(string AptEntry1, string FNameEntry1, string LNameEntry1, string emailEntry1, string PhoneEntry1, string AddressEntry1, string CityEntry1, string StateEntry1, string ZipEntry1, string DeliveryEntry1, string CCEntry1, string CVVEntry1, string ZipCCEntry1, string salt1)
         {
@@ -188,6 +189,8 @@ namespace MTYD.ViewModel
         {
             if (checkoutButton.Text == "CONTINUE")
             {
+                //if (true)
+                //{
                 _ = setPaymentInfo();
                 _ = Navigation.PushAsync(new Select("", "", ""));
             }
@@ -199,8 +202,7 @@ namespace MTYD.ViewModel
 
         // STRIPE FUNCTIONS
 
-        // FUNCTION  :
-
+        // FUNCTION  1:
         public async void CheckouWithStripe(System.Object sender, System.EventArgs e)
         {
             var total = Preferences.Get("price", "00.00");
@@ -217,7 +219,7 @@ namespace MTYD.ViewModel
                 await DisplayAlert("Ooops", "The amount to pay is zero. It must be greater than zero to process a payment", "OK");
             }
         }
-
+        // FUNCTION  2:
         public async void PayViaStripe(System.Object sender, System.EventArgs e)
         {
             try
@@ -229,7 +231,7 @@ namespace MTYD.ViewModel
 
                 var stripeObj = JsonConvert.SerializeObject(stripe);
                 var stripeContent = new StringContent(stripeObj, Encoding.UTF8, "application/json");
-                var RDSResponse = await clientHttp.PostAsync("https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/Stripe_Payment_key_checker", stripeContent);
+                var RDSResponse = await clientHttp.PostAsync(Constant.StripeModeUrl, stripeContent);
                 var content = await RDSResponse.Content.ReadAsStringAsync();
 
                 Debug.WriteLine("key to send JSON: " + stripeObj);
@@ -320,6 +322,7 @@ namespace MTYD.ViewModel
                             StripeScreen.Height = 0;
                             PayPalScreen.Height = 0;
                             Debug.WriteLine("STRIPE PAYMENT WAS SUCCESSFUL");
+                            Preferences.Set("price", "00.00");
                             await DisplayAlert("Payment Completed", "Your payment was successful. Press 'CONTINUE' to select your meals!", "OK");
                             checkoutButton.Text = "CONTINUE";
                         }
@@ -337,6 +340,7 @@ namespace MTYD.ViewModel
             }
         }
 
+        // FUNCTION  3:
         public int RemoveDecimalFromTotalAmount(string amount)
         {
             var stringAmount = "";
@@ -352,6 +356,7 @@ namespace MTYD.ViewModel
             return Int32.Parse(stringAmount);
         }
 
+        // FUNCTION  4:
         public void CancelViaStripe(System.Object sender, System.EventArgs e)
         {
             PaymentScreen.HeightRequest = 0;
@@ -427,22 +432,35 @@ namespace MTYD.ViewModel
         // FUNCTION  4: PAYPAL CLIENT
         public static PayPalHttp.HttpClient client()
         {
-            PayPalEnvironment enviroment = new SandboxEnvironment(clientId, secret);
-            PayPalHttpClient payPalClient = new PayPalHttpClient(enviroment);
-            return payPalClient;
+            
+            Debug.WriteLine("PAYPAL CLIENT ID MTYD: " + clientId);
+            Debug.WriteLine("PAYPAL SECRET MTYD   : " + secret);
+
+            if (mode == "TEST")
+            {
+                PayPalEnvironment enviroment = new SandboxEnvironment(clientId, secret);
+                PayPalHttpClient payPalClient = new PayPalHttpClient(enviroment);
+                return payPalClient;
+            }
+            else if (mode == "LIVE")
+            {
+                PayPalEnvironment enviroment = new LiveEnvironment(clientId, secret);
+                PayPalHttpClient payPalClient = new PayPalHttpClient(enviroment);
+                return payPalClient;
+            }
+            return null;
         }
 
         // FUNCTION  5: SET PAYPAL CREDENTIALS
         public async void SetPayPalCredentials()
         {
-            var mode = "";
             var clientHttp = new System.Net.Http.HttpClient();
             var paypal = new Credentials();
                 paypal.key = Constant.LiveClientId;
 
             var stripeObj = JsonConvert.SerializeObject(paypal);
             var stripeContent = new StringContent(stripeObj, Encoding.UTF8, "application/json");
-            var RDSResponse = await clientHttp.PostAsync("https://tsx3rnuidi.execute-api.us-west-1.amazonaws.com/dev/api/v2/Paypal_Payment_key_checker", stripeContent);
+            var RDSResponse = await clientHttp.PostAsync(Constant.PayPalModeUrl, stripeContent);
             var content = await RDSResponse.Content.ReadAsStringAsync();
 
             Debug.WriteLine("CREDENTIALS JSON OBJECT TO SEND: " + stripeObj);
@@ -537,6 +555,7 @@ namespace MTYD.ViewModel
             if (result.Status == "COMPLETED")
             {
                 Debug.WriteLine("PAYPAL PAYMENT WAS SUCCESSFUL");
+                Preferences.Set("price", "00.00");
                 await DisplayAlert("Payment Completed","Your payment was successful. Press 'CONTINUE' to select your meals!","OK");
                 checkoutButton.Text = "CONTINUE";
             }
