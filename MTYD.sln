@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTYD.iOS", "MTYD.iOS\MTYD.i
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTYD", "MTYD\MTYD.csproj", "{CC0C42DF-C2E8-4BB1-8E2F-AC94345DDFD9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationDispatcher", "..\Notifications-Mobile\NotificationDispatcher\NotificationDispatcher.csproj", "{BB91E634-D2E0-4E23-9948-11484BD86882}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +72,22 @@ Global
 		{CC0C42DF-C2E8-4BB1-8E2F-AC94345DDFD9}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{CC0C42DF-C2E8-4BB1-8E2F-AC94345DDFD9}.Release|x64.ActiveCfg = Release|x64
 		{CC0C42DF-C2E8-4BB1-8E2F-AC94345DDFD9}.Release|x64.Build.0 = Release|x64
+		{BB91E634-D2E0-4E23-9948-11484BD86882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB91E634-D2E0-4E23-9948-11484BD86882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB91E634-D2E0-4E23-9948-11484BD86882}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{BB91E634-D2E0-4E23-9948-11484BD86882}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{BB91E634-D2E0-4E23-9948-11484BD86882}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{BB91E634-D2E0-4E23-9948-11484BD86882}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{BB91E634-D2E0-4E23-9948-11484BD86882}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BB91E634-D2E0-4E23-9948-11484BD86882}.Debug|x64.Build.0 = Debug|Any CPU
+		{BB91E634-D2E0-4E23-9948-11484BD86882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB91E634-D2E0-4E23-9948-11484BD86882}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB91E634-D2E0-4E23-9948-11484BD86882}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{BB91E634-D2E0-4E23-9948-11484BD86882}.Release|iPhone.Build.0 = Release|Any CPU
+		{BB91E634-D2E0-4E23-9948-11484BD86882}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{BB91E634-D2E0-4E23-9948-11484BD86882}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{BB91E634-D2E0-4E23-9948-11484BD86882}.Release|x64.ActiveCfg = Release|Any CPU
+		{BB91E634-D2E0-4E23-9948-11484BD86882}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

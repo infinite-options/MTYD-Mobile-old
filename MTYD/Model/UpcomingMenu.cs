@@ -13,6 +13,10 @@ namespace MTYD.Model
         [JsonProperty("message")]
         public string Message { get; set; }
 
+        //added 12/28
+        [JsonProperty("code")]
+        public string Code { get; set; }
+
         [JsonProperty("result")]
         public Result[] Result { get; set; }
     }
@@ -46,6 +50,12 @@ namespace MTYD.Model
         [JsonProperty("meal_price")]
         public long MealPrice { get; set; }
 
+        //public string meal_uid = "0";
+        //public string meal_category = "none";
+        //public string meal_name = "beans";
+        //public string meal_desc = "no";
+        //public string meal_hint = "s";
+        //public string meal_photo_URL = "http";
         [JsonProperty("meal_uid")]
         public string MealUid { get; set; }
 

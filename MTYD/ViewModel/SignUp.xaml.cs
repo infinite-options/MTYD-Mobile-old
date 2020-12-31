@@ -43,7 +43,7 @@ namespace MTYD.ViewModel
 
         async void clickedFinalSignUp(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new SubscriptionPage());
+            //await Navigation.PushAsync(new SubscriptionPage());
         }
 
         void clickedSeePassword1(System.Object sender, System.EventArgs e)

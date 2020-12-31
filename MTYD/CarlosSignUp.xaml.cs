@@ -13,11 +13,15 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using MTYD.ViewModel;
+using Newtonsoft.Json.Linq;
+using MTYD.Model;
+using System.Collections.ObjectModel;
 
 namespace MTYD
 {
     public partial class CarlosSignUp : ContentPage
     {
+        public ObservableCollection<Plans> NewMainPage = new ObservableCollection<Plans>();
         public SignUpPost directSignUp = new SignUpPost();
         public bool isAddessValidated = false;
 
@@ -51,6 +55,11 @@ namespace MTYD
             directSignUp.social = "FALSE";
             directSignUp.password = "";
             directSignUp.social_id = "NULL";
+        }
+
+        async void BackClick(object sender, System.EventArgs e)
+        {
+            Application.Current.MainPage = new MainPage();
         }
 
         async void ValidateAddressClick(object sender, System.EventArgs e)
@@ -346,9 +355,21 @@ namespace MTYD
                     System.Diagnostics.Debug.WriteLine("Time Stamp is:" + (string)Application.Current.Properties["time_stamp"]);
                     System.Diagnostics.Debug.WriteLine("platform is:" + (string)Application.Current.Properties["platform"]);
 
+                    string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                    var request3 = new HttpRequestMessage();
+                    request3.RequestUri = new Uri(url);
+                    request3.Method = HttpMethod.Get;
+                    var client2 = new HttpClient();
+                    HttpResponseMessage response = await client2.SendAsync(request3);
+                    HttpContent content2 = response.Content;
+                    Console.WriteLine("content: " + content2);
+                    var userString = await content2.ReadAsStringAsync();
+                    JObject info_obj2 = JObject.Parse(userString);
+                    this.NewMainPage.Clear();
+
                     // Go to Subscripton page
                     // Application.Current.MainPage = new SubscriptionPage();
-                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage((info_obj2["result"])[0]["customer_first_name"].ToString(), (info_obj2["result"])[0]["customer_last_name"].ToString(), (info_obj2["result"])[0]["customer_email"].ToString()));
 
                 }
             }
@@ -357,5 +378,7 @@ namespace MTYD
                 await DisplayAlert("Message", "We weren't able to sign you up", "OK");
             }
         }
+
+
     }
 }

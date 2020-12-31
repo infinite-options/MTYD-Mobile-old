@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Xml.Linq;
 using MTYD.Constants;
+using MTYD.Model;
 using MTYD.Model.Login.LoginClasses;
 using MTYD.ViewModel;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
@@ -16,6 +19,7 @@ namespace MTYD
 {
     public partial class CarlosSocialSignUp : ContentPage
     {
+        public ObservableCollection<Plans> NewMainPage = new ObservableCollection<Plans>();
         public SignUpPost socialSignUp = new SignUpPost();
         public bool isAddressValidated = false;
 
@@ -232,6 +236,18 @@ namespace MTYD
                     System.Diagnostics.Debug.WriteLine("Access Token: " + RDSData.result.access_token);
                     System.Diagnostics.Debug.WriteLine("Refresh Token: " + RDSData.result.refresh_token);
 
+                    string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                    var request3 = new HttpRequestMessage();
+                    request3.RequestUri = new Uri(url);
+                    request3.Method = HttpMethod.Get;
+                    var client2 = new HttpClient();
+                    HttpResponseMessage response = await client2.SendAsync(request3);
+                    HttpContent content = response.Content;
+                    Console.WriteLine("content: " + content);
+                    var userString = await content.ReadAsStringAsync();
+                    JObject info_obj2 = JObject.Parse(userString);
+                    this.NewMainPage.Clear();
+
                     DateTime today = DateTime.Now;
                     DateTime expDate = today.AddDays(Constant.days);
 
@@ -239,7 +255,7 @@ namespace MTYD
                     Application.Current.Properties["time_stamp"] = expDate;
                     Application.Current.Properties["platform"] = socialSignUp.social;
                     // Application.Current.MainPage = new SubscriptionPage();
-                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage((info_obj2["result"])[0]["customer_first_name"].ToString(), (info_obj2["result"])[0]["customer_last_name"].ToString(), (info_obj2["result"])[0]["customer_email"].ToString()));
                 }
             }
             else

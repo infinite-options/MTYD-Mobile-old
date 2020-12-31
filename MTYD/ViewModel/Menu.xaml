@@ -6,9 +6,25 @@
         <ScrollView>
         <StackLayout>
 
-            <Grid x:Name="mainGrid" BackgroundColor="#FF9E19" HeightRequest="650" HorizontalOptions="Fill" VerticalOptions="Start">
+            <!--<Grid x:Name="mainGrid" BackgroundColor="#FF9E19" HeightRequest="650" HorizontalOptions="Fill" VerticalOptions="Start">-->
+            <Grid x:Name="mainGrid" BackgroundColor="#FF9E19" HeightRequest="700" HorizontalOptions="Fill" VerticalOptions="Start">
                 <StackLayout>
-                <ImageButton x:Name="menu" Source="menu2.png" Rotation="90" HeightRequest="40" WidthRequest="40" HorizontalOptions="Start" Clicked="clickedMenu"/>
+
+                <Grid x:Name="headingGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                <ImageButton x:Name="menu" Source="menu2.png" Rotation="90" HeightRequest="40" WidthRequest="40" HorizontalOptions="Center" VerticalOptions="End" Clicked="clickedMenu" Aspect="AspectFit"/>
+                <Image Grid.Column="1" x:Name="logo" Source="logo.png" HorizontalOptions="Center" HeightRequest="80" Aspect="AspectFit"/>
+
+                </Grid>
+
+                <!--<ImageButton x:Name="menu" Source="menu2.png" Rotation="90" HeightRequest="40" WidthRequest="40" HorizontalOptions="Start" Clicked="clickedMenu"/>-->
 
                 <Grid x:Name="profileInfo" ColumnSpacing="15">
                     <Grid.RowDefinitions>
@@ -20,6 +36,7 @@
                     </Grid.ColumnDefinitions>
 
                     <ImageButton x:Name="pfp" BackgroundColor="LightGray" VerticalOptions="Center" HorizontalOptions="Start" Clicked="clickedPfp"/>
+                    <Label x:Name="initials" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="End"/>
 
                     <StackLayout x:Name="profileInfoStack" Grid.Column="1">
                         <Label x:Name="userName" Text="FIRST NAME LAST NAME" FontSize="25" TextColor="Black" FontAttributes="Bold"/>
@@ -30,6 +47,32 @@
 
                 <BoxView x:Name="divider1" HeightRequest="2" HorizontalOptions="Fill" VerticalOptions="Center" BackgroundColor="White"/>
 
+
+                <!-- landing page here -->
+
+                <Grid x:Name="landingGrid" ColumnSpacing="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!--<Button x:Name="subscriptionButton" Grid.ColumnSpan="2" HorizontalOptions="Fill" Clicked="clickedPlan"/>-->
+
+                    <Label Grid.Column="1" x:Name="landing" Text="LANDING" HorizontalOptions="StartAndExpand" VerticalOptions="Center" FontAttributes="Bold" FontSize="25" TextColor="White"/>
+                    
+                    <Image x:Name="landingPic" VerticalOptions="Center" HorizontalOptions="Start" Source="profile.png"/>
+
+                    <Button x:Name="landingButton" BackgroundColor="Transparent" Grid.ColumnSpan="2" HorizontalOptions="Fill" Clicked="clickedLanding"/>
+
+
+                </Grid>
+
+                <BoxView x:Name="divider10" HeightRequest="2" HorizontalOptions="Fill" VerticalOptions="Center" BackgroundColor="White"/>
+
+                <!-- landing page stuff ends here -->
 
                 <Grid x:Name="subscriptionGrid" ColumnSpacing="15">
                     <Grid.RowDefinitions>
@@ -90,7 +133,7 @@
                     <!--<Button x:Name="mealsAvailButton" Grid.ColumnSpan="2" HorizontalOptions="Fill" Clicked="clickedMealSelect"/>-->
 
 
-                    <Label Grid.Column="1" x:Name="mealsAvail" Text="MEALS AVAILABLE" HorizontalOptions="StartAndExpand" VerticalOptions="Center" FontAttributes="Bold" FontSize="25" TextColor="White"/>
+                    <Label Grid.Column="1" x:Name="mealsAvail" Text="SELECT MEALS" HorizontalOptions="StartAndExpand" VerticalOptions="Center" FontAttributes="Bold" FontSize="25" TextColor="White"/>
                     
                     <Image x:Name="calendarPic" VerticalOptions="Center" HorizontalOptions="Start" Source="whiteCalendar.png"/>
 
@@ -141,6 +184,8 @@
                     <Label Grid.Column="1" x:Name="logout" Text="LOGOUT" HorizontalOptions="StartAndExpand" VerticalOptions="Center" FontAttributes="Bold" FontSize="25" TextColor="White"/>
                     
                     <ImageButton x:Name="logoutPic" BackgroundColor="LightGray" VerticalOptions="Center" HorizontalOptions="Start" />
+                    <Label x:Name="initials2" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="End"/>
+
 
                     <Button x:Name="logoutButton" BackgroundColor="Transparent" Grid.ColumnSpan="2" HorizontalOptions="Fill" Clicked="LogOutClick"/>
 

@@ -36,6 +36,16 @@ namespace MTYD.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs("margin"));
             }
         }
+        public string mealsLeft { get; set; }
+        public string barLabel
+        {
+            get { return mealsLeft; }
+            set
+            {
+                mealsLeft = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("mealsLeft"));
+            }
+        }
     }
     //==========================================
     public partial class Select : ContentPage
@@ -47,6 +57,7 @@ namespace MTYD.ViewModel
         //==========================================
         public ObservableCollection<PaymentInfo> NewPlan = new ObservableCollection<PaymentInfo>();
 
+        //public string mealsLeft = "yessir";
         public string text1;
         public int weekNumber;
         public Color orange = Color.FromHex("#f59a28");
@@ -89,15 +100,17 @@ namespace MTYD.ViewModel
             var height = DeviceDisplay.MainDisplayInfo.Height;
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
-            checkPlatform(height, width);
+            
             first = firstName;
             last = lastName;
             email = userEmail;
+            checkPlatform(height, width);
 
             //==========================================
             // CARLOS PROGRESS BAR INITIALIZATION
             var m = new Origin();
                 m.margin = new Thickness(0, 0, 0, 0);
+                m.mealsLeft = "";
 
             BarParameters.Add(m);
             MyCollectionView.ItemsSource = BarParameters;
@@ -125,6 +138,24 @@ namespace MTYD.ViewModel
                 pfp.WidthRequest = width / 20;
                 pfp.CornerRadius = (int)(width / 40);
                 pfp.Margin = new Thickness(0, 0, 23, 27);
+
+                if (Preferences.Get("profilePicLink", "") == "")
+                {
+                    string userInitials = "";
+                    if (first != "" || first != null)
+                    {
+                        userInitials += first.Substring(0, 1);
+                    }
+                    if (last != "" || last != null)
+                    {
+                        userInitials += last.Substring(0, 1);
+                    }
+                    initials.Text = userInitials.ToUpper();
+                    initials.Margin = new Thickness(0, 0, 32, 33);
+                    initials.FontSize = width / 38;
+                }
+                else pfp.Source = Preferences.Get("profilePicLink", "");
+
                 menu.HeightRequest = width / 25;
                 menu.WidthRequest = width / 25;
                 menu.Margin = new Thickness(25, 0, 0, 30);
@@ -132,9 +163,9 @@ namespace MTYD.ViewModel
                 //selectPlanFrame.Margin = new Thickness(25, 7);
                 //selectPlanFrame.Padding = new Thickness(15, 5);
                 //selectPlanFrame.HeightRequest = height / 50;
-                lunchPic.HeightRequest = height / 40;
-                lunchPic.WidthRequest = height / 40;
-                lunchPic.Margin = new Thickness(5, 1, 0, 1);
+                //lunchPic.HeightRequest = height / 30;
+                //lunchPic.WidthRequest = height / 30;
+                //lunchPic.Margin = new Thickness(5, -1, 0, -1);
                 //SubscriptionPicker.FontSize = height / 95;
                 SubscriptionPicker.VerticalOptions = LayoutOptions.Fill;
                 SubscriptionPicker.HorizontalOptions = LayoutOptions.Fill;
@@ -142,9 +173,9 @@ namespace MTYD.ViewModel
                 //selectDateFrame.Margin = new Thickness(25, 3, 25, 7);
                 //selectDateFrame.Padding = new Thickness(15, 5);
                 // selectDateFrame.HeightRequest = height / 50;
-                calendarPic.HeightRequest = height / 40;
-                calendarPic.WidthRequest = height / 40;
-                calendarPic.Margin = new Thickness(5, 1, 0, 1);
+                //calendarPic.HeightRequest = height / 30;
+                //calendarPic.WidthRequest = height / 30;
+                //calendarPic.Margin = new Thickness(5, 1, 0, 1);
                 //datePicker.FontSize = height / 95;
                 datePicker.VerticalOptions = LayoutOptions.Fill;
                 datePicker.HorizontalOptions = LayoutOptions.Fill;
@@ -158,12 +189,12 @@ namespace MTYD.ViewModel
 
         async void clickedPfp(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new UserProfile(), false);
+            await Navigation.PushAsync(new UserProfile(first, last, email), false);
         }
 
         async void clickedMenu(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new Menu(first + " " + last, email));
+            await Navigation.PushAsync(new Menu(first, last, email));
         }
         /*
         protected async Task SetMealSelect()
@@ -253,14 +284,19 @@ namespace MTYD.ViewModel
         // Set Dates of Each Label
         private void setDates()
         {
+            Debug.WriteLine("setDates entered");
             try
             {
                 var content = client.DownloadString(menuUrl);
+                Debug.WriteLine("after content reached");
+                Debug.WriteLine("content: " + content);
                 var obj = JsonConvert.DeserializeObject<UpcomingMenu>(content);
+                Debug.WriteLine("after obj reached");
                 string[] dateArray = new string[4];
                 string dayOfWeekString = String.Format("{0:dddd}", DateTime.Now);
                 DateTime today = DateTime.Now;
                 Dictionary<string, int> hm = new Dictionary<string, int>();
+                Debug.WriteLine("after Dictionary reached");
 
                 for (int i = 0; i < obj.Result.Length; i++)
                 {
@@ -268,15 +304,18 @@ namespace MTYD.ViewModel
                         hm.Remove(obj.Result[i].MenuDate);
                     hm.Add(obj.Result[i].MenuDate, i);
                 }
+                Debug.WriteLine("after adding to Dictionary reached");
 
                 foreach (var i in hm)
                 {
                     datePicker.Items.Add(i.Key);
                     //String.Format("MMMM dd, yyyy", i.Key);
                 }
+                Debug.WriteLine("after adding to picker reached");
 
                 datePicker.SelectedIndex = 0;
                 text1 = datePicker.SelectedItem.ToString();
+                Debug.WriteLine("date picked: " + text1);
                 Preferences.Set("dateSelected", text1.Substring(0, 11));
                 Console.WriteLine("dateSet: " + Preferences.Get("dateSelected", ""));
             }
@@ -287,15 +326,15 @@ namespace MTYD.ViewModel
 
         }
 
-
+        
         // Date Picker Selection Changes
-        private void dateChange(object sender, EventArgs e)
+        async private void dateChange(object sender, EventArgs e)
         {
             Console.WriteLine("Setting now");
             text1 = datePicker.SelectedItem.ToString();
             getUserMeals();
             setMenu();
-            weekOneProgress.Progress = 0;
+            //weekOneProgress.Progress = 0;
 
             int orig = Preferences.Get("origMax", 0);
             if (orig != 0)
@@ -308,9 +347,132 @@ namespace MTYD.ViewModel
                 totalCount.Text = "Count";
             }
             Preferences.Set("total", orig);
+            Console.WriteLine("here before");
+            //BarParameters[0].mealsLeft = "Please Select " + Preferences.Get("total", "").ToString() + " Meals";
+            //BarParameters[0].barLabel = "Please Select " + Preferences.Get("total", "").ToString() + " Meals";
             Preferences.Set("dateSelected", text1.Substring(0, 11));
             Console.WriteLine("dateSelected: " + Preferences.Get("dateSelected", ""));
             mealsSaved.Clear();   //New Addition SV
+            resetAll(); //New Addition SV
+
+            isSkip = false;
+            isSurprise = false;
+
+            await GetRecentSelection();
+            GetRecentSelection2();
+
+            Console.WriteLine("isAlreadySeleced in planchange" + isAlreadySelected);
+
+            //bool isAlreadySelected = Preferences.Get("isAlreadySelected", true);
+            if (isAlreadySelected == true)
+            {
+                saveBttn.BackgroundColor = Color.Orange;
+                saveFrame.BackgroundColor = Color.Orange;
+                saveBttn.TextColor = Color.White;
+                skipBttn.BackgroundColor = Color.Transparent;
+                skipFrame.BackgroundColor = Color.Transparent;
+                skipBttn.TextColor = Color.Black;
+                surpriseBttn.BackgroundColor = Color.Transparent;
+                surpriseFrame.BackgroundColor = Color.Transparent;
+                surpriseBttn.TextColor = Color.Black;
+
+                string s = SubscriptionPicker.SelectedItem.ToString();
+                s = s.Substring(0, 2);
+
+                totalCount.Text = "0";
+                Preferences.Set("total", 0);
+                Console.WriteLine("before true");
+                BarParameters[0].mealsLeft = "All Meals Selected";
+                BarParameters[0].barLabel = "All Meals Selected";
+                BarParameters[0].margin = new Thickness(this.Width, 0, 0, 0);
+                BarParameters[0].update = new Thickness(this.Width, 0, 0, 0);
+                Console.WriteLine("after true");
+                Preferences.Set("origMax", int.Parse(s));
+                totalCount.Text = Preferences.Get("total", 0).ToString();
+                //DisplayAlert("Alert", "Select reset button to change your meal selections", "OK");
+                //weekOneProgress.Progress = 1;
+            }
+            else if (isAlreadySelected == false)
+            {
+                string s = SubscriptionPicker.SelectedItem.ToString();
+                s = s.Substring(0, 2);
+                Preferences.Set("total", int.Parse(s));
+                Console.WriteLine("before false");
+                var holder = BarParameters[0].mealsLeft;
+                holder = "Please Select " + Preferences.Get("total", "").ToString() + " Meals";
+                BarParameters[0].mealsLeft = holder;
+                BarParameters[0].barLabel = holder;
+                BarParameters[0].margin = 0;
+                BarParameters[0].update = 0;
+                Console.WriteLine("after false");
+                totalCount.Text = Preferences.Get("total", 0).ToString();
+                Preferences.Set("origMax", int.Parse(s));
+                //weekOneProgress.Progress = 0;
+            }
+
+            if (isSkip)
+            {
+                skipBttn.BackgroundColor = Color.Orange;
+                skipFrame.BackgroundColor = Color.Orange;
+                skipBttn.TextColor = Color.White;
+                surpriseBttn.BackgroundColor = Color.Transparent;
+                surpriseFrame.BackgroundColor = Color.Transparent;
+                surpriseBttn.TextColor = Color.Black;
+                saveBttn.BackgroundColor = Color.Transparent;
+                saveFrame.BackgroundColor = Color.Transparent;
+                saveBttn.TextColor = Color.Black;
+
+                string s = SubscriptionPicker.SelectedItem.ToString();
+                s = s.Substring(0, 2);
+                Preferences.Set("total", int.Parse(s));
+                Console.WriteLine("before skip");
+                BarParameters[0].margin = 0;
+                BarParameters[0].update = 0;
+                BarParameters[0].mealsLeft = "Please Select " + Preferences.Get("total", "").ToString() + " Meals";
+                BarParameters[0].barLabel = "Please Select " + Preferences.Get("total", "").ToString() + " Meals";
+                Console.WriteLine("after skip");
+                totalCount.Text = Preferences.Get("total", 0).ToString();
+                Preferences.Set("origMax", int.Parse(s));
+                //weekOneProgress.Progress = 0;
+            }
+            else if (isSurprise)
+            {
+                surpriseBttn.BackgroundColor = Color.Orange;
+                surpriseFrame.BackgroundColor = Color.Orange;
+                surpriseBttn.TextColor = Color.White;
+                skipBttn.BackgroundColor = Color.Transparent;
+                skipFrame.BackgroundColor = Color.Transparent;
+                skipBttn.TextColor = Color.Black;
+                saveBttn.BackgroundColor = Color.Transparent;
+                saveFrame.BackgroundColor = Color.Transparent;
+                saveBttn.TextColor = Color.Black;
+
+                string s = SubscriptionPicker.SelectedItem.ToString();
+                s = s.Substring(0, 2);
+                Preferences.Set("total", int.Parse(s));
+                Console.WriteLine("before surprise");
+                BarParameters[0].margin = 0;
+                BarParameters[0].update = 0;
+                BarParameters[0].mealsLeft = "Please Select " + Preferences.Get("total", "").ToString() + " Meals";
+                BarParameters[0].barLabel = "Please Select " + Preferences.Get("total", "").ToString() + " Meals";
+                Console.WriteLine("after surprise");
+                totalCount.Text = Preferences.Get("total", 0).ToString();
+                Preferences.Set("origMax", int.Parse(s));
+                //weekOneProgress.Progress = 0;
+            }
+            else
+            {
+                //If neither skip or surprise (new plan), then initialize to surprise
+                skipBttn.BackgroundColor = Color.Transparent;
+                skipFrame.BackgroundColor = Color.Transparent;
+                skipBttn.TextColor = Color.Black;
+                surpriseBttn.BackgroundColor = Color.Transparent;
+                surpriseFrame.BackgroundColor = Color.Transparent;
+                surpriseBttn.TextColor = Color.Black;
+                if (isAlreadySelected == false)
+                    surprise();
+
+            }
             //reset the buttons
             //default to surprise if null
         }
@@ -337,7 +499,7 @@ namespace MTYD.ViewModel
 
             isSkip = false;
             isSurprise = false;
-            weekOneProgress.Progress = 0;
+            //weekOneProgress.Progress = 0;
             //firstTotalCount = Int32.Parse(totalCount.Text.ToString().Substring(0, 2));
 
             /* 
@@ -370,19 +532,48 @@ namespace MTYD.ViewModel
             //bool isAlreadySelected = Preferences.Get("isAlreadySelected", true);
             if (isAlreadySelected == true)
             {
+                saveBttn.BackgroundColor = Color.Orange;
+                saveFrame.BackgroundColor = Color.Orange;
+                saveBttn.TextColor = Color.White;
+                skipBttn.BackgroundColor = Color.Transparent;
+                skipFrame.BackgroundColor = Color.Transparent;
+                skipBttn.TextColor = Color.Black;
+                surpriseBttn.BackgroundColor = Color.Transparent;
+                surpriseFrame.BackgroundColor = Color.Transparent;
+                surpriseBttn.TextColor = Color.Black;
+
+                string s = SubscriptionPicker.SelectedItem.ToString();
+                s = s.Substring(0, 2);
+
                 totalCount.Text = "0";
                 Preferences.Set("total", 0);
+                Console.WriteLine("before true");
+                BarParameters[0].mealsLeft = "All Meals Selected";
+                BarParameters[0].barLabel = "All Meals Selected";
+                BarParameters[0].margin = new Thickness(this.Width, 0, 0, 0);
+                BarParameters[0].update = new Thickness(this.Width, 0, 0, 0);
+                Console.WriteLine("after true");
+                Preferences.Set("origMax", int.Parse(s));
+                totalCount.Text = Preferences.Get("total", 0).ToString();
                 //DisplayAlert("Alert", "Select reset button to change your meal selections", "OK");
-                weekOneProgress.Progress = 1;
+                //weekOneProgress.Progress = 1;
             }
             else if (isAlreadySelected == false)
             {
                 string s = SubscriptionPicker.SelectedItem.ToString();
                 s = s.Substring(0, 2);
                 Preferences.Set("total", int.Parse(s));
+                Console.WriteLine("before false");
+                var holder = BarParameters[0].mealsLeft;
+                holder = "Please Select " + Preferences.Get("total", "").ToString() + " Meals";
+                BarParameters[0].mealsLeft = holder;
+                BarParameters[0].barLabel = holder;
+                BarParameters[0].margin = 0;
+                BarParameters[0].update = 0;
+                Console.WriteLine("after false");
                 totalCount.Text = Preferences.Get("total", 0).ToString();
                 Preferences.Set("origMax", int.Parse(s));
-                weekOneProgress.Progress = 0;
+                //weekOneProgress.Progress = 0;
             }
 
             if (isSkip)
@@ -393,6 +584,9 @@ namespace MTYD.ViewModel
                 surpriseBttn.BackgroundColor = Color.Transparent;
                 surpriseFrame.BackgroundColor = Color.Transparent;
                 surpriseBttn.TextColor = Color.Black;
+                saveBttn.BackgroundColor = Color.Transparent;
+                saveFrame.BackgroundColor = Color.Transparent;
+                saveBttn.TextColor = Color.Black;
 
                 indexOfMealPlanSelected = (int)SubscriptionPicker.SelectedIndex;
                 Preferences.Set("purchId", purchIdArray[indexOfMealPlanSelected].ToString());
@@ -401,9 +595,15 @@ namespace MTYD.ViewModel
                 string s = SubscriptionPicker.SelectedItem.ToString();
                 s = s.Substring(0, 2);
                 Preferences.Set("total", int.Parse(s));
+                Console.WriteLine("before skip");
+                BarParameters[0].margin = 1;
+                BarParameters[0].update = 1;
+                BarParameters[0].mealsLeft = "Please Select " + Preferences.Get("total", "").ToString() + " Meals";
+                BarParameters[0].barLabel = "Please Select " + Preferences.Get("total", "").ToString() + " Meals";
+                Console.WriteLine("after skip");
                 totalCount.Text = Preferences.Get("total", 0).ToString();
                 Preferences.Set("origMax", int.Parse(s));
-                weekOneProgress.Progress = 0;
+                //weekOneProgress.Progress = 0;
             }
             else if (isSurprise)
             {
@@ -413,6 +613,9 @@ namespace MTYD.ViewModel
                 skipBttn.BackgroundColor = Color.Transparent;
                 skipFrame.BackgroundColor = Color.Transparent;
                 skipBttn.TextColor = Color.Black;
+                saveBttn.BackgroundColor = Color.Transparent;
+                saveFrame.BackgroundColor = Color.Transparent;
+                saveBttn.TextColor = Color.Black;
 
                 indexOfMealPlanSelected = (int)SubscriptionPicker.SelectedIndex;
                 Preferences.Set("purchId", purchIdArray[indexOfMealPlanSelected].ToString());
@@ -421,9 +624,15 @@ namespace MTYD.ViewModel
                 string s = SubscriptionPicker.SelectedItem.ToString();
                 s = s.Substring(0, 2);
                 Preferences.Set("total", int.Parse(s));
+                Console.WriteLine("before surprise");
+                BarParameters[0].margin = 1;
+                BarParameters[0].update = 1;
+                BarParameters[0].mealsLeft = "Please Select " + Preferences.Get("total", "").ToString() + " Meals";
+                BarParameters[0].barLabel = "Please Select " + Preferences.Get("total", "").ToString() + " Meals";
+                Console.WriteLine("after surprise");
                 totalCount.Text = Preferences.Get("total", 0).ToString();
                 Preferences.Set("origMax", int.Parse(s));
-                weekOneProgress.Progress = 0;
+                //weekOneProgress.Progress = 0;
             }
             else
             {
@@ -538,6 +747,7 @@ namespace MTYD.ViewModel
                 var currentMargin = BarParameters[0].margin;
                 var currentLeft = currentMargin.Left;
                 var newLeft = currentLeft + factor;
+                Debug.WriteLine("testing for meals left: " + (newLeft / factor).ToString());
 
                 Debug.WriteLine("CURRENT LEFT: " + currentLeft);
                 Debug.WriteLine("NEW LEFT" + newLeft);
@@ -548,6 +758,22 @@ namespace MTYD.ViewModel
                 BarParameters[0].update = currentMargin;
                 // ======================================
                 totalCount.Text = (--count).ToString();
+                //BarParameters[0].mealsLeft = count.ToString();
+
+                if (count == 0)
+                {
+                    Debug.WriteLine("final margin: " + BarParameters[0].update.ToString());
+                    BarParameters[0].mealsLeft = "All Meals Selected";
+                    BarParameters[0].barLabel = "All Meals Selected";
+                    //progress.Text = "All Meals Selected";
+                }
+                else
+                {
+                    BarParameters[0].mealsLeft = "Please Select " + count.ToString() + " Meals";
+                    BarParameters[0].barLabel = "Please Select " + count.ToString() + " Meals";
+                }
+                //else progressLabel.Text = "Please Select " + count.ToString() + " Meals";
+
                 Preferences.Set("total", count);
 
                 Button b = (Button)sender;
@@ -558,43 +784,43 @@ namespace MTYD.ViewModel
                 if (permCount == 5)
                 {
                     //adder = 0.2f;
-                    weekOneProgress.Progress += 0.2;
+                    //weekOneProgress.Progress += 0.2;
                 }
                 else if (permCount == 10)
                 {
                     //adder = 0.1f;
-                    weekOneProgress.Progress += 0.1;
+                    //weekOneProgress.Progress += 0.1;
                 }
                 else if (permCount == 15)
                 {
                     //adder = 0.067f;
-                    weekOneProgress.Progress += 0.067;
+                    //weekOneProgress.Progress += 0.067;
                 }
                 else if (permCount == 20)
                 {
                     //adder = 0.05f;
-                    weekOneProgress.Progress += 0.05;
+                    //weekOneProgress.Progress += 0.05;
                 }
 
                 //weekOneProgress.Progress -= 0.1;
                 //weekOneProgress.Progress += adder;
 
-                if (weekOneProgress.Progress < 0.3)
-                {
-                    weekOneProgress.ProgressColor = Color.LightGoldenrodYellow;
-                }
-                else if (weekOneProgress.Progress >= 0.3 && weekOneProgress.Progress < 0.5)
-                {
-                    weekOneProgress.ProgressColor = Color.Orange;
-                }
-                else if (weekOneProgress.Progress >= 0.5 && weekOneProgress.Progress <= 0.7)
-                {
-                    weekOneProgress.ProgressColor = Color.LightGreen;
-                }
-                else if (weekOneProgress.Progress >= 0.8)
-                {
-                    weekOneProgress.ProgressColor = Color.DarkOliveGreen;
-                }
+                //if (weekOneProgress.Progress < 0.3)
+                //{
+                //    weekOneProgress.ProgressColor = Color.LightGoldenrodYellow;
+                //}
+                //else if (weekOneProgress.Progress >= 0.3 && weekOneProgress.Progress < 0.5)
+                //{
+                //    weekOneProgress.ProgressColor = Color.Orange;
+                //}
+                //else if (weekOneProgress.Progress >= 0.5 && weekOneProgress.Progress <= 0.7)
+                //{
+                //    weekOneProgress.ProgressColor = Color.LightGreen;
+                //}
+                //else if (weekOneProgress.Progress >= 0.8)
+                //{
+                //    weekOneProgress.ProgressColor = Color.DarkOliveGreen;
+                //}
             }
             else
             {
@@ -634,50 +860,53 @@ namespace MTYD.ViewModel
                 if (ms.MealQuantity != 0)
                 {
                     totalCount.Text = (++count).ToString();
+                    BarParameters[0].mealsLeft = "Please Select " + count.ToString() + " Meals";
+                    BarParameters[0].barLabel = "Please Select " + count.ToString() + " Meals";
                     Preferences.Set("total", count);
+                    //BarParameters[0].mealsLeft = count.ToString();
                     ms.MealQuantity--;
 
                     int permCount = Preferences.Get("origMax", 0);
                     //float adder = 0.0f;
-                    if (permCount == 5)
-                    {
-                        //adder = 0.2f;
-                        weekOneProgress.Progress -= 0.2;
-                    }
-                    else if (permCount == 10)
-                    {
-                        //adder = 0.1f;
-                        weekOneProgress.Progress -= 0.1;
-                    }
-                    else if (permCount == 15)
-                    {
-                        //adder = 0.067f;
-                        weekOneProgress.Progress -= 0.067;
-                    }
-                    else if (permCount == 20)
-                    {
-                        //adder = 0.05f;
-                        weekOneProgress.Progress -= 0.05;
-                    }
+                    //if (permCount == 5)
+                    //{
+                    //    //adder = 0.2f;
+                    //    weekOneProgress.Progress -= 0.2;
+                    //}
+                    //else if (permCount == 10)
+                    //{
+                    //    //adder = 0.1f;
+                    //    weekOneProgress.Progress -= 0.1;
+                    //}
+                    //else if (permCount == 15)
+                    //{
+                    //    //adder = 0.067f;
+                    //    weekOneProgress.Progress -= 0.067;
+                    //}
+                    //else if (permCount == 20)
+                    //{
+                    //    //adder = 0.05f;
+                    //    weekOneProgress.Progress -= 0.05;
+                    //}
 
                     //weekOneProgress.Progress -= 0.1;
                     // weekOneProgress.Progress -= adder;
-                    if (weekOneProgress.Progress < 0.3)
-                    {
-                        weekOneProgress.ProgressColor = Color.LightGoldenrodYellow;
-                    }
-                    else if (weekOneProgress.Progress >= 0.3 && weekOneProgress.Progress < 0.5)
-                    {
-                        weekOneProgress.ProgressColor = Color.Orange;
-                    }
-                    else if (weekOneProgress.Progress >= 0.5 && weekOneProgress.Progress <= 0.7)
-                    {
-                        weekOneProgress.ProgressColor = Color.LightGreen;
-                    }
-                    else if (weekOneProgress.Progress >= 0.8)
-                    {
-                        weekOneProgress.ProgressColor = Color.DarkOliveGreen;
-                    }
+                    //if (weekOneProgress.Progress < 0.3)
+                    //{
+                    //    weekOneProgress.ProgressColor = Color.LightGoldenrodYellow;
+                    //}
+                    //else if (weekOneProgress.Progress >= 0.3 && weekOneProgress.Progress < 0.5)
+                    //{
+                    //    weekOneProgress.ProgressColor = Color.Orange;
+                    //}
+                    //else if (weekOneProgress.Progress >= 0.5 && weekOneProgress.Progress <= 0.7)
+                    //{
+                    //    weekOneProgress.ProgressColor = Color.LightGreen;
+                    //}
+                    //else if (weekOneProgress.Progress >= 0.8)
+                    //{
+                    //    weekOneProgress.ProgressColor = Color.DarkOliveGreen;
+                    //}
                 }
                 else { }
 
@@ -804,12 +1033,17 @@ namespace MTYD.ViewModel
             skipBttn.BackgroundColor = Color.Transparent;
             skipFrame.BackgroundColor = Color.Transparent;
             skipBttn.TextColor = Color.Black;
-            saveBttn.BackgroundColor = Color.Orange;
-            saveBttn.TextColor = Color.Orange;
+            //saveFrame.BackgroundColor = Color.Orange;
+            //saveBttn.BackgroundColor = Color.Orange;
+            //saveBttn.TextColor = Color.White;
 
             int count = Preferences.Get("total", 0);
             if (totalCount.Text == "0" || count == 0)
             {
+                saveFrame.BackgroundColor = Color.Orange;
+                saveBttn.BackgroundColor = Color.Orange;
+                saveBttn.TextColor = Color.White;
+
                 for (int i = 0; i < Meals1.Count; i++)
                 {
                     if (Meals1[i].MealQuantity > 0)
@@ -828,12 +1062,14 @@ namespace MTYD.ViewModel
                 jsonMeals = JsonConvert.SerializeObject(mealsSaved);
                 Console.WriteLine("line 302 " + jsonMeals);
                 postData();
+                DisplayAlert("Selection Saved", "You've successfully saved your meal selection.", "OK");
                 saveBttn.BackgroundColor = Color.Transparent;
                 saveBttn.TextColor = Color.Black;
             }
             else
             {
-                DisplayAlert("Incomplete Selection", "Please select all the meals before saving.", "OK");
+                DisplayAlert("Incomplete Meal Selection", "Please select additional meals.", "OK");
+
             }
         }
 
@@ -845,6 +1081,9 @@ namespace MTYD.ViewModel
             surpriseBttn.BackgroundColor = Color.Transparent;
             surpriseFrame.BackgroundColor = Color.Transparent;
             surpriseBttn.TextColor = Color.Black;
+            saveBttn.BackgroundColor = Color.Transparent;
+            saveFrame.BackgroundColor = Color.Transparent;
+            saveBttn.TextColor = Color.Black;
             resetAll();
             mealsSaved.Clear();
             int count = Preferences.Get("total", 0);
@@ -867,7 +1106,7 @@ namespace MTYD.ViewModel
             jsonMeals = JsonConvert.SerializeObject(mealsSaved);
             Console.WriteLine("line 302 " + jsonMeals);
             postData();
-            DisplayAlert("Meal Skipped", "You have chosen to skip the meal selection for this week. If you want to select meals again for this meal plan then click the RESET button!", "OK");
+            DisplayAlert("Delivery Skipped", "You won't receive any meals for this delivery cycle. We'll extend your subscription accordingly.", "OK");
             mealsSaved.Clear();
             int indexOfMealPlanSelected = (int)SubscriptionPicker.SelectedIndex;
             Preferences.Set("purchId", purchIdArray[indexOfMealPlanSelected].ToString());
@@ -878,17 +1117,25 @@ namespace MTYD.ViewModel
             Preferences.Set("total", int.Parse(s));
             totalCount.Text = Preferences.Get("total", 0).ToString();
             Preferences.Set("origMax", int.Parse(s));
+
+            BarParameters[0].margin = 0;
+            BarParameters[0].update = 0;
+            BarParameters[0].mealsLeft = "Please Select " + Preferences.Get("total", "").ToString() + " Meals";
+            BarParameters[0].barLabel = "Please Select " + Preferences.Get("total", "").ToString() + " Meals";
         }
 
         private void surprise()
         {
-            weekOneProgress.Progress = 0;
+            //weekOneProgress.Progress = 0;
             surpriseBttn.BackgroundColor = Color.Orange;
             surpriseFrame.BackgroundColor = Color.Orange;
             surpriseBttn.TextColor = Color.White;
             skipBttn.BackgroundColor = Color.Transparent;
             skipFrame.BackgroundColor = Color.Transparent;
             skipBttn.TextColor = Color.Black;
+            saveBttn.BackgroundColor = Color.Transparent;
+            saveFrame.BackgroundColor = Color.Transparent;
+            saveBttn.TextColor = Color.Black;
             resetAll();
             mealsSaved.Clear();
             int count = Preferences.Get("total", 0);
@@ -922,6 +1169,11 @@ namespace MTYD.ViewModel
             Preferences.Set("total", int.Parse(s));
             totalCount.Text = Preferences.Get("total", 0).ToString();
             Preferences.Set("origMax", int.Parse(s));
+
+            BarParameters[0].margin = 0;
+            BarParameters[0].update = 0;
+            BarParameters[0].mealsLeft = "Please Select " + Preferences.Get("total", "").ToString() + " Meals";
+            BarParameters[0].barLabel = "Please Select " + Preferences.Get("total", "").ToString() + " Meals";
         }
         private async void surpriseMealSelection(object sender, EventArgs e)
         {
@@ -931,6 +1183,9 @@ namespace MTYD.ViewModel
             skipBttn.BackgroundColor = Color.Transparent;
             skipFrame.BackgroundColor = Color.Transparent;
             skipBttn.TextColor = Color.Black;
+            saveBttn.BackgroundColor = Color.Transparent;
+            saveFrame.BackgroundColor = Color.Transparent;
+            saveBttn.TextColor = Color.Black;
             resetAll();
             mealsSaved.Clear();
             int count = Preferences.Get("total", 0);
@@ -953,7 +1208,7 @@ namespace MTYD.ViewModel
             jsonMeals = JsonConvert.SerializeObject(mealsSaved);
             Console.WriteLine("line 302 " + jsonMeals);
             postData();
-            DisplayAlert("SUPRISE", "You will be surprised with a randomized meal selection. If you want to select meals again for this meal plan then click the RESET button!", "OK");
+            DisplayAlert("SURPRISE", "We'll select a random assortment of nutritious, healthy meals for you!", "OK");
             mealsSaved.Clear();
             int indexOfMealPlanSelected = (int)SubscriptionPicker.SelectedIndex;
             Preferences.Set("purchId", purchIdArray[indexOfMealPlanSelected].ToString());
@@ -964,6 +1219,11 @@ namespace MTYD.ViewModel
             Preferences.Set("total", int.Parse(s));
             totalCount.Text = Preferences.Get("total", 0).ToString();
             Preferences.Set("origMax", int.Parse(s));
+
+            BarParameters[0].margin = 0;
+            BarParameters[0].update = 0;
+            BarParameters[0].mealsLeft = "Please Select " + Preferences.Get("total", "").ToString() + " Meals";
+            BarParameters[0].barLabel = "Please Select " + Preferences.Get("total", "").ToString() + " Meals";
         }
 
         public async void postData()

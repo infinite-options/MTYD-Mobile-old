@@ -623,14 +623,14 @@ namespace MTYD.ViewModel
             Preferences.Set("price", price);
 
             Console.WriteLine("Price selected: " + price);
-            await Navigation.PushAsync(new DeliveryBilling());
+            //await Navigation.PushAsync(new DeliveryBilling());
             //Application.Current.MainPage = new DeliveryBilling();
             //await NavigationPage.PushAsync(DeliveryBilling());
         }
 
         async void clickedPfp(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new UserProfile());
+            //await Navigation.PushAsync(new UserProfile());
             //Application.Current.MainPage = new UserProfile();
         }
 
@@ -641,7 +641,7 @@ namespace MTYD.ViewModel
 
         async void clickedMenu(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new Menu("", ""));
+            await Navigation.PushAsync(new Menu("", "", ""));
             //Application.Current.MainPage = new Menu();
         }
     }

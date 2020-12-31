@@ -71,7 +71,7 @@ namespace MTYD.ViewModel
 
         async void clickedPfp(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new UserProfile());
+            //await Navigation.PushAsync(new UserProfile());
         }
 
         async void clickedMenu(System.Object sender, System.EventArgs e)
@@ -81,13 +81,13 @@ namespace MTYD.ViewModel
 
         async void clickedSubscription(System.Object sender, System.EventArgs e)
         {
-            Navigation.PushAsync(new SubscriptionPage(), false);
+            //Navigation.PushAsync(new SubscriptionPage(), false);
             Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 2]);
         }
 
         async void clickedMealPlan(System.Object sender, System.EventArgs e)
         {
-            Navigation.PushAsync(new UserProfile(), false);
+            //Navigation.PushAsync(new UserProfile(), false);
             Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 2]);
         }
 
@@ -100,7 +100,7 @@ namespace MTYD.ViewModel
         async void clickedVerify(System.Object sender, System.EventArgs e)
         {
             string s1 = "", s2 = "", s3 = "", s4 = "", s5 = "", s6 = "", s7 = "", s8 = "", s9 = "", s10 = "", s11 = "", s12 = "", s13 = "", salt = "";
-            Navigation.PushAsync(new VerifyInfo(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, salt), false);
+           // Navigation.PushAsync(new VerifyInfo(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, salt), false);
             Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 2]);
         }
 

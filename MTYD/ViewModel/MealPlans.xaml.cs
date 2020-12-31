@@ -5,18 +5,23 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using Xamarin.Forms.Maps;
 using Xamarin.Forms.Xaml;
 
 namespace MTYD.ViewModel
 {
     public partial class MealPlans : ContentPage
     {
+        string cust_firstName; string cust_lastName; string cust_email;
         public ObservableCollection<Plans> userProfileInfo = new ObservableCollection<Plans>();
         public ObservableCollection<PaymentInfo> NewPlan = new ObservableCollection<PaymentInfo>();
         PaymentInfo orderInfo;
@@ -27,9 +32,14 @@ namespace MTYD.ViewModel
         string frequency;
         int lastPickerIndex;
         int chosenIndex;
+        bool planChangeCalled = false;
+        public bool isAddessValidated = false;
 
-        public MealPlans()
+        public MealPlans(string firstName, string lastName, string email)
         {
+            cust_firstName = firstName;
+            cust_lastName = lastName;
+            cust_email = email;
             var width = DeviceDisplay.MainDisplayInfo.Width;
             var height = DeviceDisplay.MainDisplayInfo.Height;
             InitializeComponent();
@@ -95,6 +105,24 @@ namespace MTYD.ViewModel
                 pfp.WidthRequest = width / 20;
                 pfp.CornerRadius = (int)(width / 40);
                 pfp.Margin = new Thickness(0, 0, 23, 27);
+
+                if (Preferences.Get("profilePicLink", "") == "")
+                {
+                    string userInitials = "";
+                    if (cust_firstName != "" || cust_firstName != null)
+                    {
+                        userInitials += cust_firstName.Substring(0, 1);
+                    }
+                    if (cust_lastName != "" || cust_lastName != null)
+                    {
+                        userInitials += cust_lastName.Substring(0, 1);
+                    }
+                    initials.Text = userInitials.ToUpper();
+                    initials.Margin = new Thickness(0, 0, 32, 33);
+                    initials.FontSize = width / 38;
+                }
+                else pfp.Source = Preferences.Get("profilePicLink", "");
+
                 menu.HeightRequest = width / 25;
                 menu.WidthRequest = width / 25;
                 menu.Margin = new Thickness(25, 0, 0, 30);
@@ -250,6 +278,7 @@ namespace MTYD.ViewModel
         private async void planChange(object sender, EventArgs e)
         {
             Console.WriteLine("planChange entered");
+            planChangeCalled = true;
             selectPlanFrame.BackgroundColor = Color.FromHex("#FF6505");
             coverPickerBorder.BorderColor = Color.FromHex("#FF6505");
             planPicker.TextColor = Color.White;
@@ -409,10 +438,16 @@ namespace MTYD.ViewModel
 
         async void clickedSub(System.Object sender, System.EventArgs e)
         {
+            if (planChangeCalled == false)
+            {
+                DisplayAlert("Invalid Selection", "Please select a meal plan first.", "OK");
+                return;
+            }
+
             string itemsStr = (info_obj["result"])[planPicker.SelectedIndex]["items"].ToString();
             string expDate = (info_obj["result"])[planPicker.SelectedIndex]["cc_exp_date"].ToString();
 
-            await Navigation.PushAsync(new SubscriptionModal("", (info_obj["result"])[planPicker.SelectedIndex]["mobile_refresh_token"].ToString(), (info_obj["result"])[planPicker.SelectedIndex]["cc_num"].ToString(),
+            await Navigation.PushAsync(new SubscriptionModal(cust_firstName, cust_lastName, cust_email, "", (info_obj["result"])[planPicker.SelectedIndex]["mobile_refresh_token"].ToString(), (info_obj["result"])[planPicker.SelectedIndex]["cc_num"].ToString(),
                 expDate.Substring(0, 4), expDate.Substring(5, 2),
                 (info_obj["result"])[planPicker.SelectedIndex]["cc_cvv"].ToString(), (info_obj["result"])[planPicker.SelectedIndex]["cc_zip"].ToString(), (info_obj["result"])[planPicker.SelectedIndex]["purchase_uid"].ToString(), itemsStr.Substring(itemsStr.IndexOf("itm_business_uid") + 20, 10),
                 itemsStr.Substring(itemsStr.IndexOf("item_uid") + 12, 10), (info_obj["result"])[planPicker.SelectedIndex]["pur_customer_uid"].ToString()), false);
@@ -420,6 +455,12 @@ namespace MTYD.ViewModel
 
         async void clickedInfo(System.Object sender, System.EventArgs e)
         {
+            if (planChangeCalled == false)
+            {
+                DisplayAlert("Invalid Selection", "Please select a meal plan first.", "OK");
+                return;
+            }
+
             string itemsStr = (info_obj["result"])[planPicker.SelectedIndex]["items"].ToString();
             string expDate = (info_obj["result"])[planPicker.SelectedIndex]["cc_exp_date"].ToString();
             Console.WriteLine("clickedInfo exp date: " + expDate);
@@ -434,7 +475,7 @@ namespace MTYD.ViewModel
 
 
 
-            await Navigation.PushAsync(new OrderInfoModal("", (info_obj["result"])[planPicker.SelectedIndex]["mobile_refresh_token"].ToString(), (info_obj["result"])[planPicker.SelectedIndex]["cc_num"].ToString(),
+            await Navigation.PushAsync(new OrderInfoModal(cust_firstName, cust_lastName, cust_email, "", (info_obj["result"])[planPicker.SelectedIndex]["mobile_refresh_token"].ToString(), (info_obj["result"])[planPicker.SelectedIndex]["cc_num"].ToString(),
                 expDate.Substring(0, 4), expDate.Substring(5, 2),
                 (info_obj["result"])[planPicker.SelectedIndex]["cc_cvv"].ToString(), (info_obj["result"])[planPicker.SelectedIndex]["cc_zip"].ToString(), (info_obj["result"])[planPicker.SelectedIndex]["purchase_uid"].ToString(), itemsStr.Substring(itemsStr.IndexOf("itm_business_uid") + 20, 10),
                 mealPlan, itemsStr.Substring(itemsStr.IndexOf("price") + 9, lengthOfPrice), itemsStr.Substring(itemsStr.IndexOf("item_uid") + 12, 10), (info_obj["result"])[planPicker.SelectedIndex]["pur_customer_uid"].ToString()), false);
@@ -447,7 +488,7 @@ namespace MTYD.ViewModel
 
         async void clickedMenu(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new Menu("", ""));
+            await Navigation.PushAsync(new Menu(cust_firstName, cust_lastName, cust_email));
         }
 
         void LogOutClick(System.Object sender, System.EventArgs e)
@@ -460,6 +501,154 @@ namespace MTYD.ViewModel
 
         async void clickedSave(System.Object sender, System.EventArgs e)
         {
+            if (planChangeCalled == false)
+            {
+                DisplayAlert("Invalid Selection", "Please select a meal plan first.", "OK");
+                return;
+            }
+
+            //------------------------validate address-----------------------------//
+
+            if (AddressEntry.Text == null)
+            {
+                await DisplayAlert("Error", "Please enter your address", "OK");
+            }
+
+            if (CityEntry.Text == null)
+            {
+                await DisplayAlert("Error", "Please enter your city", "OK");
+            }
+
+            if (StateEntry.Text == null)
+            {
+                await DisplayAlert("Error", "Please enter your state", "OK");
+            }
+
+            if (ZipEntry.Text == null)
+            {
+                await DisplayAlert("Error", "Please enter your zipcode", "OK");
+            }
+
+            //if (PhoneEntry.Text == null && PhoneEntry.Text.Length == 10)
+            //{
+            //    await DisplayAlert("Error", "Please enter your phone number", "OK");
+            //}
+
+            // Setting request for USPS API
+            XDocument requestDoc = new XDocument(
+                new XElement("AddressValidateRequest",
+                new XAttribute("USERID", "400INFIN1745"),
+                new XElement("Revision", "1"),
+                new XElement("Address",
+                new XAttribute("ID", "0"),
+                new XElement("Address1", AddressEntry.Text.Trim()),
+                new XElement("Address2", AptEntry.Text.Trim()),
+                new XElement("City", CityEntry.Text.Trim()),
+                new XElement("State", StateEntry.Text.Trim()),
+                new XElement("Zip5", ZipEntry.Text.Trim()),
+                new XElement("Zip4", "")
+                     )
+                 )
+             );
+            var url = "http://production.shippingapis.com/ShippingAPI.dll?API=Verify&XML=" + requestDoc;
+            Console.WriteLine(url);
+            var client2 = new WebClient();
+            var response2 = client2.DownloadString(url);
+
+            var xdoc = XDocument.Parse(response2.ToString());
+            Console.WriteLine("xdoc begin");
+            Console.WriteLine(xdoc);
+
+
+            string latitude = "0";
+            string longitude = "0";
+            foreach (XElement element in xdoc.Descendants("Address"))
+            {
+                if (GetXMLElement(element, "Error").Equals(""))
+                {
+                    if (GetXMLElement(element, "DPVConfirmation").Equals("Y") && GetXMLElement(element, "Zip5").Equals(ZipEntry.Text.Trim()) && GetXMLElement(element, "City").Equals(CityEntry.Text.ToUpper().Trim())) // Best case
+                    {
+                        // Get longitude and latitide because we can make a deliver here. Move on to next page.
+                        // Console.WriteLine("The address you entered is valid and deliverable by USPS. We are going to get its latitude & longitude");
+                        //GetAddressLatitudeLongitude();
+                        Geocoder geoCoder = new Geocoder();
+
+                        IEnumerable<Position> approximateLocations = await geoCoder.GetPositionsForAddressAsync(AddressEntry.Text.Trim() + "," + CityEntry.Text.Trim() + "," + StateEntry.Text.Trim());
+                        Position position = approximateLocations.FirstOrDefault();
+
+                        latitude = $"{position.Latitude}";
+                        longitude = $"{position.Longitude}";
+
+                        //directSignUp.latitude = latitude;
+                        //directSignUp.longitude = longitude;
+                        //map.MapType = MapType.Street;
+                        //var mapSpan = new MapSpan(position, 0.001, 0.001);
+
+                        //Pin address = new Pin();
+                        //address.Label = "Delivery Address";
+                        //address.Type = PinType.SearchResult;
+                        //address.Position = position;
+
+                        //map.MoveToRegion(mapSpan);
+                        //map.Pins.Add(address);
+
+                        break;
+                    }
+                    else if (GetXMLElement(element, "DPVConfirmation").Equals("D"))
+                    {
+                        //await DisplayAlert("Alert!", "Address is missing information like 'Apartment number'.", "Ok");
+                        //return;
+                    }
+                    else
+                    {
+                        //await DisplayAlert("Alert!", "Seems like your address is invalid.", "Ok");
+                        //return;
+                    }
+                }
+                else
+                {   // USPS sents an error saying address not found in there records. In other words, this address is not valid because it does not exits.
+                    //Console.WriteLine("Seems like your address is invalid.");
+                    //await DisplayAlert("Alert!", "Error from USPS. The address you entered was not found.", "Ok");
+                    //return;
+                }
+            }
+            if (latitude == "0" || longitude == "0")
+            {
+                await DisplayAlert("We couldn't find your address", "Please check for errors.", "Ok");
+            }
+            else
+            {
+                int startIndex = xdoc.ToString().IndexOf("<Address2>") + 10;
+                int length = xdoc.ToString().IndexOf("</Address2>") - startIndex;
+
+                string xdocAddress = xdoc.ToString().Substring(startIndex, length);
+                //Console.WriteLine("xdoc address: " + xdoc.ToString().Substring(startIndex, length));
+                //Console.WriteLine("xdoc end");
+
+                if (xdocAddress != AddressEntry.Text.ToUpper().Trim())
+                {
+                    DisplayAlert("heading", "changing address", "ok");
+                    AddressEntry.Text = xdocAddress;
+                }
+
+                startIndex = xdoc.ToString().IndexOf("<State>") + 7;
+                length = xdoc.ToString().IndexOf("</State>") - startIndex;
+                string xdocState = xdoc.ToString().Substring(startIndex, length);
+
+                if (xdocAddress != StateEntry.Text.ToUpper().Trim())
+                {
+                    DisplayAlert("heading", "changing state", "ok");
+                    StateEntry.Text = xdocState;
+                }
+
+                isAddessValidated = true;
+                await DisplayAlert("We validated your address", "Please click on the Sign up button to create your account!", "OK");
+                await Application.Current.SavePropertiesAsync();
+                //await tagUser(emailEntry.Text.Trim(), ZipEntry.Text.Trim());
+            }
+
+            //----------------------end validate address---------------------------//
+
             //    public string customer_uid { get; set; }
             //public string business_uid { get; set; }
             //public string salt { get; set; }
@@ -504,7 +693,159 @@ namespace MTYD.ViewModel
             Console.WriteLine("CHECKOUT JSON OBJECT BEING SENT: " + newPaymentJSONString);
             Console.WriteLine("clickedDone Func ENDED!");
 
-            await Navigation.PushAsync(new UserProfile(), false);
+            await Navigation.PushAsync(new UserProfile(cust_firstName, cust_lastName, cust_email), false);
+        }
+
+        async void ValidateAddressClick(object sender, System.EventArgs e)
+        {
+
+            if (AddressEntry.Text == null)
+            {
+                await DisplayAlert("Error", "Please enter your address", "OK");
+            }
+
+            if (CityEntry.Text == null)
+            {
+                await DisplayAlert("Error", "Please enter your city", "OK");
+            }
+
+            if (StateEntry.Text == null)
+            {
+                await DisplayAlert("Error", "Please enter your state", "OK");
+            }
+
+            if (ZipEntry.Text == null)
+            {
+                await DisplayAlert("Error", "Please enter your zipcode", "OK");
+            }
+
+            //if (PhoneEntry.Text == null && PhoneEntry.Text.Length == 10)
+            //{
+            //    await DisplayAlert("Error", "Please enter your phone number", "OK");
+            //}
+
+            // Setting request for USPS API
+            XDocument requestDoc = new XDocument(
+                new XElement("AddressValidateRequest",
+                new XAttribute("USERID", "400INFIN1745"),
+                new XElement("Revision", "1"),
+                new XElement("Address",
+                new XAttribute("ID", "0"),
+                new XElement("Address1", AddressEntry.Text.Trim()),
+                new XElement("Address2", AptEntry.Text.Trim()),
+                new XElement("City", CityEntry.Text.Trim()),
+                new XElement("State", StateEntry.Text.Trim()),
+                new XElement("Zip5", ZipEntry.Text.Trim()),
+                new XElement("Zip4", "")
+                     )
+                 )
+             );
+            var url = "http://production.shippingapis.com/ShippingAPI.dll?API=Verify&XML=" + requestDoc;
+            Console.WriteLine(url);
+            var client = new WebClient();
+            var response = client.DownloadString(url);
+
+            var xdoc = XDocument.Parse(response.ToString());
+            Console.WriteLine("xdoc begin");
+            Console.WriteLine(xdoc);
+
+
+            string latitude = "0";
+            string longitude = "0";
+            foreach (XElement element in xdoc.Descendants("Address"))
+            {
+                if (GetXMLElement(element, "Error").Equals(""))
+                {
+                    if (GetXMLElement(element, "DPVConfirmation").Equals("Y") && GetXMLElement(element, "Zip5").Equals(ZipEntry.Text.Trim()) && GetXMLElement(element, "City").Equals(CityEntry.Text.ToUpper().Trim())) // Best case
+                    {
+                        // Get longitude and latitide because we can make a deliver here. Move on to next page.
+                        // Console.WriteLine("The address you entered is valid and deliverable by USPS. We are going to get its latitude & longitude");
+                        //GetAddressLatitudeLongitude();
+                        Geocoder geoCoder = new Geocoder();
+
+                        IEnumerable<Position> approximateLocations = await geoCoder.GetPositionsForAddressAsync(AddressEntry.Text.Trim() + "," + CityEntry.Text.Trim() + "," + StateEntry.Text.Trim());
+                        Position position = approximateLocations.FirstOrDefault();
+
+                        latitude = $"{position.Latitude}";
+                        longitude = $"{position.Longitude}";
+
+                        //directSignUp.latitude = latitude;
+                        //directSignUp.longitude = longitude;
+                        //map.MapType = MapType.Street;
+                        //var mapSpan = new MapSpan(position, 0.001, 0.001);
+
+                        //Pin address = new Pin();
+                        //address.Label = "Delivery Address";
+                        //address.Type = PinType.SearchResult;
+                        //address.Position = position;
+
+                        //map.MoveToRegion(mapSpan);
+                        //map.Pins.Add(address);
+
+                        break;
+                    }
+                    else if (GetXMLElement(element, "DPVConfirmation").Equals("D"))
+                    {
+                        //await DisplayAlert("Alert!", "Address is missing information like 'Apartment number'.", "Ok");
+                        //return;
+                    }
+                    else
+                    {
+                        //await DisplayAlert("Alert!", "Seems like your address is invalid.", "Ok");
+                        //return;
+                    }
+                }
+                else
+                {   // USPS sents an error saying address not found in there records. In other words, this address is not valid because it does not exits.
+                    //Console.WriteLine("Seems like your address is invalid.");
+                    //await DisplayAlert("Alert!", "Error from USPS. The address you entered was not found.", "Ok");
+                    //return;
+                }
+            }
+            if (latitude == "0" || longitude == "0")
+            {
+                await DisplayAlert("We couldn't find your address", "Please check for errors.", "Ok");
+            }
+            else
+            {
+                int startIndex = xdoc.ToString().IndexOf("<Address2>") + 10;
+                int length = xdoc.ToString().IndexOf("</Address2>") - startIndex;
+
+                string xdocAddress = xdoc.ToString().Substring(startIndex, length);
+                //Console.WriteLine("xdoc address: " + xdoc.ToString().Substring(startIndex, length));
+                //Console.WriteLine("xdoc end");
+
+                if (xdocAddress != AddressEntry.Text.ToUpper().Trim())
+                {
+                    DisplayAlert("heading", "changing address", "ok");
+                    AddressEntry.Text = xdocAddress;
+                }
+
+                startIndex = xdoc.ToString().IndexOf("<State>") + 7;
+                length = xdoc.ToString().IndexOf("</State>") - startIndex;
+                string xdocState = xdoc.ToString().Substring(startIndex, length);
+
+                if (xdocAddress != StateEntry.Text.ToUpper().Trim())
+                {
+                    DisplayAlert("heading", "changing state", "ok");
+                    StateEntry.Text = xdocState;
+                }
+
+                isAddessValidated = true;
+                await DisplayAlert("We validated your address", "Please click on the Sign up button to create your account!", "OK");
+                await Application.Current.SavePropertiesAsync();
+                //await tagUser(emailEntry.Text.Trim(), ZipEntry.Text.Trim());
+            }
+        }
+
+        public static string GetXMLElement(XElement element, string name)
+        {
+            var el = element.Element(name);
+            if (el != null)
+            {
+                return el.Value;
+            }
+            return "";
         }
     }
 }

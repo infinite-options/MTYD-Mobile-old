@@ -239,7 +239,6 @@ namespace MTYD
 
                         if (response.StatusCode == System.Net.HttpStatusCode.OK)
                         {
-
                             HttpContent content = response.Content;
                             Console.WriteLine("content: " + content);
                             var userString = await content.ReadAsStringAsync();
@@ -247,8 +246,26 @@ namespace MTYD
 
                             if (userString.ToString()[0] != '{')
                             {
+                                url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                var request3 = new HttpRequestMessage();
+                                request3.RequestUri = new Uri(url);
+                                request3.Method = HttpMethod.Get;
+                                response = await client.SendAsync(request3);
+                                content = response.Content;
+                                Console.WriteLine("content: " + content);
+                                userString = await content.ReadAsStringAsync();
+                                JObject info_obj3 = JObject.Parse(userString);
+                                this.NewMainPage.Clear();
+                                Preferences.Set("user_latitude", (info_obj3["result"])[0]["customer_lat"].ToString());
+                                Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+                                Preferences.Set("user_longitude", (info_obj3["result"])[0]["customer_long"].ToString());
+                                Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
+
+                                Preferences.Set("profilePicLink", "");
+
                                 Console.WriteLine("go to SubscriptionPage");
-                                Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+                                Preferences.Set("canChooseSelect", false);
+                                Application.Current.MainPage = new NavigationPage(new SubscriptionPage(loginAttempt.result[0].customer_first_name, loginAttempt.result[0].customer_last_name, loginAttempt.result[0].customer_email));
                                 return;
                             }
 
@@ -271,10 +288,50 @@ namespace MTYD
                             //check if the user hasn't entered any info before, if so put in the placeholders
                             if ((info_obj2["result"]).ToString() == "[]" || (info_obj2["result"]).ToString() == "204")
                             {
+                                url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                var request3 = new HttpRequestMessage();
+                                request3.RequestUri = new Uri(url);
+                                request3.Method = HttpMethod.Get;
+                                response = await client.SendAsync(request3);
+                                content = response.Content;
+                                Console.WriteLine("content: " + content);
+                                userString = await content.ReadAsStringAsync();
+                                JObject info_obj3 = JObject.Parse(userString);
+                                this.NewMainPage.Clear();
+                                Preferences.Set("user_latitude", (info_obj3["result"])[0]["customer_lat"].ToString());
+                                Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+                                Preferences.Set("user_longitude", (info_obj3["result"])[0]["customer_long"].ToString());
+                                Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
+
+                                Preferences.Set("profilePicLink", "");
+
                                 Console.WriteLine("go to SubscriptionPage");
-                                Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+                                Preferences.Set("canChooseSelect", false);
+                                Application.Current.MainPage = new NavigationPage(new SubscriptionPage(loginAttempt.result[0].customer_first_name, loginAttempt.result[0].customer_last_name, loginAttempt.result[0].customer_email));
                             }
-                            else Application.Current.MainPage = new NavigationPage(new Select((info_obj2["result"])[0]["delivery_first_name"].ToString(), (info_obj2["result"])[0]["delivery_last_name"].ToString(),(info_obj2["result"])[0]["delivery_email"].ToString()));
+                            else
+                            {
+                                url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                var request3 = new HttpRequestMessage();
+                                request3.RequestUri = new Uri(url);
+                                request3.Method = HttpMethod.Get;
+                                response = await client.SendAsync(request3);
+                                content = response.Content;
+                                Console.WriteLine("content: " + content);
+                                userString = await content.ReadAsStringAsync();
+                                JObject info_obj3 = JObject.Parse(userString);
+                                this.NewMainPage.Clear();
+                                Preferences.Set("user_latitude", (info_obj3["result"])[0]["customer_lat"].ToString());
+                                Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+                                Preferences.Set("user_longitude", (info_obj3["result"])[0]["customer_long"].ToString());
+                                Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
+
+                                Preferences.Set("profilePicLink", "");
+                                //Application.Current.MainPage = new NavigationPage(new SubscriptionPage(loginAttempt.result[0].customer_first_name, loginAttempt.result[0].customer_last_name, loginAttempt.result[0].customer_email));
+                                //TEMPORARY
+                                Preferences.Set("canChooseSelect", true);
+                                Application.Current.MainPage = new NavigationPage(new Select(loginAttempt.result[0].customer_first_name, loginAttempt.result[0].customer_last_name, loginAttempt.result[0].customer_email));
+                            }
                         }
                     }
                     else
@@ -494,6 +551,7 @@ namespace MTYD
                             // HERE YOU NEED TO SUBSTITUTE MY SOCIAL SIGN UP PAGE WITH MTYD SOCIAL SIGN UP
                             // NOTE THAT THIS SOCIAL SIGN UP PAGE NEEDS A CONSTRUCTOR LIKE THE FOLLOWING ONE
                             // SocialSignUp(string socialId, string firstName, string lastName, string emailAddress, string accessToken, string refreshToken, string platform)
+                            Preferences.Set("canChooseSelect", false);
                             Application.Current.MainPage = new CarlosSocialSignUp(facebookData.id, facebookData.name, "", facebookData.email, accessToken, accessToken, "FACEBOOK");
                             // need to write new statment here ...
                         }
@@ -549,8 +607,26 @@ namespace MTYD
 
                                 if (userString.ToString()[0] != '{')
                                 {
+                                    url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                    var request3 = new HttpRequestMessage();
+                                    request3.RequestUri = new Uri(url);
+                                    request3.Method = HttpMethod.Get;
+                                    response = await client.SendAsync(request3);
+                                    content = response.Content;
+                                    Console.WriteLine("content: " + content);
+                                    userString = await content.ReadAsStringAsync();
+                                    JObject info_obj2 = JObject.Parse(userString);
+                                    this.NewMainPage.Clear();
+                                    Preferences.Set("user_latitude", (info_obj2["result"])[0]["customer_lat"].ToString());
+                                    Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+                                    Preferences.Set("user_longitude", (info_obj2["result"])[0]["customer_long"].ToString());
+                                    Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
+
+                                    Preferences.Set("profilePicLink", "");
+
                                     Console.WriteLine("go to SubscriptionPage");
-                                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+                                    Preferences.Set("canChooseSelect", false);
+                                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage((info_obj2["result"])[0]["customer_first_name"].ToString(), (info_obj2["result"])[0]["customer_last_name"].ToString(), (info_obj2["result"])[0]["customer_email"].ToString()));
                                     return;
                                 }
 
@@ -562,14 +638,52 @@ namespace MTYD
                                 //ArrayList payment_frequency = new ArrayList();
                                 //ArrayList groupArray = new ArrayList();
 
-                                //Console.WriteLine("string: " + (info_obj["result"]).ToString());
+                                Console.WriteLine("string: " + (info_obj["result"]).ToString());
                                 //check if the user hasn't entered any info before, if so put in the placeholders
                                 if ((info_obj["result"]).ToString() == "[]")
                                 {
+                                    url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                    var request3 = new HttpRequestMessage();
+                                    request3.RequestUri = new Uri(url);
+                                    request3.Method = HttpMethod.Get;
+                                    response = await client.SendAsync(request3);
+                                    content = response.Content;
+                                    Console.WriteLine("content: " + content);
+                                    userString = await content.ReadAsStringAsync();
+                                    JObject info_obj2 = JObject.Parse(userString);
+                                    this.NewMainPage.Clear();
+                                    Preferences.Set("user_latitude", (info_obj2["result"])[0]["customer_lat"].ToString());
+                                    Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+                                    Preferences.Set("user_longitude", (info_obj2["result"])[0]["customer_long"].ToString());
+                                    Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
+
+                                    Preferences.Set("profilePicLink", "");
+
                                     Console.WriteLine("go to SubscriptionPage");
-                                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+                                    Preferences.Set("canChooseSelect", false);
+                                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage((info_obj2["result"])[0]["customer_first_name"].ToString(), (info_obj2["result"])[0]["customer_last_name"].ToString(), (info_obj2["result"])[0]["customer_email"].ToString()));
                                 }
-                                else Application.Current.MainPage = new NavigationPage(new Select((info_obj["result"])[0]["delivery_first_name"].ToString(), (info_obj["result"])[0]["delivery_last_name"].ToString(), (info_obj["result"])[0]["delivery_email"].ToString()));
+                                else
+                                {
+                                    url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                    var request3 = new HttpRequestMessage();
+                                    request3.RequestUri = new Uri(url);
+                                    request3.Method = HttpMethod.Get;
+                                    response = await client.SendAsync(request3);
+                                    content = response.Content;
+                                    Console.WriteLine("content: " + content);
+                                    userString = await content.ReadAsStringAsync();
+                                    JObject info_obj2 = JObject.Parse(userString);
+                                    this.NewMainPage.Clear();
+                                    Preferences.Set("user_latitude", (info_obj2["result"])[0]["customer_lat"].ToString());
+                                    Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+                                    Preferences.Set("user_longitude", (info_obj2["result"])[0]["customer_long"].ToString());
+                                    Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
+
+                                    Preferences.Set("profilePicLink", "");
+                                    Preferences.Set("canChooseSelect", true);
+                                    Application.Current.MainPage = new NavigationPage(new Select((info_obj2["result"])[0]["customer_first_name"].ToString(), (info_obj2["result"])[0]["customer_last_name"].ToString(), (info_obj2["result"])[0]["customer_email"].ToString()));
+                                }
                             }
 
                             // THIS IS HOW YOU CAN ACCESS YOUR USER ID FROM THE APP
@@ -731,12 +845,15 @@ namespace MTYD
                             // HERE YOU NEED TO SUBSTITUTE MY SOCIAL SIGN UP PAGE WITH MTYD SOCIAL SIGN UP
                             // NOTE THAT THIS SOCIAL SIGN UP PAGE NEEDS A CONSTRUCTOR LIKE THE FOLLOWING ONE
                             // SocialSignUp(string socialId, string firstName, string lastName, string emailAddress, string accessToken, string refreshToken, string platform)
+                            Preferences.Set("canChooseSelect", false);
                             Application.Current.MainPage = new CarlosSocialSignUp(googleData.id, googleData.given_name, googleData.family_name, googleData.email, accessToken, refreshToken, "GOOGLE");
                         }
                     }
                     if (responseContent.Contains(Constant.AutheticatedSuccesful))
                     {
                         var data = JsonConvert.DeserializeObject<SuccessfulSocialLogIn>(responseContent);
+                        Debug.WriteLine("responseContent: " + responseContent.ToString());
+                        Debug.WriteLine("data: " + data.ToString());
                         Application.Current.Properties["user_id"] = data.result[0].customer_uid;
 
                         UpdateTokensPost updateTokesPost = new UpdateTokensPost();
@@ -783,8 +900,46 @@ namespace MTYD
                                 //testing for if the user only has serving fresh stuff
                                 if (userString.ToString()[0] != '{')
                                 {
+                                    url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                    var request3 = new HttpRequestMessage();
+                                    request3.RequestUri = new Uri(url);
+                                    request3.Method = HttpMethod.Get;
+                                    response = await client.SendAsync(request3);
+                                    content = response.Content;
+                                    Console.WriteLine("content: " + content);
+                                    userString = await content.ReadAsStringAsync();
+                                    JObject info_obj2 = JObject.Parse(userString);
+                                    this.NewMainPage.Clear();
+                                    Console.WriteLine("google first: " + (info_obj2["result"])[0]["customer_first_name"].ToString());
+                                    Console.WriteLine("google last: " + (info_obj2["result"])[0]["customer_last_name"].ToString());
+                                    Console.WriteLine("google email: " + (info_obj2["result"])[0]["customer_email"].ToString());
+                                    Preferences.Set("user_latitude", (info_obj2["result"])[0]["customer_lat"].ToString());
+                                    Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+                                    Preferences.Set("user_longitude", (info_obj2["result"])[0]["customer_long"].ToString());
+                                    Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
+
+                                    //var accessToken = loginInfo.ExternalIdentity.Claims.Where(c => c.Type.Equals("urn:google:accesstoken")).Select(c => c.Value).FirstOrDefault();
+                                    Uri apiRequestUri = new Uri("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + (info_obj2["result"])[0]["mobile_access_token"].ToString());
+                                    //request profile image
+                                    using (var webClient = new System.Net.WebClient())
+                                    {
+                                        var json = webClient.DownloadString(apiRequestUri);
+                                        var data2 = JsonConvert.DeserializeObject<profilePicLogIn>(json);
+                                        Debug.WriteLine(data2.ToString());
+                                        var userPicture = data2.picture;
+                                        //var holder = userPicture[0];
+                                        Debug.WriteLine(userPicture);
+                                        Preferences.Set("profilePicLink", userPicture);
+
+                                        //var data = JsonConvert.DeserializeObject<SuccessfulSocialLogIn>(responseContent);
+                                        //Application.Current.Properties["user_id"] = data.result[0].customer_uid;
+                                    }
+
+                                    //Debug.WriteLine("picture link: " + userPicture);
+
                                     Console.WriteLine("go to SubscriptionPage");
-                                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+                                    Preferences.Set("canChooseSelect", false);
+                                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage((info_obj2["result"])[0]["customer_first_name"].ToString(), (info_obj2["result"])[0]["customer_last_name"].ToString(), (info_obj2["result"])[0]["customer_email"].ToString()));
                                     return;
                                 }
                                 //testing
@@ -812,13 +967,88 @@ namespace MTYD
                                 //check if the user hasn't entered any info before, if so put in the placeholders
                                 if ((info_obj["result"]).ToString() == "[]" || (info_obj["result"]).ToString() == "204")
                                 {
+                                    url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                    var request3 = new HttpRequestMessage();
+                                    request3.RequestUri = new Uri(url);
+                                    request3.Method = HttpMethod.Get;
+                                    response = await client.SendAsync(request3);
+                                    content = response.Content;
+                                    Console.WriteLine("content: " + content);
+                                    userString = await content.ReadAsStringAsync();
+                                    JObject info_obj2 = JObject.Parse(userString);
+                                    this.NewMainPage.Clear();
+                                    Console.WriteLine("google first: " + (info_obj2["result"])[0]["customer_first_name"].ToString());
+                                    Console.WriteLine("google last: " + (info_obj2["result"])[0]["customer_last_name"].ToString());
+                                    Console.WriteLine("google email: " + (info_obj2["result"])[0]["customer_email"].ToString());
+                                    Preferences.Set("user_latitude", (info_obj2["result"])[0]["customer_lat"].ToString());
+                                    Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+                                    Preferences.Set("user_longitude", (info_obj2["result"])[0]["customer_long"].ToString());
+                                    Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
+
+                                    Uri apiRequestUri = new Uri("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + (info_obj2["result"])[0]["mobile_access_token"].ToString());
+                                    //request profile image
+                                    using (var webClient = new System.Net.WebClient())
+                                    {
+                                        var json = webClient.DownloadString(apiRequestUri);
+                                        var data2 = JsonConvert.DeserializeObject<profilePicLogIn>(json);
+                                        Debug.WriteLine(data2.ToString());
+                                        var userPicture = data2.picture;
+                                        //var holder = userPicture[0];
+                                        Debug.WriteLine(userPicture);
+                                        Preferences.Set("profilePicLink", userPicture);
+
+                                        //var data = JsonConvert.DeserializeObject<SuccessfulSocialLogIn>(responseContent);
+                                        //Application.Current.Properties["user_id"] = data.result[0].customer_uid;
+                                    }
+
                                     Console.WriteLine("go to SubscriptionPage");
-                                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage());
+                                    DisplayAlert("navigation", "sending to subscription", "close");
+                                    Preferences.Set("canChooseSelect", false);
+                                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage((info_obj2["result"])[0]["customer_first_name"].ToString(), (info_obj2["result"])[0]["customer_last_name"].ToString(), (info_obj2["result"])[0]["customer_email"].ToString()));
                                 }
                                 else
                                 {
+                                    url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                    var request3 = new HttpRequestMessage();
+                                    request3.RequestUri = new Uri(url);
+                                    request3.Method = HttpMethod.Get;
+                                    response = await client.SendAsync(request3);
+                                    content = response.Content;
+                                    Console.WriteLine("content: " + content);
+                                    userString = await content.ReadAsStringAsync();
+                                    JObject info_obj2 = JObject.Parse(userString);
+                                    this.NewMainPage.Clear();
+                                    Preferences.Set("user_latitude", (info_obj2["result"])[0]["customer_lat"].ToString());
+                                    Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+                                    Preferences.Set("user_longitude", (info_obj2["result"])[0]["customer_long"].ToString());
+                                    Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
+                                    Console.WriteLine("google first: " + (info_obj2["result"])[0]["customer_first_name"].ToString());
+                                    Console.WriteLine("google last: " + (info_obj2["result"])[0]["customer_last_name"].ToString());
+                                    Console.WriteLine("google email: " + (info_obj2["result"])[0]["customer_email"].ToString());
+                                    Debug.WriteLine("user access token: " + (info_obj2["result"])[0]["user_access_token"].ToString());
+                                    Debug.WriteLine("mobile access token: " + (info_obj2["result"])[0]["mobile_access_token"].ToString());
+                                    Uri apiRequestUri = new Uri("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + (info_obj2["result"])[0]["mobile_access_token"].ToString());
+                                    //request profile image
+                                    using (var webClient = new System.Net.WebClient())
+                                    {
+                                        var json = webClient.DownloadString(apiRequestUri);
+                                        var data2 = JsonConvert.DeserializeObject<profilePicLogIn>(json);
+                                        Debug.WriteLine(data2.ToString());
+                                        var userPicture = data2.picture;
+                                        //var holder = userPicture[0];
+                                        Debug.WriteLine(userPicture);
+                                        Preferences.Set("profilePicLink", userPicture);
+
+                                        //var data = JsonConvert.DeserializeObject<SuccessfulSocialLogIn>(responseContent);
+                                        //Application.Current.Properties["user_id"] = data.result[0].customer_uid;
+                                    }
+
+                                    DisplayAlert("navigation", "sending to select", "close");
                                     Console.WriteLine("delivery first name: " + (info_obj["result"])[0]["delivery_first_name"].ToString());
-                                    Application.Current.MainPage = new NavigationPage(new Select((info_obj["result"])[0]["delivery_first_name"].ToString(), (info_obj["result"])[0]["delivery_last_name"].ToString(), (info_obj["result"])[0]["delivery_email"].ToString()));
+                                    Console.WriteLine("delivery last name: " + (info_obj["result"])[0]["delivery_last_name"].ToString());
+                                    Console.WriteLine("delivery email: " + (info_obj["result"])[0]["delivery_email"].ToString());
+                                    Preferences.Set("canChooseSelect", true);
+                                    Application.Current.MainPage = new NavigationPage(new Select((info_obj2["result"])[0]["customer_first_name"].ToString(), (info_obj2["result"])[0]["customer_last_name"].ToString(), (info_obj2["result"])[0]["customer_email"].ToString()));
 
                                 }
 
@@ -881,6 +1111,7 @@ namespace MTYD
 
         async void clickedSignUp(object sender, EventArgs e)
         {
+            Preferences.Set("canChooseSelect", false);
             Application.Current.MainPage = new CarlosSignUp();
         }
 
@@ -894,6 +1125,39 @@ namespace MTYD
             if (loginPassword.IsPassword == true)
                 loginPassword.IsPassword = false;
             else loginPassword.IsPassword = true;
+        }
+
+        void HIWclicked(System.Object sender, System.EventArgs e)
+        {
+            Application.Current.MainPage = new HowItWorks();
+        }
+
+        async public void getProfileInfo()
+        {
+
+            string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+            Debug.WriteLine("getProfileInfo url: " + url);
+            var request3 = new HttpRequestMessage();
+            request3.RequestUri = new Uri(url);
+            request3.Method = HttpMethod.Get;
+            var client2 = new HttpClient();
+            HttpResponseMessage response = await client2.SendAsync(request3);
+            HttpContent content = response.Content;
+            Console.WriteLine("content: " + content.ToString());
+            var userString = await content.ReadAsStringAsync();
+            Debug.WriteLine("userString: " + userString);
+            JObject info_obj3 = JObject.Parse(userString);
+            Debug.WriteLine("info_obj3: " + info_obj3.ToString());
+            this.NewMainPage.Clear();
+            Preferences.Set("user_latitude", (info_obj3["result"])[0]["customer_lat"].ToString());
+            Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+            Preferences.Set("user_longitude", (info_obj3["result"])[0]["customer_long"].ToString());
+            Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
+
+            Preferences.Set("profilePicLink", "");
+            Preferences.Set("canChooseSelect", false);
+            Application.Current.MainPage = new NavigationPage(new SubscriptionPage((info_obj3["result"])[0]["customer_first_name"].ToString(), (info_obj3["result"])[0]["customer_last_name"].ToString(), (info_obj3["result"])[0]["customer_email"].ToString()));
+            return;
         }
 
         //void Button_Clicked(System.Object sender, System.EventArgs e)

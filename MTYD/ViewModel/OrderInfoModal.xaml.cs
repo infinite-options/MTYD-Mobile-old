@@ -18,6 +18,7 @@ namespace MTYD.ViewModel
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class OrderInfoModal : ContentPage
     {
+        string cust_firstName; string cust_lastName; string cust_email;
         public ObservableCollection<Plans> NewDeliveryInfo = new ObservableCollection<Plans>();
         public string salt;
         string fullName; string emailAddress;
@@ -273,11 +274,16 @@ namespace MTYD.ViewModel
             }
         }
 
-        public OrderInfoModal(string pass, string token, string num, string year, string month, string cvv, string zip, string purchaseID, string businessID, string mealPlan, string price, string itemID, string customerID)
+        public OrderInfoModal(string firstName, string lastName, string email, string pass, string token, string num, string year, string month, string cvv, string zip, string purchaseID, string businessID, string mealPlan, string price, string itemID, string customerID)
         {
+            cust_firstName = firstName;
+            cust_lastName = lastName;
+            cust_email = email;
             InitializeComponent();
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
+            var width = DeviceDisplay.MainDisplayInfo.Width;
+            var height = DeviceDisplay.MainDisplayInfo.Height;
 
             MonthPicker.SelectedIndex = Int32.Parse(month) - 1;
             YearPicker.SelectedIndex = Int32.Parse(year) - 2020;
@@ -286,8 +292,36 @@ namespace MTYD.ViewModel
 
             if (Device.RuntimePlatform == Device.iOS)
             {
-                orangeBox.CornerRadius = 35;
-                pfp.CornerRadius = 20;
+                orangeBox.HeightRequest = height / 2;
+                orangeBox.Margin = new Thickness(0, -height / 2.2, 0, 0);
+                orangeBox.CornerRadius = height / 40;
+                heading.FontSize = width / 32;
+                heading.Margin = new Thickness(0, 0, 0, 30);
+                pfp.HeightRequest = width / 20;
+                pfp.WidthRequest = width / 20;
+                pfp.CornerRadius = (int)(width / 40);
+                pfp.Margin = new Thickness(0, 0, 23, 27);
+
+                if (Preferences.Get("profilePicLink", "") == "")
+                {
+                    string userInitials = "";
+                    if (cust_firstName != "" || cust_firstName != null)
+                    {
+                        userInitials += cust_firstName.Substring(0, 1);
+                    }
+                    if (cust_lastName != "" || cust_lastName != null)
+                    {
+                        userInitials += cust_lastName.Substring(0, 1);
+                    }
+                    initials.Text = userInitials.ToUpper();
+                    initials.Margin = new Thickness(0, 0, 32, 33);
+                    initials.FontSize = width / 38;
+                }
+                else pfp.Source = Preferences.Get("profilePicLink", "");
+
+                menu.HeightRequest = width / 25;
+                menu.WidthRequest = width / 25;
+                menu.Margin = new Thickness(25, 0, 0, 30);
 
                 //firstName.CornerRadius = 22;
                 //firstName.HeightRequest = 35;
@@ -442,7 +476,7 @@ namespace MTYD.ViewModel
             Console.WriteLine("CHECKOUT JSON OBJECT BEING SENT: " + newPaymentJSONString);
             Console.WriteLine("clickedDone Func ENDED!");
 
-            Navigation.PushAsync(new UserProfile());
+            Navigation.PushAsync(new UserProfile(cust_firstName, cust_lastName, cust_email));
             //if (platform != "DIRECT")
             //{
             //    Navigation.PushAsync(new VerifyInfo(AptEntry.Text, FNameEntry.Text, LNameEntry.Text, emailEntry.Text, PhoneEntry.Text, AddressEntry.Text, CityEntry.Text, StateEntry.Text, ZipEntry.Text, DeliveryEntry.Text, CCEntry.Text, CVVEntry.Text, ZipCCEntry.Text, salt));
@@ -456,12 +490,12 @@ namespace MTYD.ViewModel
 
         async void clickedPfp(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new UserProfile());
+            await Navigation.PushAsync(new UserProfile(cust_firstName, cust_lastName, cust_email));
         }
 
         async void clickedMenu(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new Menu("", ""));
+            await Navigation.PushAsync(new Menu(cust_firstName, cust_lastName, cust_email));
         }
 
         void clickedNotDone(object sender, EventArgs e)

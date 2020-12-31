@@ -8,7 +8,7 @@
         <ScrollView>
             <StackLayout x:Name="StackL" BackgroundColor="White">
 
-                <AbsoluteLayout>
+                <!--<AbsoluteLayout>
 
                     <BoxView x:Name="orangeBox" BackgroundColor="#FF9E19" 
                            Margin="0, -100, 0, 0"
@@ -26,7 +26,21 @@
                     <ImageButton x:Name="menu" Source="menu.png" HeightRequest="40" WidthRequest="40"
                                  AbsoluteLayout.LayoutBounds="0.07, 0.15" Scale="0.8" Clicked="clickedMenu"
                                  AbsoluteLayout.LayoutFlags="PositionProportional"/>
-                </AbsoluteLayout>
+                </AbsoluteLayout>-->
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <BoxView x:Name="orangeBox" BackgroundColor="#FF9E19" HorizontalOptions="Fill"/>
+                    <Label x:Name="heading" Text="UPDATE BILLING" FontAttributes="Bold" VerticalOptions="End" HorizontalTextAlignment="Center" TextColor="Black"/>
+                    <!--<Label x:Name="heading" Text="MENU THIS WEEK" FontAttributes="Bold" VerticalOptions="End" HorizontalTextAlignment="Center" TextColor="Black"/>-->
+                    <ImageButton x:Name="pfp" BackgroundColor="LightGray" VerticalOptions="End" HorizontalOptions="End" Clicked="clickedPfp"/>
+                    <Label x:Name="initials" TextColor="Black" FontAttributes="Bold" VerticalOptions="End"  HorizontalOptions="End"/>
+                    <ImageButton x:Name="menu" Source="menu2.png" VerticalOptions="End" HorizontalOptions="Start" BackgroundColor="Transparent" Clicked="clickedMenu"/>
+
+                </Grid>
 
                 <Label x:Name="spacer" HeightRequest="5"/>
 

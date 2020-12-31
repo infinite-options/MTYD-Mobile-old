@@ -14,6 +14,9 @@ using System.Net.Http;
 using MTYD.Model.Login.LoginClasses;
 using Newtonsoft.Json;
 using System.Text;
+using MTYD.Model;
+using Newtonsoft.Json.Linq;
+using System.Diagnostics;
 
 [assembly: ExportFont("PlatNomor-WyVnn.ttf", Alias = "ButtonFont")]
 
@@ -22,15 +25,38 @@ namespace MTYD
 {
     public partial class App : Application
     {
-
+        //public HttpClient client = new HttpClient();
+        public ObservableCollection<Plans> NewMainPage = new ObservableCollection<Plans>();
         static UserLoginDatabase database;
         static Boolean loggedIn = false;
+        JObject info_obj2;
 
         // Initialize variables for Apple Login
         public const string LoggedInKey = "LoggedIn";
         public const string AppleUserIdKey = "AppleUserIdKey";
         string userId;
 
+        async public void getProfileInfo()
+        {
+            MainPage client = new MainPage();
+            MainPage = client;
+
+            string url = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+            Debug.WriteLine("getProfileInfo url: " + url);
+            var request3 = new HttpRequestMessage();
+            request3.RequestUri = new Uri(url);
+            request3.Method = HttpMethod.Get;
+            var client2 = new HttpClient();
+            HttpResponseMessage response = await client2.SendAsync(request3);
+            HttpContent content = response.Content;
+            Console.WriteLine("content: " + content.ToString());
+            var userString = await content.ReadAsStringAsync();
+            Debug.WriteLine("userString: " + userString);
+            info_obj2 = JObject.Parse(userString);
+            Debug.WriteLine("info_obj2: " + info_obj2.ToString());
+            this.NewMainPage.Clear();
+            return;
+        }
 
         public App()
         {
@@ -51,9 +77,17 @@ namespace MTYD
 
                     if (today <= expTime)
                     {
+                        MainPage client = new MainPage();
+                        MainPage = client;
+
+                        client.getProfileInfo();
+
+                        //getProfileInfo();
+
                         // MainPage = new CarlosHomePage();
                         Console.WriteLine("entered time check");
-                        MainPage = new NavigationPage(new SubscriptionPage());
+                        //MainPage = new NavigationPage(new SubscriptionPage("first", "last", "email"));
+                        //MainPage = new NavigationPage(new SubscriptionPage((info_obj2["result"])[0]["customer_first_name"].ToString(), (info_obj2["result"])[0]["customer_last_name"].ToString(), (info_obj2["result"])[0]["customer_email"].ToString()));
 
 
                         // Push Pop Navigation examples

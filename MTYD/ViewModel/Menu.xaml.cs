@@ -12,7 +12,7 @@ namespace MTYD.ViewModel
     public partial class Menu : ContentPage
     {
         public ObservableCollection<Plans> NewMenu = new ObservableCollection<Plans>();
-        string fullName; string email;
+        string fullName; string email; string firstName; string lastName;
 
         async void fillEntries()
         {
@@ -48,7 +48,7 @@ namespace MTYD.ViewModel
         }
 
 
-        public Menu(string name, string emailAdd)
+        public Menu(string Fname, string Lname, string emailAdd)
         {
             InitializeComponent();
             NavigationPage.SetHasBackButton(this, false);
@@ -56,11 +56,12 @@ namespace MTYD.ViewModel
             var width = DeviceDisplay.MainDisplayInfo.Width;
             var height = DeviceDisplay.MainDisplayInfo.Height;
 
-            if (name != "" && name != null)
+            if (Fname != "" && Fname != null)
             {
-                userName.Text = name;
+                userName.Text = Fname + " " + Lname;
                 userEmail.Text = emailAdd;
-                fullName = name;
+                firstName = Fname;
+                lastName = Lname;
                 email = emailAdd;
             }
             else
@@ -82,8 +83,34 @@ namespace MTYD.ViewModel
                 pfp.CornerRadius = (int)(width / 30);
                 pfp.Margin = new Thickness(25, 0, 0, 0);
                 //profileInfoStack.Margin = new Thickness(10, 0, 0, 0);
+                string userInitials = "";
+                if (Preferences.Get("profilePicLink", "") == "")
+                {
+                    if (firstName != "" || firstName != null)
+                    {
+                        userInitials += firstName.Substring(0, 1);
+                    }
+                    if (lastName != "" || lastName != null)
+                    {
+                        userInitials += lastName.Substring(0, 1);
+                    }
+                    initials.Text = userInitials.ToUpper();
+                    initials.Margin = new Thickness(0, 0, 12.5, 0);
+                    initials.FontSize = width / 33;
+                }
+                else pfp.Source = Preferences.Get("profilePicLink", "");
+
 
                 divider1.Margin = new Thickness(24, 10);
+
+                //landing starts here
+                landingButton.Margin = new Thickness(0, -5);
+                landingPic.HeightRequest = width / 15;
+                landingPic.WidthRequest = width / 15;
+                landingPic.Margin = new Thickness(25, 0, 0, 0);
+
+                divider10.Margin = new Thickness(24, 10);
+                //landing ends here
 
                 //subscription.Margin = new Thickness(0, -5);
                 subscriptionButton.Margin = new Thickness(0, -5);
@@ -123,13 +150,21 @@ namespace MTYD.ViewModel
                 logoutPic.Margin = new Thickness(25, 0, 0, 0);
                 logoutPic.CornerRadius = (int)(width / 30);
 
+                if (Preferences.Get("profilePicLink", "") == "")
+                {
+                    initials2.Text = userInitials.ToUpper();
+                    initials2.Margin = new Thickness(0, 0, 12.5, 0);
+                    initials2.FontSize = width / 33;
+                }
+                else logoutPic.Source = Preferences.Get("profilePicLink", "");
+
 
             }
         }
 
         async void clickedPfp(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new UserProfile());
+            await Navigation.PushAsync(new UserProfile(firstName, lastName, email));
         }
 
         async void clickedMenu(System.Object sender, System.EventArgs e)
@@ -137,34 +172,45 @@ namespace MTYD.ViewModel
             await Navigation.PopAsync();
         }
 
+        async void clickedLanding(System.Object sender, System.EventArgs e)
+        {
+            Navigation.PushAsync(new Landing(firstName, lastName, email), false);
+            Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 2]);
+        }
+
         async void clickedSubscription(System.Object sender, System.EventArgs e)
         {
-            Navigation.PushAsync(new SubscriptionPage(), false);
+            Navigation.PushAsync(new SubscriptionPage(firstName, lastName, email), false);
             Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 2]);
         }
 
         async void clickedMealPlan(System.Object sender, System.EventArgs e)
         {
-            Navigation.PushAsync(new MealPlans(), false);
+            Navigation.PushAsync(new MealPlans(firstName, lastName, email), false);
             Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 2]);
         }
 
         async void clickedMealSelect(System.Object sender, System.EventArgs e)
         {
-            Navigation.PushAsync(new Select("", "", ""), false);
-            Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 2]);
+            if (Preferences.Get("canChooseSelect", false) == false)
+                DisplayAlert("Error", "please purchase a meal plan first", "OK");
+            else
+            {
+                Navigation.PushAsync(new Select(firstName, lastName, email), false);
+                Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 2]);
+            }
         }
 
         async void clickedVerify(System.Object sender, System.EventArgs e)
         {
             string s1 = "", s2 = "", s3 = "", s4 = "", s5 = "", s6 = "", s7 = "", s8 = "", s9 = "", s10 = "", s11 = "", s12 = "", s13 = "", salt = "";
-            Navigation.PushAsync(new VerifyInfo(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, salt), false);
+            Navigation.PushAsync(new VerifyInfo(firstName, lastName, email, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, salt), false);
             Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 2]);
         }
 
         async void clickedSubscriptionTest(System.Object sender, System.EventArgs e)
         {
-            Navigation.PushAsync(new SubscriptionExperiment(), false);
+            //Navigation.PushAsync(new SubscriptionExperiment(), false);
             Navigation.RemovePage(this.Navigation.NavigationStack[this.Navigation.NavigationStack.Count - 2]);
         }
 

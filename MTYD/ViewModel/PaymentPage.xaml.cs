@@ -18,6 +18,8 @@ namespace MTYD.ViewModel
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PaymentPage : ContentPage
     {
+        string cust_firstName; string cust_lastName; string cust_email;
+
         protected async Task setPaymentInfo()
         {
             Console.WriteLine("SetPaymentInfo Func Started!");
@@ -76,8 +78,11 @@ namespace MTYD.ViewModel
             Console.WriteLine("CHECKOUT JSON OBJECT BEING SENT: " + newPaymentJSONString);
             Console.WriteLine("SetPaymentInfo Func ENDED!");
         }
-        public PaymentPage()
+        public PaymentPage(string firstName, string lastName, string email)
         {
+            cust_firstName = firstName;
+            cust_lastName = lastName;
+            cust_email = email;
             InitializeComponent();
         }
 
@@ -119,7 +124,7 @@ namespace MTYD.ViewModel
         private async void clickedDone(object sender, EventArgs e)
         {
             setPaymentInfo();
-            Navigation.PushAsync(new Select("", "", ""));
+            Navigation.PushAsync(new Select(cust_firstName, cust_lastName, cust_email));
             //MainPage = PaymentPage();
         }
 

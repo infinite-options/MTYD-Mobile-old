@@ -126,7 +126,9 @@
 
             </Grid>
 
-            
+            <BoxView HeightRequest="3"/>
+
+            <Button Text="How It Works" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" BackgroundColor="Transparent" Clicked="HIWclicked" FontSize="20"/>
 
             <!--<Grid x:Name="grid3" HorizontalOptions="Center" VerticalOptions="Center" 
                   BackgroundColor="LightGray">

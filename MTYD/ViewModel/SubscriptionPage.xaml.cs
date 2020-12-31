@@ -23,6 +23,7 @@ namespace MTYD.ViewModel
         double m3price_f1 = 0.0; double m3price_f2 = 0.0; double m3price_f3 = 0.0; double m4price_f1 = 0.0; double m4price_f2 = 0.0; double m4price_f3 = 0.0;
         string m1f1name = "", m1f2name = "", m1f3name = "", m2f1name = "", m2f2name = "", m2f3name = "", m3f1name = "", m3f2name = "", m3f3name = "", m4f1name = "", m4f2name = "", m4f3name = "";
         string m1f1uid = "", m1f2uid = "", m1f3uid = "", m2f1uid = "", m2f2uid = "", m2f3uid = "", m3f1uid = "", m3f2uid = "", m3f3uid = "", m4f1uid = "", m4f2uid = "", m4f3uid = "";
+        string cust_firstName; string cust_lastName; string cust_email;
         protected async Task GetPlans()
         {
             var request = new HttpRequestMessage();
@@ -203,6 +204,24 @@ namespace MTYD.ViewModel
                 pfp.WidthRequest = width / 20;
                 pfp.CornerRadius = (int)(width / 40);
                 pfp.Margin = new Thickness(0, 0, 23, 27);
+
+                if (Preferences.Get("profilePicLink", "") == "")
+                {
+                    string userInitials = "";
+                    if (cust_firstName != "" || cust_firstName != null)
+                    {
+                        userInitials += cust_firstName.Substring(0, 1);
+                    }
+                    if (cust_lastName != "" || cust_lastName != null)
+                    {
+                        userInitials += cust_lastName.Substring(0, 1);
+                    }
+                    initials.Text = userInitials.ToUpper();
+                    initials.Margin = new Thickness(0, 0, 32, 33);
+                    initials.FontSize = width / 38;
+                }
+                else pfp.Source = Preferences.Get("profilePicLink", "");
+
                 menu.HeightRequest = width / 25;
                 menu.WidthRequest = width / 25;
                 menu.Margin = new Thickness(25, 0, 0, 30);
@@ -341,8 +360,11 @@ namespace MTYD.ViewModel
             //common adjustments regardless of platform
         }
 
-        public SubscriptionPage()
+        public SubscriptionPage(string firstName, string lastName, string email)
         {
+            cust_firstName = firstName;
+            cust_lastName = lastName;
+            cust_email = email;
             var width = DeviceDisplay.MainDisplayInfo.Width;
             var height = DeviceDisplay.MainDisplayInfo.Height;
             InitializeComponent();
@@ -351,6 +373,7 @@ namespace MTYD.ViewModel
             checkPlatform(height, width);
             GetPlans();
             Preferences.Set("freqSelected", "");
+            pfp.Source = Preferences.Get("profilePicLink", "");
         }
 
 
@@ -623,14 +646,14 @@ namespace MTYD.ViewModel
             Preferences.Set("price", price);
 
             Console.WriteLine("Price selected: " + price);
-            await Navigation.PushAsync(new DeliveryBilling());
+            await Navigation.PushAsync(new DeliveryBilling(cust_firstName, cust_lastName, cust_email));
             //Application.Current.MainPage = new DeliveryBilling();
             //await NavigationPage.PushAsync(DeliveryBilling());
         }
 
         async void clickedPfp(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new UserProfile());
+            await Navigation.PushAsync(new UserProfile(cust_firstName, cust_lastName, cust_email));
             //Application.Current.MainPage = new UserProfile();
         }
 
@@ -641,7 +664,7 @@ namespace MTYD.ViewModel
 
         async void clickedMenu(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new Menu("", ""));
+            await Navigation.PushAsync(new Menu(cust_firstName, cust_lastName, cust_email));
             //Application.Current.MainPage = new Menu();
         }
     }

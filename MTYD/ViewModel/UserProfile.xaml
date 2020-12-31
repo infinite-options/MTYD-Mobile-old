@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="MTYD.ViewModel.UserProfile">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
+             x:Class="MTYD.ViewModel.UserProfile">
 
 
     <ContentPage.Content>
@@ -14,11 +16,15 @@
                     <BoxView x:Name="orangeBox" BackgroundColor="#FF9E19" HorizontalOptions="Fill"/>
                     <Label x:Name="heading" Text="USER PROFILE" FontAttributes="Bold" VerticalOptions="End" HorizontalTextAlignment="Center" TextColor="Black"/>
                     <ImageButton x:Name="pfp" BackgroundColor="LightGray" VerticalOptions="End" HorizontalOptions="End" Clicked="clickedPfp"/>
+                    <Label x:Name="initials" TextColor="Black" FontAttributes="Bold" VerticalOptions="End"  HorizontalOptions="End"/>
                     <ImageButton x:Name="menu" Source="menu2.png" VerticalOptions="End" HorizontalOptions="Start" BackgroundColor="Transparent" Clicked="clickedMenu"/>
 
                 </Grid>
 
-                <ImageButton x:Name="mainPfp" HorizontalOptions="Center" Margin="10,10" BackgroundColor="LightGray"/>
+                <Grid>
+                    <ImageButton x:Name="mainPfp" HorizontalOptions="Center" Margin="10,10" BackgroundColor="LightGray"/>
+                    <Label x:Name="mainInitials" TextColor="Black" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center"/>
+                </Grid>
 
                 <Label x:Name="customerInfo" Text="USER INFO" FontAttributes="Bold" HorizontalOptions="Start"/>
 
@@ -167,6 +173,19 @@
                         </Grid>
 
                 <BoxView x:Name="divider2" HeightRequest="3" BackgroundColor="Transparent"/>
+
+                <Frame x:Name="mapFrame" HasShadow="False" BackgroundColor="Gray" Padding="0" HeightRequest="200">
+                    <maps:Map
+                        x:Name="map"
+                        IsVisible="true">
+                    </maps:Map>
+                </Frame>
+
+                <BoxView HeightRequest="2" BackgroundColor="Transparent"/>
+
+                <Button x:Name="validateAddress" Text="VALIDATE ADDRESS" BackgroundColor="#F59A28" FontAttributes="Bold" TextColor="White" Clicked="ValidateAddressClick"/>
+
+                <BoxView HeightRequest="2" BackgroundColor="Transparent"/>
 
                 <Button x:Name="saveCustomerInfo" Text="UPDATE INFO" BackgroundColor="#F59A28" FontAttributes="Bold" TextColor="White" Clicked="clickedSave"/>
 

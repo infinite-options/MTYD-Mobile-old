@@ -17,6 +17,7 @@ namespace MTYD.ViewModel
 {
     public partial class SubscriptionModal : ContentPage
     {
+        string cust_firstName; string cust_lastName; string cust_email;
         public ObservableCollection<Plans> NewPlan = new ObservableCollection<Plans>();
 
         double m1price_f1 = 0.0; double m1price_f2 = 0.0; double m1price_f3 = 0.0; double m2price_f1 = 0.0; double m2price_f2 = 0.0; double m2price_f3 = 0.0;
@@ -327,6 +328,24 @@ namespace MTYD.ViewModel
                 pfp.WidthRequest = width / 20;
                 pfp.CornerRadius = (int)(width / 40);
                 pfp.Margin = new Thickness(0, 0, 23, 27);
+
+                if (Preferences.Get("profilePicLink", "") == "")
+                {
+                    string userInitials = "";
+                    if (cust_firstName != "" || cust_firstName != null)
+                    {
+                        userInitials += cust_firstName.Substring(0, 1);
+                    }
+                    if (cust_lastName != "" || cust_lastName != null)
+                    {
+                        userInitials += cust_lastName.Substring(0, 1);
+                    }
+                    initials.Text = userInitials.ToUpper();
+                    initials.Margin = new Thickness(0, 0, 32, 33);
+                    initials.FontSize = width / 38;
+                }
+                else pfp.Source = Preferences.Get("profilePicLink", "");
+
                 menu.HeightRequest = width / 25;
                 menu.WidthRequest = width / 25;
                 menu.Margin = new Thickness(25, 0, 0, 30);
@@ -465,8 +484,11 @@ namespace MTYD.ViewModel
             //common adjustments regardless of platform
         }
 
-        public SubscriptionModal(string pass, string token, string num, string year, string month, string cvv, string zip, string purchaseID, string businessID, string itemID, string customerID)
+        public SubscriptionModal(string firstName, string lastName, string email, string pass, string token, string num, string year, string month, string cvv, string zip, string purchaseID, string businessID, string itemID, string customerID)
         {
+            cust_firstName = firstName;
+            cust_lastName = lastName;
+            cust_email = email;
             Console.WriteLine("SubscriptionModal entered");
             var width = DeviceDisplay.MainDisplayInfo.Width;
             var height = DeviceDisplay.MainDisplayInfo.Height;
@@ -835,14 +857,14 @@ namespace MTYD.ViewModel
             Console.WriteLine("clickedDone Func ENDED!");
 
 
-            await Navigation.PushAsync(new UserProfile());
+            await Navigation.PushAsync(new UserProfile(cust_firstName, cust_lastName, cust_email));
             //Application.Current.MainPage = new DeliveryBilling();
             //await NavigationPage.PushAsync(DeliveryBilling());
         }
 
         async void clickedPfp(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new UserProfile());
+            await Navigation.PushAsync(new UserProfile(cust_firstName, cust_lastName, cust_email));
             //Application.Current.MainPage = new UserProfile();
         }
 
@@ -853,7 +875,7 @@ namespace MTYD.ViewModel
 
         async void clickedMenu(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new Menu("", ""));
+            await Navigation.PushAsync(new Menu(cust_firstName, cust_lastName, cust_email));
             //Application.Current.MainPage = new Menu();
         }
     }

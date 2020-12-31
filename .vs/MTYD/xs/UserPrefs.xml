@@ -1,26 +1,31 @@
-﻿<Properties StartupConfiguration="{46AB3B16-E84F-452C-9FC2-2827A0A70ABC}|Default" HasHotReloadOverlayBeenDismissed="True">
-  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD.Android/Properties/AndroidManifest.xml">
+﻿<Properties StartupConfiguration="{FAB6B3BB-6B8C-41F3-9565-69D18FC959BC}|Default" HasHotReloadOverlayBeenDismissed="True">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MTYD/CarlosSignUp.xaml.cs">
     <Files>
-      <File FileName="MTYD/ViewModel/Select.xaml" Line="64" Column="1" />
-      <File FileName="MTYD/MainPage.xaml" />
+      <File FileName="MTYD.iOS/AppDelegate.cs" Line="28" Column="11" />
+      <File FileName="MTYD/AppConstants.cs" />
+      <File FileName="MTYD.iOS/Entitlements.plist" />
       <File FileName="MTYD.iOS/Info.plist" />
-      <File FileName="MTYD.Android/MainActivity.cs" />
-      <File FileName="MTYD.Android/Properties/AndroidManifest.xml" />
+      <File FileName="MTYD/CarlosSignUp.xaml.cs" Line="295" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="MTYD" expanded="True" />
+          <Node name="MTYD" expanded="True">
+            <Node name="MTYD" expanded="True">
+              <Node name="CarlosSignUp.xaml" expanded="True">
+                <Node name="CarlosSignUp.xaml.cs" selected="True" />
+              </Node>
+            </Node>
+            <Node name="MTYD.iOS" expanded="True" />
+          </Node>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.ItemProperties.MTYD.iOS automaticSigning="True" TriggeredFromHotReload="False" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.3FAE291C-5CE8-428A-A62F-4006A88DC907">
-    <MonoDevelop.MacDev.AppleDevelopmentTeam DeveloperId="N87M66JNVY" TeamId="8V66NC2T37" />
-  </MonoDevelop.Ide.ItemProperties.MTYD.iOS>
+  <MonoDevelop.Ide.ItemProperties.MTYD.iOS automaticSigning="False" TriggeredFromHotReload="False" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.MTYD.Android TriggeredFromHotReload="False" PreferredExecutionTarget="Android.pixel_2_q_10_0_-_api_29" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|iPhone" />
+  <MonoDevelop.Ide.ItemProperties.MTYD.Android TriggeredFromHotReload="False" PreferredExecutionTarget="Android.nexus_5x" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
