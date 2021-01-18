@@ -18,6 +18,8 @@ namespace MTYD.ViewModel
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PaymentPage : ContentPage
     {
+        string cust_firstName; string cust_lastName; string cust_email;
+
         protected async Task setPaymentInfo()
         {
             Console.WriteLine("SetPaymentInfo Func Started!");
@@ -66,18 +68,21 @@ namespace MTYD.ViewModel
             var content = new StringContent(newPaymentJSONString, Encoding.UTF8, "application/json");
             Console.WriteLine("Content: " + content);
             /*var request = new HttpRequestMessage();
-            request.RequestUri = new Uri("https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/checkout");
+            request.RequestUri = new Uri("https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/checkout");
             request.Method = HttpMethod.Post;
             request.Content = content;*/
             var client = new HttpClient();
-            var response = client.PostAsync("https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/checkout", content);
+            var response = client.PostAsync("https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/checkout", content);
             // HttpResponseMessage response = await client.SendAsync(request);
             Console.WriteLine("RESPONSE TO CHECKOUT   " + response.Result);
             Console.WriteLine("CHECKOUT JSON OBJECT BEING SENT: " + newPaymentJSONString);
             Console.WriteLine("SetPaymentInfo Func ENDED!");
         }
-        public PaymentPage()
+        public PaymentPage(string firstName, string lastName, string email)
         {
+            cust_firstName = firstName;
+            cust_lastName = lastName;
+            cust_email = email;
             InitializeComponent();
         }
 
@@ -119,7 +124,7 @@ namespace MTYD.ViewModel
         private async void clickedDone(object sender, EventArgs e)
         {
             setPaymentInfo();
-            Navigation.PushAsync(new Select());
+            Navigation.PushAsync(new Select(cust_firstName, cust_lastName, cust_email));
             //MainPage = PaymentPage();
         }
 

@@ -25,720 +25,1221 @@ using System.IO;
 
 using System.Collections.Generic;
 using System.ComponentModel;
+using MTYD.Model.Login.LoginClasses.Apple;
+using MTYD.Model.Login.LoginClasses;
+using MTYD.Constants;
+using MTYD.LogInClasses;
+using Newtonsoft.Json.Linq;
+using MTYD.Model;
+using System.Collections.ObjectModel;
 
-
-
+//testing
 namespace MTYD
 {
     public partial class MainPage : ContentPage
     {
-        const string socialUrl = "https://uavi7wugua.execute-api.us-west-1.amazonaws.com/dev/api/v2/social/"; // api to check if user has a social media account; need email at end of link
-        const string socialLoginUrl = "https://uavi7wugua.execute-api.us-west-1.amazonaws.com/dev/api/v2/socialacc/"; // api to login the user with social account, need user id at end of link
-        
-        const string accountSaltUrl = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/accountsalt?email=quang@gmail.com";
-        const string loginUrl = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/login"; 
-        public HttpClient client = new HttpClient(); // client to handle all api calls
+        public HttpClient client = new HttpClient();
+        public event EventHandler SignIn;
+        public bool createAccount = false;
+        public ObservableCollection<Plans> NewMainPage = new ObservableCollection<Plans>();
+        LoginViewModel vm = new LoginViewModel();
 
         Account account;
         [Obsolete]
         AccountStore store;
 
-        [Obsolete]
         public MainPage()
         {
+            var width = DeviceDisplay.MainDisplayInfo.Width;
+            var height = DeviceDisplay.MainDisplayInfo.Height;
+            Console.WriteLine("Width = " + width.ToString());
+            Console.WriteLine("Height = " + height.ToString());
             InitializeComponent();
             store = AccountStore.Create();
-            checkPlatform();
-            forgotPass.CornerRadius = 0;
+            checkPlatform(height, width);
+            BackgroundImageSource = "landing1.jpg";
+            
+
+            // APPLE
+            //var vm = new LoginViewModel();
+            vm.AppleError += AppleError;
+            //vm.PlatformError += PlatformError;
+            BindingContext = vm;
+
+            if (Device.RuntimePlatform == Device.Android)
+            {
+                appleLoginButton.IsEnabled = false;
+            }
         }
 
-        private void checkPlatform()
+        private async void PlatformError(object sender, EventArgs e)
         {
-            if (Device.RuntimePlatform == Device.iOS)
+            if (Application.Current.Properties.ContainsKey("platform"))
             {
-                foreach (var button in absLayout.Children)
-                {
-                    if (button is Button)
-                    {
-                        ((Button)button).CornerRadius = 25;
-                    }
-                }
-                googleLoginButton.CornerRadius = 27;
-                appleLoginButton.CornerRadius = 27;
-                facebookLoginButton.CornerRadius = 27;
-                passFrame.CornerRadius = 20;
-                userFrame.CornerRadius = 20;
-                seePassword.CornerRadius = 14;
+                string platform = (string) Application.Current.Properties["platform"];
+                await DisplayAlert("Alert!", "Our records show that you have an account associated with " + platform + ". Please log in with " + platform, "OK");
             }
-            else if (Device.RuntimePlatform == Device.Android)
-            {
-                foreach (var button in absLayout.Children)
-                {
-                    if (button is Button)
-                    {
-                        ((Button)button).CornerRadius = 20;
-                    }
-                }
-
-                Heading.CharacterSpacing = 1;
-            }
+            
         }
 
-        // handles when the login button is clicked
+        private async void AppleError(object sender, EventArgs e)
+        {
+            await DisplayAlert("Error", "We weren't able to set an account for you", "OK");
+        }
+
+        private void checkPlatform(double height, double width)
+        {
+            if (width == 1125 && height == 2436) //iPhone X only
+            {
+                Console.WriteLine("entered for iPhone X");
+
+                //username and password entry
+                grid2.Margin = new Thickness(width / 22, height / 90, width / 22, 0);
+                loginUsername.Margin = new Thickness(0, height / (-120), 0, height / (-120));
+                loginPassword.Margin = new Thickness(0, height / (-120), width / 55, height / (-120));
+                userFrame.CornerRadius = 27;
+                passFrame.CornerRadius = 27;
+
+                //login and signup buttons
+                loginButton.HeightRequest = height / 47;
+                signUpButton.HeightRequest = height / 47;
+                loginButton.WidthRequest = width / 10;
+                signUpButton.WidthRequest = width / 10;
+                loginButton.CornerRadius = (int)(height / 94);
+                signUpButton.CornerRadius = (int)(height / 94);
+
+                //or divider
+                grid4.Margin = new Thickness(width / 16, height / 80, width / 16, height / 100);
+
+                //social media buttons
+                googleLoginButton.HeightRequest = width / 17;
+                googleLoginButton.WidthRequest = width / 17;
+                googleLoginButton.CornerRadius = (int)(width / 34);
+                facebookLoginButton.HeightRequest = width / 17;
+                facebookLoginButton.WidthRequest = width / 17;
+                facebookLoginButton.CornerRadius = (int)(width / 34);
+                appleLoginButton.HeightRequest = width / 17;
+                appleLoginButton.WidthRequest = width / 17;
+                appleLoginButton.CornerRadius = (int)(width / 34);
+            }
+            else if (Device.RuntimePlatform == Device.iOS)
+            {
+                //username and password entry
+                grid2.Margin = new Thickness(width / 13, height / 90, width / 13, 0);
+                loginUsername.Margin = new Thickness(0, height / (-120), 0, height / (-120));
+                loginPassword.Margin = new Thickness(0, height / (-120), width / 55, height / (-120));
+
+                //login and signup buttons
+                loginButton.HeightRequest = height / 35;
+                signUpButton.HeightRequest = height / 35;
+                loginButton.WidthRequest = width / 7;
+                signUpButton.WidthRequest = width / 7;
+                loginButton.CornerRadius = (int)(height / 70);
+                signUpButton.CornerRadius = (int)(height / 70);
+
+                //or divider
+                grid4.Margin = new Thickness(width / 15, height / 80, width / 15, height / 100);
+
+                //social media buttons
+                googleLoginButton.HeightRequest = width / 13;
+                googleLoginButton.WidthRequest = width / 13;
+                googleLoginButton.CornerRadius = (int)(width / 26);
+                facebookLoginButton.HeightRequest = width / 13;
+                facebookLoginButton.WidthRequest = width / 13;
+                facebookLoginButton.CornerRadius = (int)(width / 26);
+                appleLoginButton.HeightRequest = width / 13;
+                appleLoginButton.WidthRequest = width / 13;
+                appleLoginButton.CornerRadius = (int)(width / 26);
+
+
+                introParagraph.FontSize = width / 50;
+
+                choosePic.Margin = new Thickness(width / 8, 0);
+                first.FontSize = width / 32;
+                first.HeightRequest = width / 17;
+                first.WidthRequest = width / 17;
+                first.CornerRadius = (int)(width / 34);
+                first.Margin = new Thickness(width / 30, 0);
+                step1.FontSize = width / 34;
+                sub1.FontSize = width / 47;
+
+                deliveryPic.Margin = new Thickness(width / 12, 0);
+                second.FontSize = width / 32;
+                second.HeightRequest = width / 17;
+                second.WidthRequest = width / 17;
+                second.CornerRadius = (int)(width / 34);
+                second.Margin = new Thickness(width / 30, 0);
+                step2.FontSize = width / 34;
+                sub2.FontSize = width / 47;
+
+                paymentPic.Margin = new Thickness(width / 10, 0);
+                third.FontSize = width / 32;
+                third.HeightRequest = width / 17;
+                third.WidthRequest = width / 17;
+                third.CornerRadius = (int)(width / 34);
+                third.Margin = new Thickness(width / 30, 0);
+                step3.FontSize = width / 34;
+                sub3.FontSize = width / 47;
+
+                browseMenu.FontSize = width / 33;
+            }
+            else //android
+            {
+                //username and password entry
+                grid2.Margin = new Thickness(width / 20, height / 80, width / 25, 0);
+                loginUsername.Margin = new Thickness(0, height / (-120), 0, height / (-120));
+                loginPassword.Margin = new Thickness(0, height / (-120), 0, height / (-120));
+                //login and signup buttons, forgot password
+                loginButton.HeightRequest = height / 40;
+                signUpButton.HeightRequest = height / 40;
+                loginButton.WidthRequest = width / 10;
+                signUpButton.WidthRequest = width / 10;
+                forgotPass.Margin = new Thickness(0, -30, 10, 0);
+                loginButton.CornerRadius = (int)(height / 80);
+                signUpButton.CornerRadius = (int)(height / 80);
+
+                //or divider
+                grid4.Margin = new Thickness(width / 15, height / 80, width / 15, height / 120);
+
+                //social media buttons
+                googleLoginButton.HeightRequest = width / 18;
+                googleLoginButton.WidthRequest = width / 18;
+                googleLoginButton.CornerRadius = (int)(width / 36);
+                facebookLoginButton.HeightRequest = width / 18;
+                facebookLoginButton.WidthRequest = width / 18;
+                facebookLoginButton.CornerRadius = (int)(width / 36);
+                appleLoginButton.HeightRequest = width / 18;
+                appleLoginButton.WidthRequest = width / 18;
+                appleLoginButton.CornerRadius = (int)(width / 36);
+            }
+
+            //adjustments regardless of device
+            //grid1.Margin = new Thickness(0, 0, 0, 0);
+            grid5.Margin = new Thickness(0, height / 80, 0, 0);
+            userFrame.HeightRequest = height / 180;
+            passFrame.HeightRequest = height / 180;
+            //userFrame.CornerRadius = 25;
+            //passFrame.CornerRadius = 25;
+        }
+
+        async void clickedWeeksMeals(object sender, EventArgs e)
+        {
+            Application.Current.MainPage = new ThisWeeksMeals();
+        }
+
+        // DIRECT LOGIN CLICK
         private async void clickedLogin(object sender, EventArgs e)
         {
-            //For testing purposes
-            await Navigation.PushAsync(new SubscriptionPage());
-            //loginButton.IsEnabled = false;
-            if (String.IsNullOrEmpty(this.loginUsername.Text) || String.IsNullOrEmpty(this.loginPassword.Text))
+
+            loginButton.IsEnabled = false;
+            if (String.IsNullOrEmpty(loginUsername.Text) || String.IsNullOrEmpty(loginPassword.Text))
             { // check if all fields are filled out
                 await DisplayAlert("Error", "Please fill in all fields", "OK");
                 loginButton.IsEnabled = true;
             }
             else
             {
-                await Navigation.PushAsync(new SubscriptionPage());
-                /*
-                var accountSalt = await retrieveAccountSalt(this.loginUsername.Text); // retrieve user's account salt
-                Console.WriteLine("after acct salt 84");
-                //System.Diagnostics.Debug.WriteLine("account salt count: " + accountSalt.result.Count);
+                var accountSalt = await retrieveAccountSalt(loginUsername.Text.ToLower().Trim());
 
-                //if (accountSalt != null && accountSalt.result.Count != 0)
-                //{ // make sure the account salt exists 
-                //var loginAttempt = await login(this.loginEmail.Text, this.loginPassword.Text, accountSalt);
-                login(this.loginUsername.Text, this.loginPassword.Text, accountSalt);
-                Console.WriteLine("login executed");
-                //System.Diagnostics.Debug.WriteLine("login attempt: " + loginAttempt.GetType());
-                /*
-                if (loginAttempt != null && loginAttempt.Message != "Request failed, wrong password.")
-                { // make sure the login attempt was successful
-                    captureLoginSession(loginAttempt);
-                    await Navigation.PopAsync();
-
-                }
-                else
+                if (accountSalt != null)
                 {
-                    await DisplayAlert("Error", "Wrong password was entered", "OK");
-                    loginButton.IsEnabled = true;
-                }
-                
-                //}
-                //else
-                if (accountSalt == null)
-                {
-                    await DisplayAlert("Error", "An account with that email does not exist", "OK");
-                    loginButton.IsEnabled = true;
+                    var loginAttempt = await LogInUser(loginUsername.Text.ToLower(), loginPassword.Text, accountSalt);
 
-                }
-                */
-            }
-
-        }
-
-        public class UserInfo {
-            public string email { get; set; }
-            public string password { get; set; }
-        }
-
-        // logs the user into the app 
-        // returns a LoginResponse if successful and null if unsuccessful 
-        //public async Task<LoginResponse> login(string userEmail, string userPassword, AccountSalt accountSalt)
-        public async void login(string userEmail, string userPassword, AccountSalt accountSalt)
-        {
-            Console.WriteLine("login email" + userEmail);
-            Console.WriteLine("login pw" + userPassword);
-            Console.WriteLine("login acct salt" + accountSalt);
-
-            const string deviceBrowserType = "Mobile";
-             var deviceIpAddress = Dns.GetHostAddresses(Dns.GetHostName()).FirstOrDefault();
-
-            //var deviceIpAddress = "0.0.0.0";
-            if (deviceIpAddress != null)
-            {
-                try
-                {
-                    /*
-                    LoginPost loginPostContent = new LoginPost()
-                    { // object that contains ip address and browser type; will be converted into a json object 
-                        ipAddress = deviceIpAddress.ToString(),
-                        browserType = deviceBrowserType
-                    };
-
-                    string loginPostContentJson = JsonConvert.SerializeObject(loginPostContent); // make orderContent into json
-
-                    var httpContent = new StringContent(loginPostContentJson, Encoding.UTF8, "application/json"); // encode orderContentJson into format to send to database
-                    */
-
-                    /*
-                    UserInfo ui = new UserInfo()
+                    if (loginAttempt != null && loginAttempt.message != "Request failed, wrong password.")
                     {
-                        email = "quang@gmail.com",
-                        password = "64a7f1fb0df93d8f5b9df14077948afa1b75b4c5028d58326fb801d825c9cd24412f88c8b121c50ad5c62073c75d69f14557255da1a21e24b9183bc584efef71"
-                    };
-                    */
+                        System.Diagnostics.Debug.WriteLine("USER'S DATA");
+                        System.Diagnostics.Debug.WriteLine("USER CUSTOMER_UID: " + loginAttempt.result[0].customer_uid);
+                        System.Diagnostics.Debug.WriteLine("USER FIRST NAME: " + loginAttempt.result[0].customer_first_name);
+                        System.Diagnostics.Debug.WriteLine("USER LAST NAME: " + loginAttempt.result[0].customer_last_name);
+                        System.Diagnostics.Debug.WriteLine("USER EMAIL: " + loginAttempt.result[0].customer_email);
 
+                        DateTime today = DateTime.Now;
+                        DateTime expDate = today.AddDays(Constant.days);
 
+                        Application.Current.Properties["user_id"] = loginAttempt.result[0].customer_uid;
+                        Application.Current.Properties["time_stamp"] = expDate;
+                        Application.Current.Properties["platform"] = "DIRECT";
 
-                    SHA512 sHA512 = new SHA512Managed();
-                    Console.WriteLine("sha " + sHA512);
+                        // Application.Current.MainPage = new CarlosHomePage();
+                        // This statement initializes the stack to Subscription Page
+                        //check to see if user has already selected a meal plan before
+                        var request = new HttpRequestMessage();
+                        Console.WriteLine("user_id: " + (string)Application.Current.Properties["user_id"]);
+                        string url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/customer_lplp?customer_uid=" + (string)Application.Current.Properties["user_id"];
+                        //old db
+                        //string url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/customer_lplp?customer_uid=" + (string)Application.Current.Properties["user_id"];
+                        //string url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + (string)Application.Current.Properties["user_id"];
+                        //string url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + "100-000256";
+                        Console.WriteLine("url: " + url);
+                        request.RequestUri = new Uri(url);
+                        //request.RequestUri = new Uri("https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/get_delivery_info/400-000453");
+                        request.Method = HttpMethod.Get;
+                        var client = new HttpClient();
+                        HttpResponseMessage response = await client.SendAsync(request);
 
-                    byte[] data = sHA512.ComputeHash(Encoding.UTF8.GetBytes(userPassword + accountSalt.result[0].password_salt)); // take the password and account salt to generate hash
-                    Console.WriteLine("data " + data[0]);
+                        if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            HttpContent content = response.Content;
+                            Console.WriteLine("content: " + content);
+                            var userString = await content.ReadAsStringAsync();
+                            Console.WriteLine(userString);
 
-                    string hashedPassword = BitConverter.ToString(data).Replace("-", string.Empty).ToLower(); // convert hash to hex
+                            if (userString.ToString()[0] != '{')
+                            {
+                                url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                //old db
+                                //url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                var request3 = new HttpRequestMessage();
+                                request3.RequestUri = new Uri(url);
+                                request3.Method = HttpMethod.Get;
+                                response = await client.SendAsync(request3);
+                                content = response.Content;
+                                Console.WriteLine("content: " + content);
+                                userString = await content.ReadAsStringAsync();
+                                JObject info_obj3 = JObject.Parse(userString);
+                                this.NewMainPage.Clear();
+                                Preferences.Set("password_salt", (info_obj3["result"])[0]["password_salt"].ToString());
+                                Preferences.Set("password_hashed", (info_obj3["result"])[0]["password_hashed"].ToString());
 
-                    UserInfo ui = new UserInfo()
-                    {
-                        email = userEmail,
-                        password = hashedPassword,
+                                Preferences.Set("user_latitude", (info_obj3["result"])[0]["customer_lat"].ToString());
+                                Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+                                Preferences.Set("user_longitude", (info_obj3["result"])[0]["customer_long"].ToString());
+                                Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
 
-                    };
+                                Preferences.Set("profilePicLink", "");
 
-                    Console.WriteLine("hash pw " + hashedPassword);
+                                Console.WriteLine("go to SubscriptionPage");
+                                Preferences.Set("canChooseSelect", false);
 
-                    var data2 = JsonConvert.SerializeObject(ui);
-                    var content = new StringContent(data2, Encoding.UTF8, "application/json");
-                    Console.WriteLine("data2 "  + data2 );
-                    Console.WriteLine("after content 176");
-                    Console.WriteLine("login url " + loginUrl);
+                                Debug.WriteLine("email verified:" + (info_obj3["result"])[0]["email_verified"].ToString());
+                                Application.Current.MainPage = new NavigationPage(new SubscriptionPage(loginAttempt.result[0].customer_first_name, loginAttempt.result[0].customer_last_name, loginAttempt.result[0].customer_email));
+                                return;
+                            }
 
-                    using (var httpClient = new HttpClient())
-                    {
-                        Console.WriteLine("HTTPclient " + httpClient);
+                            JObject info_obj2 = JObject.Parse(userString);
+                            this.NewMainPage.Clear();
 
-                        Console.WriteLine("inside using");
+                            //ArrayList item_price = new ArrayList();
+                            //ArrayList num_items = new ArrayList();
+                            //ArrayList payment_frequency = new ArrayList();
+                            //ArrayList groupArray = new ArrayList();
 
-                        var request1 = new HttpRequestMessage();
-                        Console.WriteLine("request " + request1);
+                            //int counter = 0;
+                            //while (((info_obj2["result"])[0]).ToString() != "{}")
+                            //{
+                            //    Console.WriteLine("worked" + counter);
+                            //    counter++;
+                            //}
 
-                        request1.Method = HttpMethod.Post;
-                        Console.WriteLine("rq method " + request1.Method);
+                            Console.WriteLine("string: " + (info_obj2["result"]).ToString());
+                            //check if the user hasn't entered any info before, if so put in the placeholders
+                            if ((info_obj2["result"]).ToString() == "[]" || (info_obj2["result"]).ToString() == "204")
+                            {
 
-                        request1.Content = content;
-                        Console.WriteLine("request ctnt " + request1.Content);
+                                url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
 
-                        var httpResponse = await httpClient.PostAsync(loginUrl, content);
-                        //HttpResponseMessage response = await httpClient.SendAsync(request);
-                        //Console.WriteLine("This is the response from request" + response);
-                        /*
-                        var endpointresponse = await httpClient.GetAsync(loginUrl);
-                        string jsonobject = endpointresponse.Content.ReadAsStringAsync().Result;
-                        var data3 = httpClient.GetStringAsync(loginUrl);
-                        Console.WriteLine("data 3 " + httpResponse.RequestMessage.Content);
-                        */
+                                //old db
+                                //url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                var request3 = new HttpRequestMessage();
+                                request3.RequestUri = new Uri(url);
+                                request3.Method = HttpMethod.Get;
+                                response = await client.SendAsync(request3);
+                                content = response.Content;
+                                Console.WriteLine("content: " + content);
+                                userString = await content.ReadAsStringAsync();
+                                JObject info_obj3 = JObject.Parse(userString);
+                                this.NewMainPage.Clear();
+                                Preferences.Set("password_salt", (info_obj3["result"])[0]["password_salt"].ToString());
+                                Preferences.Set("password_hashed", (info_obj3["result"])[0]["password_hashed"].ToString());
+
+                                Preferences.Set("user_latitude", (info_obj3["result"])[0]["customer_lat"].ToString());
+                                Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+                                Preferences.Set("user_longitude", (info_obj3["result"])[0]["customer_long"].ToString());
+                                Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
+
+                                Preferences.Set("profilePicLink", "");
+
+                                Console.WriteLine("go to SubscriptionPage");
+                                Preferences.Set("canChooseSelect", false);
+                                Application.Current.MainPage = new NavigationPage(new SubscriptionPage(loginAttempt.result[0].customer_first_name, loginAttempt.result[0].customer_last_name, loginAttempt.result[0].customer_email));
+                            }
+                            else
+                            {
+                                url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+
+                                //old db
+                                //url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                var request3 = new HttpRequestMessage();
+                                request3.RequestUri = new Uri(url);
+                                request3.Method = HttpMethod.Get;
+                                response = await client.SendAsync(request3);
+                                content = response.Content;
+                                Console.WriteLine("content: " + content);
+                                userString = await content.ReadAsStringAsync();
+                                JObject info_obj3 = JObject.Parse(userString);
+                                this.NewMainPage.Clear();
+                                Preferences.Set("password_salt", (info_obj3["result"])[0]["password_salt"].ToString());
+                                Preferences.Set("password_hashed", (info_obj3["result"])[0]["password_hashed"].ToString());
+
+                                Preferences.Set("user_latitude", (info_obj3["result"])[0]["customer_lat"].ToString());
+                                Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+                                Preferences.Set("user_longitude", (info_obj3["result"])[0]["customer_long"].ToString());
+                                Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
+
+                                Preferences.Set("profilePicLink", "");
+                                //Application.Current.MainPage = new NavigationPage(new SubscriptionPage(loginAttempt.result[0].customer_first_name, loginAttempt.result[0].customer_last_name, loginAttempt.result[0].customer_email));
+                                //TEMPORARY
+                                Preferences.Set("canChooseSelect", true);
+                                Application.Current.MainPage = new NavigationPage(new Select(loginAttempt.result[0].customer_first_name, loginAttempt.result[0].customer_last_name, loginAttempt.result[0].customer_email));
+                            }
+                        }
                     }
-                    Console.WriteLine("after 208");
-                    /*
-                    var request = new HttpRequestMessage();
-                    request.RequestUri = new Uri(loginUrl);
-                    request.Method = HttpMethod.Post;
-                    request.Content = content;
-
-                    var client = new HttpClient();
-                    HttpResponseMessage response = await client.SendAsync(request);
-                    string items = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine("items " + items);
-                    */
-                    //string uiString = JsonConvert.SerializeObject(ui);
-                    //var httpContent = new StringContent(uiString, Encoding.UTF8, "application/json"); // encode orderContentJson into format to send to database
-
-                    /*
-                    SHA512 sHA512 = new SHA512Managed();
-                    byte[] data = sHA512.ComputeHash(Encoding.UTF8.GetBytes(userPassword + accountSalt.result[0].passwordSalt)); // take the password and account salt to generate hash
-                    string hashedPassword = BitConverter.ToString(data).Replace("-", string.Empty).ToLower(); // convert hash to hex
-
-                    */
-
-                    //var respString = loginUrl + userEmail + "/" + hashedPassword;
-                    //var respString = loginUrl;
-                    //var response = await client.PostAsync(respString, httpContent); // try to post to database
-                    //var response = await client.PostAsync(respString, httpContent); // try to post to database
-                    //var answer = await client.GetStringAsync(loginUrl);
-                    //Console.WriteLine("Answer " + answer);
-                    /*
-                    if (response.Content != null)
-                    { // post was successful
-                        var responseContent = await response.Content.ReadAsStringAsync();
-                        var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(responseContent);
-                        System.Diagnostics.Debug.WriteLine("URL: " + respString + "\n" + uiString + "\n " + loginResponse);
-
-                        return loginResponse;
-
+                    else
+                    {
+                        await DisplayAlert("Error", "Wrong password was entered", "OK");
+                        loginButton.IsEnabled = true;
                     }
-                    */
-
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine("catch 225");
-
-                    System.Diagnostics.Debug.WriteLine("Exception message: " + e.Message);
-                    //return null;
-
-                }
-
-
+                loginButton.IsEnabled = true;
             }
-            //return null;
-
-                }
-
-
-        public async Task<LoginResponse> socialLogin(string userUid)
-        {
-            const string deviceBrowserType = "Mobile";
-            const string deviceIpAddress = "0.0.0.0";
-
-            LoginPost loginPostContent = new LoginPost()
-            { // object that contains ip address and browser type; will be converted into a json object 
-                ipAddress = deviceIpAddress.ToString(),
-                browserType = deviceBrowserType
-            };
-
-            string loginPostContentJson = JsonConvert.SerializeObject(loginPostContent); // make orderContent into json
-
-            var httpContent = new StringContent(loginPostContentJson, Encoding.UTF8, "application/json"); // encode orderContentJson into format to send to database
-
-            var response = await client.PostAsync(socialLoginUrl + userUid, httpContent); // try to post to database
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                var responseContent = await response.Content.ReadAsStringAsync();
-
-                var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(responseContent);
-                return loginResponse;
-            }
-            return null;
         }
 
-        // uses account salt api to retrieve the user's account salt
-        // account salt is used to find the user's hashed password
-        public async Task<AccountSalt> retrieveAccountSalt(string userEmail)
+        private async Task<AccountSalt> retrieveAccountSalt(string userEmail)
         {
-
             try
             {
-                /*
-                var url = accountSaltUrl + userEmail;
-                System.Diagnostics.Debug.WriteLine("url " + url);
-                var content = await client.GetStringAsync(accountSaltUrl + userEmail); // get the requested account salt
-                var accountSalt = JsonConvert.DeserializeObject<AccountSalt>(content);
-                System.Diagnostics.Debug.WriteLine("try" + accountSalt);
+                System.Diagnostics.Debug.WriteLine(userEmail);
 
-                //System.Diagnostics.Debug.WriteLine("account salt good " + accountSalt.result[0].password_salt);
-                //System.Diagnostics.Debug.WriteLine("account salt good " + accountSalt.result[0].password_algorithm);
-                return accountSalt;
-                */
+                SaltPost saltPost = new SaltPost();
+                saltPost.email = userEmail;
 
-                /*
-                var request = new HttpRequestMessage();
+                var saltPostSerilizedObject = JsonConvert.SerializeObject(saltPost);
+                var saltPostContent = new StringContent(saltPostSerilizedObject, Encoding.UTF8, "application/json");
 
-                request.RequestUri = new Uri(accountSaltUrl);
-                */
-                UriBuilder builder = new UriBuilder("https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/accountsalt");
-                builder.Query = "email=quang@gmail.com";
-                System.Diagnostics.Debug.WriteLine("builder " + builder);
-                System.Diagnostics.Debug.WriteLine("builderq " + builder.Query);
-
-                var result =  await client.GetStringAsync(builder.Uri);
-
-                Console.WriteLine("result line 287 = " + result);
-                /*
-                using (StreamReader sr = new StreamReader(result.Content.ReadAsStreamAsync().Result))
-                {
-                    Console.WriteLine(sr.ReadToEnd());
-                }
-                */
-                /*
-
-                request.Method = HttpMethod.Get;
+                System.Diagnostics.Debug.WriteLine(saltPostSerilizedObject);
 
                 var client = new HttpClient();
-                HttpResponseMessage response = await client.SendAsync(request);
+                var DRSResponse = await client.PostAsync(Constant.AccountSaltUrl, saltPostContent);
+                var DRSMessage = await DRSResponse.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine(DRSMessage);
 
-                string items = await response.Content.ReadAsStringAsync();
-                */
-                Console.WriteLine("line 303");
-                AccountSalt data = new AccountSalt();
-                Console.WriteLine("line 305");
-                data = JsonConvert.DeserializeObject<AccountSalt>(result);
-                Console.WriteLine("line 307 Data: " + data.result[0].password_salt.ToString());
+                AccountSalt userInformation = null;
 
-                return data;
+                if (DRSResponse.IsSuccessStatusCode)
+                {
+                    var result = await DRSResponse.Content.ReadAsStringAsync();
+
+                    AcountSaltCredentials data = new AcountSaltCredentials();
+                    data = JsonConvert.DeserializeObject<AcountSaltCredentials>(result);
+
+                    if (DRSMessage.Contains(Constant.UseSocialMediaLogin))
+                    {
+                        createAccount = true;
+                        System.Diagnostics.Debug.WriteLine(DRSMessage);
+                        await DisplayAlert("Oops!", data.message, "OK");
+                    }else if (DRSMessage.Contains(Constant.EmailNotFound))
+                    {
+                        await DisplayAlert("Oops!", "Our records show that you don't have an accout. Please sign up!", "OK");
+                    }
+                    else
+                    {
+                        userInformation = new AccountSalt
+                        {
+                            password_algorithm = data.result[0].password_algorithm,
+                            password_salt = data.result[0].password_salt
+                        };
+                    }
+                }
+
+                return userInformation;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("line 313");
+                System.Diagnostics.Debug.WriteLine(ex.Message);
                 return null;
             }
-            //return null;
         }
 
-        /*public async void captureLoginSession(LoginResponse loginResponse)
+
+
+        public async Task<LogInResponse> LogInUser(string userEmail, string userPassword, AccountSalt accountSalt)
         {
-
-            var userSessionInformation = new UserLoginSession
-            { // object to send into local database
-                UserUid = loginResponse.Result.Result[0].UserUid,
-                FirstName = loginResponse.Result.Result[0].FirstName,
-                SessionId = loginResponse.LoginAttemptLog.SessionId,
-                LoginId = loginResponse.LoginAttemptLog.LoginId,
-                Email = loginResponse.Result.Result[0].UserEmail
-            };
-
-            await App.Database.SaveItemAsync(userSessionInformation); // send login session to local database
-            System.Diagnostics.Debug.WriteLine("user logged in: " + App.Database.GetLastItem().Email);
-            App.setLoggedIn(true);
-            MainPage mainPage = (MainPage)Navigation.NavigationStack[0];
-            mainPage.updateLoginButton();
-        }*/
-
-        // handler for when google login button is clicked 
-        [Obsolete]
-        private async void googleLoginButtonClicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new GoogleLogin(), false);
-            /*
-            string clientId = null;
-            string redirectUri = null;
-
-            // retrieve client id based on the platform
-            switch (Device.RuntimePlatform)
+            try
             {
-                case Device.iOS:
-                    clientId = SocialMediaLoginConstants.GoogleiOSClientId;
-                    redirectUri = SocialMediaLoginConstants.GoogleiOSRedirectUrl;
-                    break;
+                SHA512 sHA512 = new SHA512Managed();
+                byte[] data = sHA512.ComputeHash(Encoding.UTF8.GetBytes(userPassword + accountSalt.password_salt)); // take the password and account salt to generate hash
+                string hashedPassword = BitConverter.ToString(data).Replace("-", string.Empty).ToLower(); // convert hash to hex
 
-                case Device.Android:
-                    clientId = SocialMediaLoginConstants.GoogleAndroidClientId;
-                    redirectUri = SocialMediaLoginConstants.GoogleAndroidRedirectUrl;
-                    break;
-            }
+                LogInPost loginPostContent = new LogInPost();
+                loginPostContent.email = userEmail;
+                loginPostContent.password = hashedPassword;
+                loginPostContent.social_id = "";
+                loginPostContent.signup_platform = "";
+                Preferences.Set("hashed_password", hashedPassword);
+                Preferences.Set("user_password", userPassword);
+                Console.WriteLine("accountSalt: " + accountSalt.password_salt);
+                Console.WriteLine("userPassword: " + userPassword);
 
-            account = store.FindAccountsForService(SocialMediaLoginConstants.AppName).FirstOrDefault();
+                string loginPostContentJson = JsonConvert.SerializeObject(loginPostContent); // make orderContent into json
 
-            var authenticator = new OAuth2Authenticator(
-                clientId,
-                null,
-                SocialMediaLoginConstants.GoogleScope,
-                new Uri(SocialMediaLoginConstants.GoogleAuthorizeUrl),
-                new Uri(redirectUri),
-                new Uri(SocialMediaLoginConstants.GoogleAccessTokenUrl),
-                null,
-                true);
+                var httpContent = new StringContent(loginPostContentJson, Encoding.UTF8, "application/json"); // encode orderContentJson into format to send to database
+                var response = await client.PostAsync(Constant.LogInUrl, httpContent); // try to post to database
+                var message = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine(message);
 
-            //authenticator.Completed += OnAuthCompleted;
-            //authenticator.Error += OnAuthError;
+                if (message.Contains(Constant.AutheticatedSuccesful)){
 
-            AuthenticationState.Authenticator = authenticator;
-
-            var presenter = new Xamarin.Auth.Presenters.OAuthLoginPresenter();
-
-            presenter.Login(authenticator);
-            */
-        }
-
-        // handler for when facebook login button is clicked
-        [Obsolete]
-        private async void facebookLoginButtonClicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new FacebookLogin(), false);
-            /*
-            string clientId = null;
-            string redirectUri = null;
-
-            switch (Device.RuntimePlatform)
-            {
-                case Device.iOS:
-                    clientId = SocialMediaLoginConstants.FacebookiOSClientId;
-                    redirectUri = SocialMediaLoginConstants.FacebookiOSRedirectUrl;
-                    break;
-
-                case Device.Android:
-                    clientId = SocialMediaLoginConstants.FacebookAndroidClientId;
-                    redirectUri = SocialMediaLoginConstants.FacebookAndroidRedirectUrl;
-                    break;
-            }
-
-            account = store.FindAccountsForService(SocialMediaLoginConstants.AppName).FirstOrDefault();
-
-            var authenticator = new OAuth2Authenticator(
-                clientId,
-                SocialMediaLoginConstants.FacebookScope,
-                new Uri(SocialMediaLoginConstants.FacebookAuthorizeUrl),
-                new Uri(SocialMediaLoginConstants.FacebookAccessTokenUrl),
-                null);
-
-            //authenticator.Completed += OnAuthCompleted;
-            //authenticator.Error += OnAuthError;
-
-            var presenter = new Xamarin.Auth.Presenters.OAuthLoginPresenter();
-            presenter.Login(authenticator);
-            */
-
-        }
-
-        // handler for when apple login button is clicked (copied from fb login)
-        [Obsolete]
-        private async void appleLoginButtonClicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new AppleLogin(), false);
-            /*
-            string clientId = null;
-            string redirectUri = null;
-
-            switch (Device.RuntimePlatform)
-            {
-                case Device.iOS:
-                    clientId = SocialMediaLoginConstants.FacebookiOSClientId;
-                    redirectUri = SocialMediaLoginConstants.FacebookiOSRedirectUrl;
-                    break;
-
-                case Device.Android:
-                    clientId = SocialMediaLoginConstants.FacebookAndroidClientId;
-                    redirectUri = SocialMediaLoginConstants.FacebookAndroidRedirectUrl;
-                    break;
-            }
-
-            account = store.FindAccountsForService(SocialMediaLoginConstants.AppName).FirstOrDefault();
-
-            var authenticator = new OAuth2Authenticator(
-                clientId,
-                SocialMediaLoginConstants.FacebookScope,
-                new Uri(SocialMediaLoginConstants.FacebookAuthorizeUrl),
-                new Uri(SocialMediaLoginConstants.FacebookAccessTokenUrl),
-                null);
-
-            //authenticator.Completed += OnAuthCompleted;
-            //authenticator.Error += OnAuthError;
-
-            var presenter = new Xamarin.Auth.Presenters.OAuthLoginPresenter();
-            presenter.Login(authenticator);
-            */
-
-        }
-
-        // function when the auth is completed without any errors
-        /*[Obsolete]
-        async void OnAuthCompleted(object sender, AuthenticatorCompletedEventArgs e)
-        {
-            var authenticator = sender as OAuth2Authenticator;
-            if (authenticator != null)
-            {
-                authenticator.Completed -= OnAuthCompleted;
-                authenticator.Error -= OnAuthError;
-            }
-            Debug.WriteLine("starting authentication");
-            if (e.IsAuthenticated)
-            {
-                Debug.WriteLine("first authentication");
-                if (authenticator.AuthorizeUrl.Host == "www.facebook.com")
-                {
-                    Debug.WriteLine("authenticated!!!");
-                    FacebookEmail facebookEmail = null;
-
-                    var json = await client.GetStringAsync($"https://graph.facebook.com/me?fields=id,name,first_name,last_name,email,picture.type(large)&access_token=" + e.Account.Properties["access_token"]);
-
-                    facebookEmail = JsonConvert.DeserializeObject<FacebookEmail>(json);
-
-                    await store.SaveAsync(account = e.Account, SocialMediaLoginConstants.AppName);
-
-                    Application.Current.Properties.Remove("Id");
-                    Application.Current.Properties.Remove("FirstName");
-                    Application.Current.Properties.Remove("LastName");
-                    Application.Current.Properties.Remove("DisplayName");
-                    Application.Current.Properties.Remove("EmailAddress");
-                    Application.Current.Properties.Remove("ProfilePicture");
-
-                    Application.Current.Properties.Add("Id", facebookEmail.Id);
-                    Application.Current.Properties.Add("FirstName", facebookEmail.First_Name);
-                    Application.Current.Properties.Add("LastName", facebookEmail.Last_Name);
-                    Application.Current.Properties.Add("DisplayName", facebookEmail.Name);
-                    Application.Current.Properties.Add("EmailAddress", facebookEmail.Email);
-                    Application.Current.Properties.Add("ProfilePicture", facebookEmail.Picture.Data.Url);
-
-                    try
-                    {
-                        var socialAccountJson = await client.GetStringAsync(socialUrl + facebookEmail.Email); // get the user's account from the social accounts table
-
-                        SocialAccountResponse socialAccountResponse = JsonConvert.DeserializeObject<SocialAccountResponse>(socialAccountJson);
-
-                        if (socialAccountResponse.Result.Result.Length == 0)
-                        { // if the social account doesn't exist, navigate to social sign up page
-                            Debug.WriteLine("no social account found");
-                            string accessToken = e.Account.Properties["access_token"]; // access token retrieved from facebook
-                            // facebook doesn't provide refresh token!
-                            string socialMedia = "Facebook";
-                            SocialMediaSignUpPage socialSignUpPage = new SocialMediaSignUpPage(facebookEmail.First_Name, facebookEmail.Last_Name, facebookEmail.Email, socialMedia, accessToken, ""); // declare new social sign up page with user's name, email, and tokens
-
-                            await Navigation.PushAsync(socialSignUpPage);
-                        }
-                        else
-                        { // user's social account exists and login attempt is made
-                            Debug.WriteLine("social account found, logging in");
-                            LoginResponse socialLoginAttempt = await socialLogin(socialAccountResponse.Result.Result[0].UserUid);
-                            captureLoginSession(socialLoginAttempt);
-                            await Navigation.PopAsync(); // go back to home page
-
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine(ex.Message);
-                    }
-
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var loginResponse = JsonConvert.DeserializeObject<LogInResponse>(responseContent);
+                    return loginResponse;
                 }
                 else
                 {
-                    User user = null;
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("Exception message: " + e.Message);
+                return null;
+            }
+        }
 
-                    // If the user is authenticated, request their basic user data from Google
-                    // UserInfoUrl https://www.googleapis.com/oauth2/v2/userinfo
 
-                    var request = new OAuth2Request("GET", new Uri(SocialMediaLoginConstants.GoogleUserInfoUrl), null, e.Account); // create the request to get the user's google info
-                    var response = await request.GetResponseAsync();
-                    if (response != null)
+        // FACEBOOK LOGIN CLICK
+        public async void facebookLoginButtonClicked(object sender, EventArgs e)
+        {
+
+            // Initialize variables
+            string clientID = string.Empty;
+            string redirectURL = string.Empty;
+
+            switch (Device.RuntimePlatform)
+            {
+                // depending on the device, get constants from Login>Constants>Constants.cs file
+                case Device.iOS:
+                    clientID = Constant.FacebookiOSClientID;
+                    redirectURL = Constant.FacebookiOSRedirectUrl;
+                    break;
+                case Device.Android:
+                    clientID = Constant.FacebookAndroidClientID;
+                    redirectURL = Constant.FacebookAndroidRedirectUrl;
+                    break;
+            }
+
+            // Store all the information in a variable called authenticator (for client) and presenter for http client (who is going to present the credentials)
+            var authenticator = new OAuth2Authenticator(clientID, Constant.FacebookScope, new Uri(Constant.FacebookAuthorizeUrl), new Uri(redirectURL), null, false);
+            var presenter = new Xamarin.Auth.Presenters.OAuthLoginPresenter();
+
+            // Creates Completed and Error Event Handler functions;  "+=" means create
+            authenticator.Completed += FacebookAuthenticatorCompleted;
+            authenticator.Error += FacebookAutheticatorError;
+
+
+            // This is the actual call to Facebook
+            presenter.Login(authenticator);
+            // Facebooks sends back an authenticator that goes directly into the Event Handlers created above as "sender".  Data is stored in arguement "e" (account, user name, access token, etc).
+        }
+
+
+
+
+        // sender contains nothing then there is an error.  sender contains an authenticator from Facebook
+        public async void FacebookAuthenticatorCompleted(object sender, AuthenticatorCompletedEventArgs e)
+        {
+            var authenticator = sender as OAuth2Authenticator;
+            Console.WriteLine("authenticator" + authenticator.ToString());
+            if (authenticator != null)
+            {
+                // Removes Event Handler functions;  "-=" means delete
+                authenticator.Completed -= FacebookAuthenticatorCompleted;
+                authenticator.Error -= FacebookAutheticatorError;
+            }
+
+            if (e.IsAuthenticated)
+            {
+                // Uses access token from Facebook as an input to FacebookUserProfileAsync
+                FacebookUserProfileAsync(e.Account.Properties["access_token"]);
+            }
+        }
+
+        public async void FacebookUserProfileAsync(string accessToken)
+        {
+
+            var client = new HttpClient();
+            var socialLogInPost = new SocialLogInPost();
+
+            // Actual call to Facebooks end point now that we have the token (appending accessToken to URL in constants file)
+            var facebookResponse = client.GetStringAsync(Constant.FacebookUserInfoUrl + accessToken);  // makes the call to Facebook and returns True/False
+            var userData = facebookResponse.Result;  // returns Facebook email and social ID
+
+            System.Diagnostics.Debug.WriteLine(facebookResponse);
+            System.Diagnostics.Debug.WriteLine(userData);
+
+
+            // Deserializes JSON object from info provided by Facebook
+            FacebookResponse facebookData = JsonConvert.DeserializeObject<FacebookResponse>(userData);
+            socialLogInPost.email = facebookData.email;
+            socialLogInPost.password = "";
+            socialLogInPost.social_id = facebookData.id;
+            socialLogInPost.signup_platform = "FACEBOOK";
+
+            // Create JSON object for Login Endpoint
+            var socialLogInPostSerialized = JsonConvert.SerializeObject(socialLogInPost);
+            var postContent = new StringContent(socialLogInPostSerialized, Encoding.UTF8, "application/json");
+
+            System.Diagnostics.Debug.WriteLine(socialLogInPostSerialized);
+
+            // Call to RDS database with endpoint and JSON data
+            var RDSResponse = await client.PostAsync(Constant.LogInUrl, postContent);  //  True or False if Parva's endpoint ran preperly.
+            var responseContent = await RDSResponse.Content.ReadAsStringAsync();  // Contains Parva's code containing all the user data including userid
+
+            System.Diagnostics.Debug.WriteLine(RDSResponse.IsSuccessStatusCode);  // Response code is Yes/True if successful from httpclient system.net package
+            System.Diagnostics.Debug.WriteLine(responseContent);  // Response JSON that RDS returns
+            
+            if (RDSResponse.IsSuccessStatusCode)
+            {
+                if (responseContent != null)
+                {
+                    // Do I don't have the email in RDS
+                    if (responseContent.Contains(Constant.EmailNotFound))
                     {
-                        // Deserialize the data and store it in the account store
-                        // The users email address will be used to identify data in SimpleDB
-                        string userJson = await response.GetResponseTextAsync();
-                        Debug.WriteLine("user json: " + userJson);
-                        user = JsonConvert.DeserializeObject<User>(userJson);
+                        var signUp = await DisplayAlert("Message", "It looks like you don't have a MTYD account. Please sign up!", "OK", "Cancel");
+                        if (signUp)
+                        {
+                            // HERE YOU NEED TO SUBSTITUTE MY SOCIAL SIGN UP PAGE WITH MTYD SOCIAL SIGN UP
+                            // NOTE THAT THIS SOCIAL SIGN UP PAGE NEEDS A CONSTRUCTOR LIKE THE FOLLOWING ONE
+                            // SocialSignUp(string socialId, string firstName, string lastName, string emailAddress, string accessToken, string refreshToken, string platform)
+                            Preferences.Set("canChooseSelect", false);
+                            Preferences.Set("profilePicLink", facebookData.picture.data.url);
+                            Debug.WriteLine("fb profile pic:" + facebookData.picture.data.url);
 
+                            Application.Current.MainPage = new CarlosSocialSignUp(facebookData.id, facebookData.name, "", facebookData.email, accessToken, accessToken, "FACEBOOK");
+                            // need to write new statment here ...
+                        }
                     }
 
-                    if (account != null)
+
+                    // if Response content contains 200
+                    if (responseContent.Contains(Constant.AutheticatedSuccesful))
                     {
-                        store.Delete(account, SocialMediaLoginConstants.AppName);
-                    }
+                        var data = JsonConvert.DeserializeObject<SuccessfulSocialLogIn>(responseContent);
+                        Application.Current.Properties["user_id"] = data.result[0].customer_uid;  // converts RDS data into appication data.
 
-                    await store.SaveAsync(account = e.Account, SocialMediaLoginConstants.AppName);
+                        UpdateTokensPost updateTokensPost = new UpdateTokensPost();
+                        updateTokensPost.uid = data.result[0].customer_uid;
+                        updateTokensPost.mobile_access_token = accessToken;
+                        updateTokensPost.mobile_refresh_token = accessToken;  // only get access token from Facebook so we store the data again
 
-                    Application.Current.Properties.Remove("Id");
-                    Application.Current.Properties.Remove("FirstName");
-                    Application.Current.Properties.Remove("LastName");
-                    Application.Current.Properties.Remove("DisplayName");
-                    Application.Current.Properties.Remove("EmailAddress");
-                    Application.Current.Properties.Remove("ProfilePicture");
+                        var updateTokensPostSerializedObject = JsonConvert.SerializeObject(updateTokensPost);
+                        var updateTokensContent = new StringContent(updateTokensPostSerializedObject, Encoding.UTF8, "application/json");
+                        var updateTokensResponse = await client.PostAsync(Constant.UpdateTokensUrl, updateTokensContent);  // This calls the database and returns True or False
+                        var updateTokenResponseContent = await updateTokensResponse.Content.ReadAsStringAsync();
+                        System.Diagnostics.Debug.WriteLine(updateTokenResponseContent);
 
-                    Application.Current.Properties.Add("Id", user.Id);
-                    Application.Current.Properties.Add("FirstName", user.GivenName);
-                    Application.Current.Properties.Add("LastName", user.FamilyName);
-                    Application.Current.Properties.Add("DisplayName", user.Name);
-                    Application.Current.Properties.Add("EmailAddress", user.Email);
-                    Application.Current.Properties.Add("ProfilePicture", user.Picture);
-                    try
-                    {
-                        var socialAccountJson = await client.GetStringAsync(socialUrl + user.Email); // get the user's account from the social accounts table
+                        if (updateTokensResponse.IsSuccessStatusCode)
+                        {
+                            DateTime today = DateTime.Now;
+                            DateTime expDate = today.AddDays(Constant.days);  // Internal assignment - not from the database
 
-                        SocialAccountResponse socialAccountResponse = JsonConvert.DeserializeObject<SocialAccountResponse>(socialAccountJson);
+                            Application.Current.Properties["time_stamp"] = expDate;
+                            Application.Current.Properties["platform"] = "FACEBOOK";
+                            // Application.Current.MainPage = new SubscriptionPage();
 
-                        if (socialAccountResponse.Result.Result.Length == 0)
-                        { // if the social account doesn't exist, navigate to social sign up page
-                            string accessToken = e.Account.Properties["access_token"]; // access token retrieved from google 
-                            string refreshToken = e.Account.Properties["refresh_token"]; // refresh token retrieved from google 
-                            string socialMedia = "Google";
-                            SocialMediaSignUpPage socialSignUpPage = new SocialMediaSignUpPage(user.GivenName, user.FamilyName, user.Email, socialMedia, accessToken, refreshToken); // declare new social sign up page, maybe bind to certain info???
 
-                            await Navigation.PushAsync(socialSignUpPage);
+                            //check to see if user has already selected a meal plan before
+                            var request2 = new HttpRequestMessage();
+                            Console.WriteLine("user_id: " + (string)Application.Current.Properties["user_id"]);
+                            string url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/customer_lplp?customer_uid=" + (string)Application.Current.Properties["user_id"];
+
+                            //old db
+                            //string url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/customer_lplp?customer_uid=" + (string)Application.Current.Properties["user_id"]; 
+                            //string url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + (string)Application.Current.Properties["user_id"];
+                            //string url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + "100-000256";
+                            request2.RequestUri = new Uri(url);
+                            //request.RequestUri = new Uri("https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/get_delivery_info/400-000453");
+                            request2.Method = HttpMethod.Get;
+                            var client2 = new HttpClient();
+                            HttpResponseMessage response = await client.SendAsync(request2);
+
+                            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                            {
+
+                                HttpContent content = response.Content;
+                                Console.WriteLine("content: " + content);
+                                var userString = await content.ReadAsStringAsync();
+                                //Console.WriteLine(userString);
+
+                                if (userString.ToString()[0] != '{')
+                                {
+                                    url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+
+                                    //old db
+                                    //url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                    var request3 = new HttpRequestMessage();
+                                    request3.RequestUri = new Uri(url);
+                                    request3.Method = HttpMethod.Get;
+                                    response = await client.SendAsync(request3);
+                                    content = response.Content;
+                                    Console.WriteLine("content: " + content);
+                                    userString = await content.ReadAsStringAsync();
+                                    JObject info_obj2 = JObject.Parse(userString);
+                                    this.NewMainPage.Clear();
+                                    Preferences.Set("user_latitude", (info_obj2["result"])[0]["customer_lat"].ToString());
+                                    Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+                                    Preferences.Set("user_longitude", (info_obj2["result"])[0]["customer_long"].ToString());
+                                    Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
+
+                                    Preferences.Set("profilePicLink", facebookData.picture.data.url);
+                                    Debug.WriteLine("fb profile pic:" + facebookData.picture.data.url);
+
+                                    Console.WriteLine("go to SubscriptionPage");
+                                    Preferences.Set("canChooseSelect", false);
+                                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage((info_obj2["result"])[0]["customer_first_name"].ToString(), (info_obj2["result"])[0]["customer_last_name"].ToString(), (info_obj2["result"])[0]["customer_email"].ToString()));
+                                    return;
+                                }
+
+                                JObject info_obj = JObject.Parse(userString);
+                                this.NewMainPage.Clear();
+
+                                //ArrayList item_price = new ArrayList();
+                                //ArrayList num_items = new ArrayList();
+                                //ArrayList payment_frequency = new ArrayList();
+                                //ArrayList groupArray = new ArrayList();
+
+                                Console.WriteLine("string: " + (info_obj["result"]).ToString());
+                                //check if the user hasn't entered any info before, if so put in the placeholders
+                                if ((info_obj["result"]).ToString() == "[]")
+                                {
+                                    url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+
+                                    //old db
+                                    //url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                    var request3 = new HttpRequestMessage();
+                                    request3.RequestUri = new Uri(url);
+                                    request3.Method = HttpMethod.Get;
+                                    response = await client.SendAsync(request3);
+                                    content = response.Content;
+                                    Console.WriteLine("content: " + content);
+                                    userString = await content.ReadAsStringAsync();
+                                    JObject info_obj2 = JObject.Parse(userString);
+                                    this.NewMainPage.Clear();
+                                    Preferences.Set("user_latitude", (info_obj2["result"])[0]["customer_lat"].ToString());
+                                    Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+                                    Preferences.Set("user_longitude", (info_obj2["result"])[0]["customer_long"].ToString());
+                                    Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
+
+                                    Preferences.Set("profilePicLink", facebookData.picture.data.url);
+                                    Debug.WriteLine("fb profile pic:" + facebookData.picture.data.url);
+
+                                    Console.WriteLine("go to SubscriptionPage");
+                                    Preferences.Set("canChooseSelect", false);
+                                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage((info_obj2["result"])[0]["customer_first_name"].ToString(), (info_obj2["result"])[0]["customer_last_name"].ToString(), (info_obj2["result"])[0]["customer_email"].ToString()));
+                                }
+                                else
+                                {
+                                    url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+
+                                    //old db
+                                    //url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                    var request3 = new HttpRequestMessage();
+                                    request3.RequestUri = new Uri(url);
+                                    request3.Method = HttpMethod.Get;
+                                    response = await client.SendAsync(request3);
+                                    content = response.Content;
+                                    Console.WriteLine("content: " + content);
+                                    userString = await content.ReadAsStringAsync();
+                                    JObject info_obj2 = JObject.Parse(userString);
+                                    this.NewMainPage.Clear();
+                                    Preferences.Set("user_latitude", (info_obj2["result"])[0]["customer_lat"].ToString());
+                                    Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+                                    Preferences.Set("user_longitude", (info_obj2["result"])[0]["customer_long"].ToString());
+                                    Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
+
+                                    Preferences.Set("profilePicLink", facebookData.picture.data.url);
+                                    Debug.WriteLine("fb profile pic:" + facebookData.picture.data.url);
+
+                                    Preferences.Set("canChooseSelect", true);
+                                    Application.Current.MainPage = new NavigationPage(new Select((info_obj2["result"])[0]["customer_first_name"].ToString(), (info_obj2["result"])[0]["customer_last_name"].ToString(), (info_obj2["result"])[0]["customer_email"].ToString()));
+                                }
+                            }
+
+                            // THIS IS HOW YOU CAN ACCESS YOUR USER ID FROM THE APP
+                            //string userID = (string)Application.Current.Properties["user_id"];
+                            //printing id for testing
+                            //System.Diagnostics.Debug.WriteLine("user ID after success: " + userID);
                         }
                         else
-                        { // user's social account exists and login attempt is made
-                            LoginResponse socialLoginAttempt = await socialLogin(socialAccountResponse.Result.Result[0].UserUid);
-                            captureLoginSession(socialLoginAttempt);
-                            await Navigation.PopAsync(); // go back to home page
-
+                        {
+                            await DisplayAlert("Oops", "We are facing some problems with our internal system. We weren't able to update your credentials", "OK");
                         }
                     }
-                    catch (Exception ex)
+
+                    // Wrong Platform message
+                    if (responseContent.Contains(Constant.ErrorPlatform))
                     {
-                        System.Diagnostics.Debug.WriteLine(ex.Message);
+                        var RDSCode = JsonConvert.DeserializeObject<RDSLogInMessage>(responseContent);
+                        await DisplayAlert("Message", RDSCode.message, "OK");
                     }
 
-                    //await Navigation.PopAsync();
+
+                    // Wrong LOGIN method message
+                    if (responseContent.Contains(Constant.ErrorUserDirectLogIn))
+                    {
+                        await DisplayAlert("Oops!", "You have an existing MTYD account. Please use direct login", "OK");
+                    }
                 }
             }
         }
 
-        // function when authenticator gives an error
-        [Obsolete]
-        void OnAuthError(object sender, AuthenticatorErrorEventArgs e)
+
+
+        private async void FacebookAutheticatorError(object sender, AuthenticatorErrorEventArgs e)
         {
             var authenticator = sender as OAuth2Authenticator;
             if (authenticator != null)
             {
-                authenticator.Completed -= OnAuthCompleted;
-                authenticator.Error -= OnAuthError;
+                authenticator.Completed -= FacebookAuthenticatorCompleted;
+                authenticator.Error -= FacebookAutheticatorError;
             }
 
-            Debug.WriteLine("Authentication Error " + e.Message);
-        }*/
-
-
-        async void clickedSignUp(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new SignUp(), false);
+            await DisplayAlert("Authentication error: ", e.Message, "OK");
         }
 
-        /*public void updateLoginButton()
-        {
-            if (!App.LoggedIn)
-            {
-                this.loginButton.Text = "Log in";
-                signUpButton.SetValue(IsVisibleProperty, true);
-                mainSubStack.IsVisible = false;
 
+
+
+
+
+
+
+
+
+
+
+        // GOOGLE LOGIN CLICK
+        public async void googleLoginButtonClicked(object sender, EventArgs e)
+        {
+            Console.WriteLine("googleLoginButtonClicked entered");
+
+            string clientId = string.Empty;
+            string redirectUri = string.Empty;
+
+            switch (Device.RuntimePlatform)
+            {
+                case Device.iOS:
+                    clientId = Constant.GoogleiOSClientID;
+                    redirectUri = Constant.GoogleRedirectUrliOS;
+                    break;
+
+                case Device.Android:
+                    clientId = Constant.GoogleAndroidClientID;
+                    redirectUri = Constant.GoogleRedirectUrlAndroid;
+                    break;
+            }
+
+            Console.WriteLine("after switch entered");
+
+            var authenticator = new OAuth2Authenticator(clientId, string.Empty, Constant.GoogleScope, new Uri(Constant.GoogleAuthorizeUrl), new Uri(redirectUri), new Uri(Constant.GoogleAccessTokenUrl), null, true);
+            var presenter = new Xamarin.Auth.Presenters.OAuthLoginPresenter();
+
+            Console.WriteLine("after vars entered");
+
+            authenticator.Completed += GoogleAuthenticatorCompleted;
+            authenticator.Error += GoogleAuthenticatorError;
+
+            Console.WriteLine("after completed/error entered");
+
+            AuthenticationState.Authenticator = authenticator;
+
+            Console.WriteLine("before Login entered");
+            presenter.Login(authenticator);
+            Console.WriteLine("after Login entered");
+        }
+
+        private async void GoogleAuthenticatorCompleted(object sender, AuthenticatorCompletedEventArgs e)
+        {
+            Console.WriteLine("googleAuthenticatorCompleted entered");
+            //Application.Current.MainPage = new Landing("", "", "");
+
+            var authenticator = sender as OAuth2Authenticator;
+
+            if (authenticator != null)
+            {
+                authenticator.Completed -= GoogleAuthenticatorCompleted;
+                authenticator.Error -= GoogleAuthenticatorError;
+            }
+
+            Console.WriteLine("Authenticator authenticated:" + e.IsAuthenticated);
+
+            if (e.IsAuthenticated)
+            {
+                GoogleUserProfileAsync(e.Account.Properties["access_token"], e.Account.Properties["refresh_token"], e);
             }
             else
             {
-                this.loginButton.Text = "Log out";
-                signUpButton.SetValue(IsVisibleProperty, false);
-                mainSubStack.IsVisible = true;
-
+                await DisplayAlert("Error", "Google was not able to autheticate your account", "OK");
             }
         }
 
-        // Navigation Bar
-        private async void onNavClick(object sender, EventArgs e)
+        public async void GoogleUserProfileAsync(string accessToken, string refreshToken, AuthenticatorCompletedEventArgs e)
         {
-            Button button = (Button)sender;
-            if (button.Equals(SubscribeNav))
+            Console.WriteLine("googleUserProfileAsync entered");
+            //Application.Current.MainPage = new NavigationPage(new Landing("", "", ""));
+
+            var client = new HttpClient();
+            var socialLogInPost = new SocialLogInPost();
+
+            var request = new OAuth2Request("GET", new Uri(Constant.GoogleUserInfoUrl), null, e.Account);
+            var GoogleResponse = await request.GetResponseAsync();
+            Debug.WriteLine("google response: " + GoogleResponse);
+            var userData = GoogleResponse.GetResponseText();
+            Debug.WriteLine("user Data: " + userData);
+            Application.Current.MainPage = new NavigationPage(new Landing("", "", ""));
+
+            System.Diagnostics.Debug.WriteLine(userData);
+            GoogleResponse googleData = JsonConvert.DeserializeObject<GoogleResponse>(userData);
+            Debug.WriteLine("googleData: " + googleData);
+            socialLogInPost.email = googleData.email;
+            socialLogInPost.password = "";
+            socialLogInPost.social_id = googleData.id;
+            socialLogInPost.signup_platform = "GOOGLE";
+
+            var socialLogInPostSerialized = JsonConvert.SerializeObject(socialLogInPost);
+            var postContent = new StringContent(socialLogInPostSerialized, Encoding.UTF8, "application/json");
+
+            System.Diagnostics.Debug.WriteLine(socialLogInPostSerialized);
+
+            var RDSResponse = await client.PostAsync(Constant.LogInUrl, postContent);
+            var responseContent = await RDSResponse.Content.ReadAsStringAsync();
+
+            System.Diagnostics.Debug.WriteLine(responseContent);
+            System.Diagnostics.Debug.WriteLine(RDSResponse.IsSuccessStatusCode);
+
+            if (RDSResponse.IsSuccessStatusCode)
             {
-                await Navigation.PushAsync(new SubscriptionPage());
-            }
-            else if (button.Equals(ProfileNav))
-            {
-                await Navigation.PushAsync(new Profile());
-            }
-            else if (button.Equals(SelectNav))
-            {
-                await Navigation.PushAsync(new Select());
+                if (responseContent != null)
+                {
+                    if (responseContent.Contains(Constant.EmailNotFound))
+                    {
+                        var signUp = await DisplayAlert("Message", "It looks like you don't have a MTYD account. Please sign up!", "OK", "Cancel");
+                        if (signUp)
+                        {
+                            // HERE YOU NEED TO SUBSTITUTE MY SOCIAL SIGN UP PAGE WITH MTYD SOCIAL SIGN UP
+                            // NOTE THAT THIS SOCIAL SIGN UP PAGE NEEDS A CONSTRUCTOR LIKE THE FOLLOWING ONE
+                            // SocialSignUp(string socialId, string firstName, string lastName, string emailAddress, string accessToken, string refreshToken, string platform)
+                            Preferences.Set("canChooseSelect", false);
+                            Application.Current.MainPage = new CarlosSocialSignUp(googleData.id, googleData.given_name, googleData.family_name, googleData.email, accessToken, refreshToken, "GOOGLE");
+                        }
+                    }
+                    if (responseContent.Contains(Constant.AutheticatedSuccesful))
+                    {
+                        var data = JsonConvert.DeserializeObject<SuccessfulSocialLogIn>(responseContent);
+                        Debug.WriteLine("responseContent: " + responseContent.ToString());
+                        Debug.WriteLine("data: " + data.ToString());
+                        Application.Current.Properties["user_id"] = data.result[0].customer_uid;
+
+                        UpdateTokensPost updateTokesPost = new UpdateTokensPost();
+                        updateTokesPost.uid = data.result[0].customer_uid;
+                        updateTokesPost.mobile_access_token = accessToken;
+                        updateTokesPost.mobile_refresh_token = refreshToken;
+
+                        var updateTokesPostSerializedObject = JsonConvert.SerializeObject(updateTokesPost);
+                        var updateTokesContent = new StringContent(updateTokesPostSerializedObject, Encoding.UTF8, "application/json");
+                        var updateTokesResponse = await client.PostAsync(Constant.UpdateTokensUrl, updateTokesContent);
+                        var updateTokenResponseContent = await updateTokesResponse.Content.ReadAsStringAsync();
+                        System.Diagnostics.Debug.WriteLine(updateTokenResponseContent);
+
+                        if (updateTokesResponse.IsSuccessStatusCode)
+                        {
+                            DateTime today = DateTime.Now;
+                            DateTime expDate = today.AddDays(Constant.days);
+
+                            Application.Current.Properties["time_stamp"] = expDate;
+                            Application.Current.Properties["platform"] = "GOOGLE";
+                            // Application.Current.MainPage = new SubscriptionPage();
+
+
+                            //check to see if user has already selected a meal plan before
+                            var request2 = new HttpRequestMessage();
+                            Console.WriteLine("user_id: " + (string)Application.Current.Properties["user_id"]);
+                            string url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/customer_lplp?customer_uid=" + (string)Application.Current.Properties["user_id"];
+                            //old db
+                            //string url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/customer_lplp?customer_uid=" + (string)Application.Current.Properties["user_id"];
+                            //string url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + (string)Application.Current.Properties["user_id"];
+                            //string url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/meals_selected?customer_uid=" + "100-000256";
+                            request2.RequestUri = new Uri(url);
+                            //request.RequestUri = new Uri("https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/get_delivery_info/400-000453");
+                            request2.Method = HttpMethod.Get;
+                            var client2 = new HttpClient();
+                            HttpResponseMessage response = await client.SendAsync(request2);
+
+                            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                            {
+
+                                HttpContent content = response.Content;
+                                Console.WriteLine("content: " + content);
+                                var userString = await content.ReadAsStringAsync();
+                                Console.WriteLine(userString.ToString());
+
+                                //testing for if the user only has serving fresh stuff
+                                if (userString.ToString()[0] != '{')
+                                {
+                                    url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                    //old db
+                                    //url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                    var request3 = new HttpRequestMessage();
+                                    request3.RequestUri = new Uri(url);
+                                    request3.Method = HttpMethod.Get;
+                                    response = await client.SendAsync(request3);
+                                    content = response.Content;
+                                    Console.WriteLine("content: " + content);
+                                    userString = await content.ReadAsStringAsync();
+                                    JObject info_obj2 = JObject.Parse(userString);
+                                    this.NewMainPage.Clear();
+                                    Console.WriteLine("google first: " + (info_obj2["result"])[0]["customer_first_name"].ToString());
+                                    Console.WriteLine("google last: " + (info_obj2["result"])[0]["customer_last_name"].ToString());
+                                    Console.WriteLine("google email: " + (info_obj2["result"])[0]["customer_email"].ToString());
+                                    Preferences.Set("user_latitude", (info_obj2["result"])[0]["customer_lat"].ToString());
+                                    Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+                                    Preferences.Set("user_longitude", (info_obj2["result"])[0]["customer_long"].ToString());
+                                    Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
+
+                                    //var accessToken = loginInfo.ExternalIdentity.Claims.Where(c => c.Type.Equals("urn:google:accesstoken")).Select(c => c.Value).FirstOrDefault();
+                                    Uri apiRequestUri = new Uri("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + (info_obj2["result"])[0]["mobile_access_token"].ToString());
+                                    //request profile image
+                                    using (var webClient = new System.Net.WebClient())
+                                    {
+                                        var json = webClient.DownloadString(apiRequestUri);
+                                        var data2 = JsonConvert.DeserializeObject<profilePicLogIn>(json);
+                                        Debug.WriteLine(data2.ToString());
+                                        var userPicture = data2.picture;
+                                        //var holder = userPicture[0];
+                                        Debug.WriteLine(userPicture);
+                                        Preferences.Set("profilePicLink", userPicture);
+
+                                        //var data = JsonConvert.DeserializeObject<SuccessfulSocialLogIn>(responseContent);
+                                        //Application.Current.Properties["user_id"] = data.result[0].customer_uid;
+                                    }
+
+                                    //Debug.WriteLine("picture link: " + userPicture);
+
+                                    Console.WriteLine("go to SubscriptionPage");
+                                    Preferences.Set("canChooseSelect", false);
+                                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage((info_obj2["result"])[0]["customer_first_name"].ToString(), (info_obj2["result"])[0]["customer_last_name"].ToString(), (info_obj2["result"])[0]["customer_email"].ToString()));
+                                    return;
+                                }
+                                //testing
+
+                                JObject info_obj = JObject.Parse(userString);
+                                this.NewMainPage.Clear();
+
+                                //ArrayList item_price = new ArrayList();
+                                //ArrayList num_items = new ArrayList();
+                                //ArrayList payment_frequency = new ArrayList();
+                                //ArrayList groupArray = new ArrayList();
+
+                                //int counter = 0;
+                                //Console.WriteLine("testing: " + ((info_obj["result"]).Count().ToString()));
+                                //Console.WriteLine("testing: " + ((info_obj["result"]).Last().ToString()));
+                                //while (((info_obj["result"])[counter]) != null)
+                                //{
+                                //    Console.WriteLine("worked" + counter);
+                                //    counter++;
+                                //}
+
+                                //check if the user hasn't entered any info before, if so put in the placeholders
+
+                                Console.WriteLine("string: " + (info_obj["result"]).ToString());
+                                //check if the user hasn't entered any info before, if so put in the placeholders
+                                if ((info_obj["result"]).ToString() == "[]" || (info_obj["result"]).ToString() == "204")
+                                {
+                                    url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+
+                                    //old db
+                                    //url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                    var request3 = new HttpRequestMessage();
+                                    request3.RequestUri = new Uri(url);
+                                    request3.Method = HttpMethod.Get;
+                                    response = await client.SendAsync(request3);
+                                    content = response.Content;
+                                    Console.WriteLine("content: " + content);
+                                    userString = await content.ReadAsStringAsync();
+                                    JObject info_obj2 = JObject.Parse(userString);
+                                    this.NewMainPage.Clear();
+                                    Console.WriteLine("google first: " + (info_obj2["result"])[0]["customer_first_name"].ToString());
+                                    Console.WriteLine("google last: " + (info_obj2["result"])[0]["customer_last_name"].ToString());
+                                    Console.WriteLine("google email: " + (info_obj2["result"])[0]["customer_email"].ToString());
+                                    Preferences.Set("user_latitude", (info_obj2["result"])[0]["customer_lat"].ToString());
+                                    Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+                                    Preferences.Set("user_longitude", (info_obj2["result"])[0]["customer_long"].ToString());
+                                    Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
+
+                                    Uri apiRequestUri = new Uri("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + (info_obj2["result"])[0]["mobile_access_token"].ToString());
+                                    //request profile image
+                                    using (var webClient = new System.Net.WebClient())
+                                    {
+                                        var json = webClient.DownloadString(apiRequestUri);
+                                        var data2 = JsonConvert.DeserializeObject<profilePicLogIn>(json);
+                                        Debug.WriteLine(data2.ToString());
+                                        var userPicture = data2.picture;
+                                        //var holder = userPicture[0];
+                                        Debug.WriteLine(userPicture);
+                                        Preferences.Set("profilePicLink", userPicture);
+
+                                        //var data = JsonConvert.DeserializeObject<SuccessfulSocialLogIn>(responseContent);
+                                        //Application.Current.Properties["user_id"] = data.result[0].customer_uid;
+                                    }
+
+                                    Console.WriteLine("go to SubscriptionPage");
+                                    DisplayAlert("navigation", "sending to subscription", "close");
+                                    Preferences.Set("canChooseSelect", false);
+                                    Application.Current.MainPage = new NavigationPage(new SubscriptionPage((info_obj2["result"])[0]["customer_first_name"].ToString(), (info_obj2["result"])[0]["customer_last_name"].ToString(), (info_obj2["result"])[0]["customer_email"].ToString()));
+                                }
+                                else
+                                {
+                                    url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+
+                                    //old db
+                                    //url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+                                    var request3 = new HttpRequestMessage();
+                                    request3.RequestUri = new Uri(url);
+                                    request3.Method = HttpMethod.Get;
+                                    response = await client.SendAsync(request3);
+                                    content = response.Content;
+                                    Console.WriteLine("content: " + content);
+                                    userString = await content.ReadAsStringAsync();
+                                    JObject info_obj2 = JObject.Parse(userString);
+                                    this.NewMainPage.Clear();
+                                    Preferences.Set("user_latitude", (info_obj2["result"])[0]["customer_lat"].ToString());
+                                    Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+                                    Preferences.Set("user_longitude", (info_obj2["result"])[0]["customer_long"].ToString());
+                                    Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
+                                    Console.WriteLine("google first: " + (info_obj2["result"])[0]["customer_first_name"].ToString());
+                                    Console.WriteLine("google last: " + (info_obj2["result"])[0]["customer_last_name"].ToString());
+                                    Console.WriteLine("google email: " + (info_obj2["result"])[0]["customer_email"].ToString());
+                                    Debug.WriteLine("user access token: " + (info_obj2["result"])[0]["user_access_token"].ToString());
+                                    Debug.WriteLine("mobile access token: " + (info_obj2["result"])[0]["mobile_access_token"].ToString());
+                                    Uri apiRequestUri = new Uri("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + (info_obj2["result"])[0]["mobile_access_token"].ToString());
+                                    //request profile image
+                                    using (var webClient = new System.Net.WebClient())
+                                    {
+                                        var json = webClient.DownloadString(apiRequestUri);
+                                        var data2 = JsonConvert.DeserializeObject<profilePicLogIn>(json);
+                                        Debug.WriteLine(data2.ToString());
+                                        var userPicture = data2.picture;
+                                        //var holder = userPicture[0];
+                                        Debug.WriteLine(userPicture);
+                                        Preferences.Set("profilePicLink", userPicture);
+
+                                        //var data = JsonConvert.DeserializeObject<SuccessfulSocialLogIn>(responseContent);
+                                        //Application.Current.Properties["user_id"] = data.result[0].customer_uid;
+                                    }
+
+                                    DisplayAlert("navigation", "sending to select", "close");
+                                    Console.WriteLine("delivery first name: " + (info_obj["result"])[0]["delivery_first_name"].ToString());
+                                    Console.WriteLine("delivery last name: " + (info_obj["result"])[0]["delivery_last_name"].ToString());
+                                    Console.WriteLine("delivery email: " + (info_obj["result"])[0]["delivery_email"].ToString());
+                                    Preferences.Set("canChooseSelect", true);
+                                    //await Debug.WriteLine("a");
+                                    //navToSelect((info_obj2["result"])[0]["customer_first_name"].ToString(), (info_obj2["result"])[0]["customer_last_name"].ToString(), (info_obj2["result"])[0]["customer_email"].ToString());
+                                    Application.Current.MainPage = new NavigationPage(new Select((info_obj2["result"])[0]["customer_first_name"].ToString(), (info_obj2["result"])[0]["customer_last_name"].ToString(), (info_obj2["result"])[0]["customer_email"].ToString()));
+
+                                }
+
+                            }
+
+                                // THIS IS HOW YOU CAN ACCESS YOUR USER ID FROM THE APP
+                                // string userID = (string)Application.Current.Properties["user_id"];
+                            }
+                        else
+                        {
+                            await DisplayAlert("Oops", "We are facing some problems with our internal system. We weren't able to update your credentials", "OK");
+                        }
+                    }
+                    if (responseContent.Contains(Constant.ErrorPlatform))
+                    {
+                        var RDSCode = JsonConvert.DeserializeObject<RDSLogInMessage>(responseContent);
+                        await DisplayAlert("Message", RDSCode.message, "OK");
+                    }
+
+                    if (responseContent.Contains(Constant.ErrorUserDirectLogIn))
+                    {
+                        await DisplayAlert("Oops!", "You have an existing MTYD account. Please use direct login", "OK");
+                    }
+                }
             }
         }
 
-        // Navigation Bar Icons
-        private async void onNavIconClick(object sender, EventArgs e)
+        private async void GoogleAuthenticatorError(object sender, AuthenticatorErrorEventArgs e)
         {
-            ImageButton button = (ImageButton)sender;
+            Console.WriteLine("googleAuthenticatorError entered");
 
-            if (button.Equals(SubscribeIconNav))
+            var authenticator = sender as OAuth2Authenticator;
+
+            if (authenticator != null)
             {
-                await Navigation.PushAsync(new SubscriptionPage());
-            }
-            else if (button.Equals(ProfileIconNav))
-            {
-                await Navigation.PushAsync(new Profile());
-            }
-            else if (button.Equals(SelectIconNav))
-            {
-                await Navigation.PushAsync(new Select());
+                authenticator.Completed -= GoogleAuthenticatorCompleted;
+                authenticator.Error -= GoogleAuthenticatorError;
             }
 
-        }*/
+            await DisplayAlert("Authentication error: ", e.Message, "OK");
+        }
 
-        void clickedForgotPass(System.Object sender, System.EventArgs e)
+        // APPLE LOGIN CLICK
+        public async void appleLoginButtonClicked(object sender, EventArgs e)
         {
-            DisplayAlert("Title", "Message", "Nope");
+            Console.WriteLine("appleLogin clicked");
+
+            SignIn?.Invoke(sender, e);
+            var c = (ImageButton)sender;
+            Console.WriteLine("appleLogin c: " + c.ToString());
+            c.Command?.Execute(c.CommandParameter);
+
+            //testing
+            var testingVar = new LoginViewModel();
+            //testingVar.OnAppleSignInRequest();
+            vm.OnAppleSignInRequest();
+        }
+
+        public void InvokeSignInEvent(object sender, EventArgs e)
+            => SignIn?.Invoke(sender, e);
+
+        async void clickedSignUp(object sender, EventArgs e)
+        {
+            Preferences.Set("canChooseSelect", false);
+            Application.Current.MainPage = new CarlosSignUp();
+        }
+
+        async void clickedForgotPass(System.Object sender, System.EventArgs e)
+        {
+            //reset password (get): https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/reset_password?email=welks@gmail.com
+            //change password (post): https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/change_password
+
+            if (loginUsername.Text == "" || loginUsername.Text == null)
+            {
+                DisplayAlert("Error", "please enter your email into the username box first", "OK");
+                return;
+            }
+            //if endpoint returns email not found, display an alert
+            else
+            {
+                string url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/reset_password?email=" + loginUsername.Text;
+                var request = new HttpRequestMessage();
+                request.RequestUri = new Uri(url);
+                request.Method = HttpMethod.Get;
+                var client = new HttpClient();
+                HttpResponseMessage response = await client.SendAsync(request);
+                HttpContent content = response.Content;
+                Console.WriteLine("content: " + content.ToString());
+                var userString = await content.ReadAsStringAsync();
+                Debug.WriteLine("userString: " + userString);
+                JObject info_obj = JObject.Parse(userString);
+                Debug.WriteLine("info_obj");
+            }
+            
+            //for testing 
+            Application.Current.MainPage = new changePassword(loginUsername.Text);
         }
 
         void clickedSeePassword(System.Object sender, System.EventArgs e)
@@ -747,5 +1248,58 @@ namespace MTYD
                 loginPassword.IsPassword = false;
             else loginPassword.IsPassword = true;
         }
+
+        void HIWclicked(System.Object sender, System.EventArgs e)
+        {
+            Application.Current.MainPage = new HowItWorks();
+        }
+
+        async public void getProfileInfo()
+        {
+            string url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+
+            //old db
+            //string url = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/Profile/" + (string)Application.Current.Properties["user_id"];
+            Debug.WriteLine("getProfileInfo url: " + url);
+            var request3 = new HttpRequestMessage();
+            request3.RequestUri = new Uri(url);
+            request3.Method = HttpMethod.Get;
+            var client2 = new HttpClient();
+            HttpResponseMessage response = await client2.SendAsync(request3);
+            HttpContent content = response.Content;
+            Console.WriteLine("content: " + content.ToString());
+            var userString = await content.ReadAsStringAsync();
+            Debug.WriteLine("userString: " + userString);
+            JObject info_obj3 = JObject.Parse(userString);
+            Debug.WriteLine("info_obj3: " + info_obj3.ToString());
+            this.NewMainPage.Clear();
+            Preferences.Set("user_latitude", (info_obj3["result"])[0]["customer_lat"].ToString());
+            Debug.WriteLine("user latitude" + Preferences.Get("user_latitude", ""));
+            Preferences.Set("user_longitude", (info_obj3["result"])[0]["customer_long"].ToString());
+            Debug.WriteLine("user longitude" + Preferences.Get("user_longitude", ""));
+
+            Preferences.Set("profilePicLink", "");
+            Preferences.Set("canChooseSelect", false);
+            Application.Current.MainPage = new NavigationPage(new SubscriptionPage((info_obj3["result"])[0]["customer_first_name"].ToString(), (info_obj3["result"])[0]["customer_last_name"].ToString(), (info_obj3["result"])[0]["customer_email"].ToString()));
+            return;
+        }
+
+        public void navToSub(string first, string last, string email)
+        {
+            Debug.WriteLine("reached navToSub");
+            Application.Current.MainPage = new NavigationPage(new SubscriptionPage(first, last, email));
+        }
+
+        public void navToSelect(string first, string last, string email)
+        {
+            Debug.WriteLine("reached navToSelect");
+            Application.Current.MainPage = new NavigationPage(new Select(first, last, email));
+        }
+        //void Button_Clicked(System.Object sender, System.EventArgs e)
+        //{
+        //    Application.Current.MainPage = new MainPageExperiment();
+        //    //Navigation.PushAsync(new MainPageExperiment());
+        //}
+
     }
 }

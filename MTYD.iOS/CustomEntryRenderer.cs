@@ -22,8 +22,11 @@ namespace CustomRenderer.iOS
 
                 Control.BorderStyle = UITextBorderStyle.None;
                 Control.Layer.CornerRadius = 10;
-                Control.TextColor = UIColor.White;
 
+                // Control.TextColor = UIColor.White;
+                // The reason why every entry text color was white is because those entries are
+                // customize. The default color was white, but I set it to black now. 
+                Control.TextColor = UIColor.Black;
             }
         }
     }

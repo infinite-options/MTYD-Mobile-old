@@ -43,7 +43,7 @@ namespace MTYD.ViewModel
 
         async void clickedFinalSignUp(System.Object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new SubscriptionPage());
+            //await Navigation.PushAsync(new SubscriptionPage());
         }
 
         void clickedSeePassword1(System.Object sender, System.EventArgs e)
@@ -66,8 +66,8 @@ namespace MTYD.ViewModel
         const string accountSaltURL = "https://uavi7wugua.execute-api.us-west-1.amazonaws.com/dev/api/v2/accountsalt/"; // api to get account salt; need email at the end of link
         const string loginURL = "https://uavi7wugua.execute-api.us-west-1.amazonaws.com/dev/api/v2/account/"; // api to log in; need email + hashed password at the end of link
 
-        //public const string signUpApi = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/signup";
-        //const string accountSaltURL = "https://ht56vci4v9.execute-api.us-west-1.amazonaws.com/dev/api/v2/accountsalt/";
+        //public const string signUpApi = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/signup";
+        //const string accountSaltURL = "https://kur4j57ved.execute-api.us-west-1.amazonaws.com/dev/api/v2/accountsalt/";
 
         public SignUp()
         {
